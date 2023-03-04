@@ -14,6 +14,7 @@ module.exports = {
             "2xl": '1536px'
         },
         colors: {
+            'red': 'red',
             'blue': '#1fb6ff',
             'purple': '#7e5bef',
             'pink': '#ff49db',
@@ -23,6 +24,8 @@ module.exports = {
             'gray-dark': '#273444',
             'gray': '#8492a6',
             'gray-light': '#fafafa',
+            'gray-light2': '#d7d7d7',
+            'gray-light-transparent': '#d7d7d74d',
             'white': '#ffffff',
             'black':'#0c0c0c',
         },

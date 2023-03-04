@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
         @livewireStyles
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
