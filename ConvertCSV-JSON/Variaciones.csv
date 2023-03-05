@@ -1,0 +1,12 @@
+VariacionID,Titulo,OpcionID,Valor,PrecioBulto,PrecioM2,Descripcion,Imagen,Miniatura,Unidades,m2porBulto
+1,Color,1,Blanco,,,,,,15,
+1,Color,2,Azul Marino,,,,,,6,
+1,Color,3,Verde Oscuro,,,,,,4,
+1,Color,4,Negro,,,,,,5,
+1,Color,5,Beige,,,,,,9,
+2,Tamaño,1,50x30,,,,,,,
+2,Tamaño,2,80x50,,,,,,,
+2,Tamaño,3,115x70,,,,,,,
+3,Tamaño,1,100,,,,,,,
+3,Tamaño,2,150,,,,,,,
+3,Tamaño,3,300,,,,,,,

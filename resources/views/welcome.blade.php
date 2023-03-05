@@ -15,10 +15,13 @@
 
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
-    <body class="antialiased">
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+    <body class="antialiased" x-data="{
+            Products: []
+        }">
+        <div class="relative flex flex-col justify-center items-center min-h-screen p-2">
             @yield('product', view("product.card"))
             <livewire:product-list />
+            <x-categories-menu/>
         </div>
         @livewireScripts
     </body>

@@ -1,4 +1,4 @@
-<div class="bg-gray-light text-black w-40 rounded shadow-lg border border-gray-light-transparent"
+<div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0"
     x-data="{
         units: 1,
         get squareMeters() {
@@ -7,7 +7,7 @@
         }
     }">
     <div class="shrink-0 mb-2">
-        <img class="h-40 w-full" src="{{ Vite::asset('resources/images/defaultImage.svg') }}" alt="Product Thumbnail">
+        <img class="h-40 w-full" src="{{ asset('images/defaultImage.svg') }}" alt="Product Thumbnail">
     </div>
     <h3 class="text-center text-sm font-medium mb-1"><a>Cerámicos Marca Modelo x 2,64m2</a></h3>
     <div class="text-center font-light flex-col items-center">
