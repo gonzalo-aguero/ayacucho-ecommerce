@@ -1,6 +1,6 @@
 ID,Nombre,PrecioBulto,PrecioM2,Descripcion,Imagen,Miniatura,Categoria,Unidades,MostrarUnidades,m2porBulto,VariacionID
-1,"Cerámicos Marca Modelo x 2,64m2",3309.8,1235,,,,Productos Varios,35,No,2.68,
-2,Vanitory,7899.4,,,,,Productos Varios,35,Si,,1
+1,"Cerámicos Marca Modelo x 2,64m2",3309.8,1235,,,,Cerámicos,35,No,2.68,
+2,Vanitory,7899.4,,,,,Productos para baños,35,Si,,1
 3,Producto Elegante Marca Modelo,3499.78,,,,,Productos Varios,35,No,,
 4,Producto 4,3499.78,1235,,,,Productos Varios,35,No,,
 5,Producto 5,3499.78,1235,,,,Productos Varios,35,No,,
