@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-require 'vendor/autoload.php'; // Importar la librería PhpSpreadsheet
+//require base_path().' vendor/autoload.php'; // Importar la librería PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class ExcelConversionController extends Controller
     {
 
         // Cargar archivo Excel
-        $inputFileName = 'archivo.xlsx';
+        $inputFileName = base_path().'/storage/app/Base de Datos.xlsx';
         $spreadsheet = IOFactory::load($inputFileName);
 
         // Seleccionar la hoja
@@ -45,13 +45,13 @@ class ExcelConversionController extends Controller
         }
 
         // Crear archivo JSON con los datos obtenidos
-        $outputFileName = 'archivo.json';
+        $outputFileName = base_path().'/public_html/json/Productos.json';
         $file = fopen($outputFileName, 'w');
         fwrite($file, json_encode($data));
         fclose($file);
 
         return response()->json([
-            'status' => 200
+            'conversion' => true
         ]);
     }
 }

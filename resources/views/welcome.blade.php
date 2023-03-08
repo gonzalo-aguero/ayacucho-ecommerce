@@ -15,7 +15,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     </head>
     <body class="antialiased">
-        <div class="relative flex flex-col justify-center items-center min-h-screen p-2">
+        <x-header></x-header>
+        <div class="relative flex flex-col justify-center items-center min-h-screen p-2 bg-gray-light-transparent">
             <x-categories-menu/>
         </div>
         @livewireScripts

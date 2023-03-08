@@ -22,4 +22,6 @@ yarn-error.log
 # WRITTEN BY DEVS
 Session.vim
 .editorconfig
-convert
+/ConvertCSV-JSON
+/public/json/*.json
+
