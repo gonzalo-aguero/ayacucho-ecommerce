@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExcelConversionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/admin/excel-conversion', [ExcelConversionController::class, 'show']);
+Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'process'])->name('excel.convert');
