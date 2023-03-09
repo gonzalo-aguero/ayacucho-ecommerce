@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelConversionController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,13 @@ Route::get('/checkout', function () {
 
 Route::get('/admin/excel-conversion', [ExcelConversionController::class, 'show']);
 Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'process'])->name('excel.convert');
+
+Route::get('/site-set/{action}', function (string $action) {
+    if($action == "down"){
+        $exitCode = Artisan::call('down --render="errors.503" --secret="40012jasdjj-246b-jiasdm120-afa1-dd72a4c43515"');
+    }else{
+        $exitCode = Artisan::call('up');
+    }
+
+    return $exitCode;
+});
