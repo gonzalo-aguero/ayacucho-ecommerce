@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - export DEPLOY_PATH=/home/c6743/public_html/
+    - export LARAVEL_BACKEND_PATH=/home/c6743/
+    - /bin/rsync -av ./ $LARAVEL_BACKEND_PATH
+    - /bin/rsync -av public_html/ $DEPLOY_PATH
