@@ -1,19 +1,18 @@
 <div x-data="{
         loadingProducts: ()=>{
-            return $store.products.length == 0;
+            return $store.productsToPrint.length == 0;
         }
-    }" class="w-full flex flex-col items-center justify-center py-10">
-    <template x-for="category in $store.sortedProducts">
-        <div x-data="{ open: false }" class="block w-5/6 bg-white rounded shadow-lg">
-            <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange font-bold" @click="open = !open"></h2>
+    }" class="w-full flex flex-col items-center justify-center">
+    <template x-for="category in $store.productsToPrint">
+        <div x-data="{ open: false }" class="block w-5/6 bg-white rounded shadow drop-shadow">
+            <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-extrabold hover:bg-gray-light" @click="open = !open"></h2>
             <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
-               <template x-for="i in 5">
+                <template x-for="product in category.products">
                     {{-----------------------
                         Product card template
                     ---------------------------}}
                     <div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0"
                         x-data="{
-                            product: category.products[i],
                             units: 1,
                             get squareMeters() {
                                 if(this.units >= 0) return (this.units * product.m2ByUnit).toPrecision(3);
@@ -63,9 +62,18 @@
             </div>
         </div>
      </template>
-    @for ($i = 0; $i < 10; $i++)
-        <template x-if="loadingProducts">
-            <x-product.loading-product-card></x-product.loading-product-card>
-        </template>
+    @for ($i = 0; $i < 6; $i++)
+    <template x-if="loadingProducts">
+        <div x-data="{ open: false }" class="block w-5/6 bg-white rounded shadow-lg">
+            <h2 class="py-3 flex justify-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
+                <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
+            </h2>
+            <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
+                @for($j = 0; $j < 10; $j++)
+                <x-product.loading-product-card></x-product.loading-product-card>
+                @endfor
+            </div>
+        </div>
+    </template>
     @endfor
 </div>

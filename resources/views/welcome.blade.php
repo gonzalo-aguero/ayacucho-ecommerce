@@ -12,11 +12,12 @@
         @livewireStyles
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>--}}
     </head>
     <body class="antialiased">
         <x-header></x-header>
-        <div class="relative flex flex-col justify-center items-center min-h-screen p-2 bg-gray-light-transparent">
+        <div class="relative flex flex-col items-center min-h-screen px-2 py-10 gap-8 bg-gray-light-transparent">
+            <h2 class="uppercase text-2xl">Nuestros Productos</h2>
             <x-categories-menu/>
         </div>
         @livewireScripts

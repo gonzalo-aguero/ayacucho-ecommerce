@@ -16,7 +16,11 @@ use App\Http\Controllers\ExcelConversionController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+Route::get('/checkout', function () {
+    return "This is the Checkout page.";
+})->name('checkout');
+
 
 Route::get('/admin/excel-conversion', [ExcelConversionController::class, 'show']);
 Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'process'])->name('excel.convert');
