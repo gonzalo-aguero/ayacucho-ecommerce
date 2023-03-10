@@ -1,6 +1,11 @@
 {
+  "resources/css/Notification-Bar.css": {
+    "file": "assets/Notification-Bar-4b374919.css",
+    "isEntry": true,
+    "src": "resources/css/Notification-Bar.css"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-529c69ed.css",
+    "file": "assets/app-0d36e32d.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -10,7 +15,7 @@
     "src": "resources/js/admin.js"
   },
   "resources/js/app.js": {
-    "file": "assets/app-88a3894b.js",
+    "file": "assets/app-d68e00e9.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
