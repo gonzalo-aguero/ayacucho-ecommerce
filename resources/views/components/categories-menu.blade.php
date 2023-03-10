@@ -2,10 +2,11 @@
         loadingProducts: ()=>{
             return $store.productsToPrint.length == 0;
         }
-    }" class="w-full flex flex-col items-center justify-center">
+    }" class="flex flex-col items-center justify-center w-5/6 bg-white rounded-md shadow-2xl">
     <template x-for="category in $store.productsToPrint">
-        <div x-data="{ open: false }" class="block w-5/6 bg-white rounded shadow drop-shadow">
-            <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-extrabold hover:bg-gray-light" @click="open = !open"></h2>
+        <div x-data="{ open: false }" class="block w-full shadow">
+            <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-bold
+                hover:bg-gray-light rounded-md hover:underline decoration-orange-medium underline-offset-2" @click="open = !open"></h2>
             <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
                 <template x-for="product in category.products">
                     {{-----------------------
@@ -27,7 +28,15 @@
                                 return url;
                             },
                             {{-- Measurable per square meter--}}
-                            squareMeter: (product.m2Price != null && product.m2ByUnit != null)
+                            squareMeter: (product.m2Price != null && product.m2ByUnit != null),
+                            addToCart(){
+                                if($store.cart.add(product, this.units)){
+                                    $store.Notify.Success('Agregado al carrito', 1500);
+                                    this.units = 1;
+                                }else{
+                                    $store.Notify.Error('Ha ocurrido un error al agregar al carrito', 2000);
+                                }
+                            }
                         }">
                         <div class="shrink-0 mb-2">
                             <a :href="productPage">
@@ -52,7 +61,9 @@
                                 <span x-text="squareMeters"></span>
                                 <span>m²</span>
                             </div>
-                            <button class="bg-orange-light text-white text-sm p-1 mt-2 rounded active:opacity-80 hover:opacity-80">Añadir al carrito</button>
+                            <button class="bg-orange-light text-white text-sm p-1 mt-2 rounded active:opacity-80 hover:opacity-80
+                                active:scale-95	"
+                                x-on:click="addToCart">Añadir al carrito</button>
                         </div>
                     </div>
                     {{---------------------------
@@ -64,8 +75,8 @@
      </template>
     @for ($i = 0; $i < 6; $i++)
     <template x-if="loadingProducts">
-        <div x-data="{ open: false }" class="block w-5/6 bg-white rounded shadow-lg">
-            <h2 class="py-3 flex justify-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
+        <div x-data="{ open: false }" class="block w-full bg-white rounded shadow-lg">
+            <h2 class="h-[52px] flex justify-center items-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
                 <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
             </h2>
             <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">

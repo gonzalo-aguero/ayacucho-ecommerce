@@ -1,5 +1,6 @@
 //import './bootstrap';
 import Cart from './cart';
+import Notify from './Notification-Bar/notify';
 "use strict";
 
 var GLOBAL = {
@@ -16,6 +17,17 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('sortedProducts', []);
     Alpine.store('productsToPrint', []);
     loadProducts();
+
+    Notify.Settings = {
+        soundsOff: false,
+        animDuration: {
+            success: 5000,
+            warning: 5000,
+            error: 5000
+        }
+    };
+    Alpine.store('Notify', Notify);
+
     setTimeout(()=>{
         let interval = setInterval(()=>{
             printMoreProducts();
@@ -23,12 +35,7 @@ document.addEventListener('alpine:init', () => {
     }, 2000);
 
     //Livewire.emit("setProductsLoaded");
-    let cart = new Cart();
-    cart.add("add",1);
-    cart.add("been",1);
-    cart.add("colors",1);
-    cart.add("document",1);
-    cart.save();
+    Alpine.store('cart', new Cart());
 });
 function sortByCategories(){
     const sortedProducts = [];
