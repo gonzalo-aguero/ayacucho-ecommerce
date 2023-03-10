@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-//require base_path().' vendor/autoload.php'; // Importar la librería PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 use Illuminate\Http\Request;
@@ -23,7 +22,7 @@ class ExcelConversionController extends Controller
     {
 
         // Cargar archivo Excel
-        $inputFileName = base_path().'/storage/app/Base de Datos.xlsx';
+        $inputFileName = base_path().'/Base de Datos WEB.xlsx';
         $spreadsheet = IOFactory::load($inputFileName);
 
         // Seleccionar la hoja

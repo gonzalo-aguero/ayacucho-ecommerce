@@ -1,14 +1,15 @@
-import './bootstrap';
+//import './bootstrap';
+import Cart from './cart';
+import Notify from './Notification-Bar/notify';
 "use strict";
 
 var GLOBAL = {
-    DEBUG: true,//make it true to display console logs
     products: [],
     sortedProducts: [],
     printedProductsMax: false,
 };
 
-if(GLOBAL.DEBUG) console.log("Code working");
+if(DEBUG) console.log("Code working");
 
 document.addEventListener('alpine:init', () => {
     Alpine.store('colors', ['Red', 'Orange', 'Yellow']);
@@ -16,11 +17,25 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('sortedProducts', []);
     Alpine.store('productsToPrint', []);
     loadProducts();
+
+    Notify.Settings = {
+        soundsOff: false,
+        animDuration: {
+            success: 5000,
+            warning: 5000,
+            error: 5000
+        }
+    };
+    Alpine.store('Notify', Notify);
+
     setTimeout(()=>{
         let interval = setInterval(()=>{
             printMoreProducts();
         }, 3000);
     }, 2000);
+
+    //Livewire.emit("setProductsLoaded");
+    Alpine.store('cart', new Cart());
 });
 function sortByCategories(){
     const sortedProducts = [];
@@ -65,7 +80,7 @@ function printProducts(max){
         Object.assign(productsToPrint, GLOBAL.sortedProducts);
     }
 
-    if(GLOBAL.DEBUG) console.log("Products To Print:",productsToPrint);
+    if(DEBUG) console.log("Products To Print:",productsToPrint);
     Alpine.store('productsToPrint', productsToPrint);
 }
 /**
@@ -81,23 +96,12 @@ function loadProducts(){
         .then(data => {
             GLOBAL.products = data;
             Alpine.store('products', GLOBAL.products);
-            if(GLOBAL.DEBUG) console.log("Productos sin ordenar:",GLOBAL.products);
+            if(DEBUG) console.log("Productos sin ordenar:",GLOBAL.products);
 
             sortByCategories();
             Alpine.store('sortedProducts', GLOBAL.sortedProducts);
-            if(GLOBAL.DEBUG) console.log("Productos ordenados:", GLOBAL.sortedProducts);
+            if(DEBUG) console.log("Productos ordenados:", GLOBAL.sortedProducts);
 
             printProducts(GLOBAL.printedProductsMax);
         });
 }
-window.onload = ()=>{
-    Livewire.emit("setProductsLoaded");
-
-    fetch("json/Variaciones.json")
-        .then(response => response.json())
-        .then(data => {
-            //console.log(data);
-        });
-
-};
-
