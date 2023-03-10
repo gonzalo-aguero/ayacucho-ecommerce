@@ -23,5 +23,6 @@ yarn-error.log
 Session.vim
 .editorconfig
 /ConvertCSV-JSON
+Base de Datos WEB.xlsx
 /public_html/json/Productos.json
 /public_html/json/Variaciones.json
