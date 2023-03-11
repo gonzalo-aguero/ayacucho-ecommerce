@@ -12,11 +12,12 @@ var GLOBAL = {
 if(DEBUG) console.log("Code working");
 
 document.addEventListener('alpine:init', () => {
-    Alpine.store('colors', ['Red', 'Orange', 'Yellow']);
     Alpine.store('products', []);
     Alpine.store('sortedProducts', []);
     Alpine.store('productsToPrint', []);
     loadProducts();
+
+    Alpine.store('cartOpened', true);
 
     Notify.Settings = {
         soundsOff: false,
