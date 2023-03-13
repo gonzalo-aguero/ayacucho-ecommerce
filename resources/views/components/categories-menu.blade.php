@@ -53,7 +53,7 @@
                         <!-- Add to cart functionalities -->
                         <div class="flex flex-col w-full items-center pt-2 pb-3">
                             <div class="flex w-full justify-center items-center gap-1">
-                                <input type="number" min="1" x-model="units" class="block w-12 text-sm rounded border border-gray-light2 text-center" x-model="units"/>
+                                <input type="number" min="1" x-model="units" class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
                                 <span class="text-xs font-light">Unidades</span>
                             </div>
                             <div class="text-xs font-normal" x-show="squareMeter">

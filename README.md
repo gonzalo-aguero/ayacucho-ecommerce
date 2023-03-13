@@ -1,4 +1,3 @@
 # RH Renova tu Hogar - ECommerce
-
-sudo apt install php*-gd
-sudo apt install php*-zip
+Proyecto e-commerce desarrollado sobre Laravel 10.
+En conjunto con Laravel también se utilizaron tecnologías como AlpineJS, Livewire, y TailwindCSS.

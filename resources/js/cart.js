@@ -45,7 +45,7 @@ class Cart{
 
         return done;
     }
-    clearCart(){
+    clear(){
         this.content = [];
         this.save();
     }
@@ -72,6 +72,14 @@ class Cart{
     }
     length(){
         return this.content.length;
+    }
+    total(){
+        let total = 0;
+        this.content.forEach( item => {
+            const prod = Alpine.store('products')[item.pos];
+            total += prod.price * item.units;
+        });
+        return total;
     }
 };
 
