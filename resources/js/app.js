@@ -1,5 +1,6 @@
 //import './bootstrap';
 import Cart from './cart';
+import { StaticProduct } from './product';
 import Notify from './Notification-Bar/notify';
 "use strict";
 
@@ -11,19 +12,22 @@ var GLOBAL = {
 
 if(DEBUG) console.log("Code working");
 
-document.addEventListener('alpine:init', () => {
+document.addEventListener('alpine:init', async function(){
     Alpine.store('products', []);
     Alpine.store('productsLength', 0);
     Alpine.store('sortedProducts', []);
     Alpine.store('productsToPrint', []);
-    loadProducts();
-    console.log("PRODUCTOS CARGADOS 2");
+    Alpine.store('cart', new Cart());
+    Alpine.store('StaticProduct', StaticProduct);
+    Alpine.store('Notify', Notify);
+    Alpine.store('cartOpened', true);
+
     // *** HELPERS ***
     Alpine.store('priceFormat', priceFormat);
     Alpine.store('Confirm', Confirm);
 
-
-    Alpine.store('cartOpened', true);
+    await loadProducts();
+    console.log("PRODUCTOS CARGADOS 2");
 
     Notify.Settings = {
         soundsOff: false,
@@ -33,16 +37,16 @@ document.addEventListener('alpine:init', () => {
             error: 5000
         }
     };
-    Alpine.store('Notify', Notify);
 
-    setTimeout(()=>{
-        let interval = setInterval(()=>{
-            printMoreProducts();
-        }, 3000);
-    }, 2000);
+    console.log("PRODUCTOS CARGADOS 3");
+    //setTimeout(()=>{
+        //let interval = setInterval(()=>{
+            //printMoreProducts();
+        //}, 3000);
+    //}, 2000);
 
     //Livewire.emit("setProductsLoaded");
-    Alpine.store('cart', new Cart());
+    console.log("PRODUCTOS CARGADOS 4");
 });
 function sortByCategories(){
     const sortedProducts = [];

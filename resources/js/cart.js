@@ -28,15 +28,11 @@ class Cart{
     get content(){
         return this.content;
     }
-    /**
-     * Make units=false to remove all units
-     **/
-    remove(item, units = false){
+    remove(item){
         let done = false;
-        //Product position in products array
-        const posInProducts = Alpine.store('products').findIndex( prod => prod.id === item.id);
         //Product position in content array (it's -1 if it's not there)
-        const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        const posInCart = this.content.findIndex( prod => prod.pos === item.pos);
+
         if(posInCart !== -1){
             this.content.splice(posInCart, 1);
             this.save();
@@ -78,6 +74,7 @@ class Cart{
         this.content.forEach( item => {
             const prod = Alpine.store('products')[item.pos];
             total += prod.price * item.units;
+
         });
         return total;
     }

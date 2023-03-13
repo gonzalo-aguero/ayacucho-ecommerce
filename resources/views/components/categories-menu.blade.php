@@ -22,11 +22,6 @@
                             defaultImage(){
                                 return product.thumbnail !== null ? product.thumbnail :'{{asset('images/defaultImage.svg')}}';
                             },
-                            productPage(){
-                                let url ='producto/' + product.name;
-                                url = url.replace(/ /g, '-').toLowerCase();
-                                return url;
-                            },
                             {{-- Measurable per square meter--}}
                             squareMeter: (product.m2Price != null && product.m2ByUnit != null),
                             addToCart(){
@@ -39,11 +34,11 @@
                             }
                         }">
                         <div class="shrink-0 mb-2">
-                            <a :href="productPage">
+                            <a :href="$store.StaticProduct.productPage(product)">
                                 <img class="h-40 w-full" :src="defaultImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
-                        <h3 class="text-center text-sm font-medium mb-1"><a :href="productPage" x-text="product.name"></a></h3>
+                        <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
                         <div class="text-center font-light flex-col items-center">
                             <!-- Primary price -->
                             <span class="text-base" x-text="'$' + product.price"></span>

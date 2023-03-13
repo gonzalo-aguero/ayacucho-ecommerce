@@ -44,7 +44,7 @@ module.exports = {
                 '4xl': '2rem',
             },
             gridTemplateColumns: {
-                "cart-table": '1fr 6fr 4fr 4fr 6fr'
+                "cart-table": '1fr 6fr 4fr 3fr 5fr'
             }
         },
         container: {
