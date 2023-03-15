@@ -2,6 +2,7 @@
 import Cart from './cart';
 import { StaticProduct } from './product';
 import Notify from './Notification-Bar/notify';
+import {AxiosHeaders} from 'axios';
 "use strict";
 
 var GLOBAL = {

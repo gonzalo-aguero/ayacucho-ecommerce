@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelConversionController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -19,9 +20,9 @@ Route::get('/', function () {
     return view('home', ["DEBUG"=>env("APP_DEBUG")]);
 })->name('home');
 Route::get('/checkout', function () {
-    return "This is the Checkout page.";
+    return view('checkout', ["DEBUG"=>env("APP_DEBUG")]);
 })->name('checkout');
-
+Route::post('order/create', [OrderController::class, 'create'])->name('order-create');
 
 Route::get('/admin/excel-conversion', [ExcelConversionController::class, 'show']);
 Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'process'])->name('excel.convert');
