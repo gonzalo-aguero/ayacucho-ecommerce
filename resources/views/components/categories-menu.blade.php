@@ -12,7 +12,7 @@
                     {{-----------------------
                         Product card template
                     ---------------------------}}
-                    <div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0"
+                    <div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
                         x-data="{
                             units: 1,
                             get squareMeters() {
@@ -33,6 +33,11 @@
                                 }
                             }
                         }">
+                        {{--"NO STOCK" SIGN--}}
+                        <template x-if="product.units == 0">
+                            <div class="bg-red text-white text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
+                        </template>
+                        {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
                             <a :href="$store.StaticProduct.productPage(product)">
                                 <img class="h-40 w-full" :src="defaultImage" :alt="product.name" :title="product.description">

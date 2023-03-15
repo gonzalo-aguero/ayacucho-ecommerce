@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return view('welcome', ["DEBUG"=>env("APP_DEBUG")]);
+    return view('home', ["DEBUG"=>env("APP_DEBUG")]);
 })->name('home');
 Route::get('/checkout', function () {
     return "This is the Checkout page.";

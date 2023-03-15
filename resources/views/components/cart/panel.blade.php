@@ -7,9 +7,7 @@
         <span>Unidades</span>
         <span>Subtotal</span>
     </div>
-    <ul class="h-full w-full overflow-auto flex flex-col gap-4 " ax-init="$watch($store.cart, ()=>{
-
-        })">
+    <ul class="h-full w-full overflow-auto flex flex-col gap-4">
         <template x-if="$store.productsLength > 0 && $store.cart.content.length > 0">
             <template x-for="item in $store.cart.content">
                 <li x-data="{
@@ -20,16 +18,20 @@
                             return this.product.thumbnail !== null ? this.product.thumbnail :'{{ asset('images/defaultImage.svg') }}';
                         }
 
-                    }" x-init=" product = $store.products[item.pos]; units = item.units;"
+                    }"
+                    x-init="
+                        product = $store.products[item.pos];
+                        units = item.units;
+                        $watch('$store.cart.content', ()=>{
+                            product = $store.products[item.pos];
+                            units = item.units;
+                        });
+                    "
                     class="grid grid-cols-cart-table grid-flow-row gap-2 text-sm items-center p-2">
                     {{--REMOVE PRODUCT BUTTON--}}
                     <button class="hover:opacity-80" @click="
                         if($store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`)){
-                            if($store.cart.remove(item)){
-                                console.log('Eliminado');
-                            }else{
-                                console.log('No eliminado');
-                            }
+                            $store.cart.remove(item);
                         }
                     ">
                         <img src="{{ asset('images/UI-Icons/icons8-remove-48.png') }}" class="h-5 w-5"/>

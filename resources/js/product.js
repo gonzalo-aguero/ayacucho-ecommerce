@@ -60,5 +60,4 @@ class StaticProduct{
 
 
 }
-
 export { Product, StaticProduct };

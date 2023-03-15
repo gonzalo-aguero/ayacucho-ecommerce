@@ -20,7 +20,7 @@ document.addEventListener('alpine:init', async function(){
     Alpine.store('cart', new Cart());
     Alpine.store('StaticProduct', StaticProduct);
     Alpine.store('Notify', Notify);
-    Alpine.store('cartOpened', true);
+    Alpine.store('cartOpened', false);
 
     // *** HELPERS ***
     Alpine.store('priceFormat', priceFormat);
@@ -46,7 +46,6 @@ document.addEventListener('alpine:init', async function(){
     //}, 2000);
 
     //Livewire.emit("setProductsLoaded");
-    console.log("PRODUCTOS CARGADOS 4");
 });
 function sortByCategories(){
     const sortedProducts = [];
