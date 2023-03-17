@@ -5,5 +5,5 @@ deployment:
     - export LARAVEL_BACKEND_PATH=/home/c6743/
     - /bin/rsync -av ./ $LARAVEL_BACKEND_PATH
     - /bin/rsync -av public_html/ $PUBLIC_PATH
-    - php $LARAVEL_BACKEND_PATH"/artisan" up
-    - echo "exito" >> $LARAVEL_BACKEND_PATH"/salida.txt"
+    - /bin/php $LARAVEL_BACKEND_PATH/artisan up
+    - echo "exito" >> $LARAVEL_BACKEND_PATH/salida.txt
