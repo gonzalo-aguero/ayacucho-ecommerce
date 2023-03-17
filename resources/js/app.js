@@ -1,31 +1,37 @@
 //import './bootstrap';
-import Cart from './cart';
-import { StaticProduct } from './product';
+import Cart from './classes/Cart';
+import PaymentMethods from './classes/PaymentMethods';
+import { StaticProduct } from './classes/Product';
+import ShippingZones from './classes/ShippingZones';
 import Notify from './Notification-Bar/notify';
-import {AxiosHeaders} from 'axios';
+//import {AxiosHeaders} from 'axios';
 "use strict";
-
-var GLOBAL = {
-    products: [],
-    sortedProducts: [],
-    printedProductsMax: false,
-};
 
 if(DEBUG) console.log("Code working");
 
-document.addEventListener('alpine:init', async function(){
-    Alpine.store('products', []);
-    Alpine.store('productsLength', 0);
-    Alpine.store('sortedProducts', []);
-    Alpine.store('productsToPrint', []);
-    Alpine.store('cart', new Cart());
-    Alpine.store('StaticProduct', StaticProduct);
-    Alpine.store('Notify', Notify);
-    Alpine.store('cartOpened', false);
+// helper
+function store(key, value){
+    if(value === undefined){
+        return Alpine.store(key);
+    }else{
+        Alpine.store(key, value);
+    }
+}
 
+
+document.addEventListener('alpine:init', async function(){
+    store('products', []);
+    store('productsLength', 0);
+    store('sortedProducts', []);
+    store('productsToPrint', []);
+    store("printedProductsMax", false);
+    store('cart', new Cart());
+    store('StaticProduct', StaticProduct);
+    store('Notify', Notify);
+    store('cartOpened', false);
     // *** HELPERS ***
-    Alpine.store('priceFormat', priceFormat);
-    Alpine.store('Confirm', Confirm);
+    store('priceFormat', priceFormat);
+    store('Confirm', Confirm);
 
     await loadProducts();
     console.log("PRODUCTOS CARGADOS 2");
@@ -39,8 +45,19 @@ document.addEventListener('alpine:init', async function(){
         }
     };
 
-    console.log("PRODUCTOS CARGADOS 3");
-    //setTimeout(()=>{
+    const path = window.location.pathname;
+    switch(path){
+        case '/':
+            HOME();
+            break;
+        case '/checkout':
+            CHECKOUT();
+            break;
+    }
+
+
+
+           //setTimeout(()=>{
         //let interval = setInterval(()=>{
             //printMoreProducts();
         //}, 3000);
@@ -53,7 +70,7 @@ function sortByCategories(){
     let currCategory;
     let index;
     let category;
-    GLOBAL.products.forEach( product => {
+    store("products").forEach( product => {
         currCategory = product.category;
         // index of category
         index = sortedProducts.findIndex( el => el.category === currCategory);
@@ -69,7 +86,8 @@ function sortByCategories(){
         }
     });
 
-    Object.assign(GLOBAL.sortedProducts, sortedProducts);
+    //Object.assign(GLOBAL.sortedProducts, sortedProducts);
+    store("sortedProducts", sortedProducts);
 }
 /**
  * Copy from "ordered products" at most "max" products to "productsToPrint"
@@ -79,7 +97,7 @@ function printProducts(max){
     let currCategory;
 
     if(max !== false){
-        GLOBAL.sortedProducts.forEach( categoryItem => {
+        store("sortedProducts").forEach( categoryItem => {
             currCategory = {
                 category: categoryItem.category,
                 products: []
@@ -88,33 +106,35 @@ function printProducts(max){
             productsToPrint.push(currCategory);
         });
     }else{
-        Object.assign(productsToPrint, GLOBAL.sortedProducts);
+        //Object.assign(productsToPrint, GLOBAL.sortedProducts);
+        store("productsToPrint", store("sortedProducts"));// !
     }
 
-    //if(DEBUG) console.log("Products To Print:",productsToPrint);
-    Alpine.store('productsToPrint', productsToPrint);
+    if(DEBUG) console.log("Products To Print:",productsToPrint);
+    //store('productsToPrint', productsToPrint);
+    store("productsToPrint", store("sortedProducts"));// !
 }
 /**
  * Update the "GLOBAL.printedProductsMax" and reprint products
  **/
 function printMoreProducts(){
-    GLOBAL.printedProductsMax += 10;
-    printProducts(GLOBAL.printedProductsMax);
+    const prevValue = store('printedProductsMax');
+    store('printedProductsMax', prevValue + 10);
+    printProducts(store('printedProductsMax'));
 }
 async function loadProducts(){
     await fetch("json/Productos.json")
         .then(response => response.json())
         .then(data => {
-            GLOBAL.products = data;
-            Alpine.store('products', GLOBAL.products);
-            Alpine.store('productsLength', GLOBAL.products.length);
-            if(DEBUG) console.log("Productos sin ordenar:",GLOBAL.products);
+            store('products', data);
+            store('productsLength', data.length);
+            if(DEBUG) console.log("Productos sin ordenar:", store('products'));
 
             sortByCategories();
-            Alpine.store('sortedProducts', GLOBAL.sortedProducts);
-            if(DEBUG) console.log("Productos ordenados:", GLOBAL.sortedProducts);
+            store('sortedProducts', store("sortedProducts"));
+            if(DEBUG) console.log("Productos ordenados:", store("sortedProducts"));
 
-            printProducts(GLOBAL.printedProductsMax);
+            printProducts(store("printedProductsMax"));
             console.log("PRODUCTOS CARGADOS");
         });
 }
@@ -125,4 +145,26 @@ function priceFormat(value){
 }
 function Confirm(message){
     return confirm(message);
+}
+function HOME(){
+    console.log("THIS IS THE HOME PAGE.");
+}
+function CHECKOUT(){
+    console.log("THIS IS THE CHECKOUT PAGE.");
+
+    Alpine.data('paymentMethodSelect', () => ({
+        loaded: false
+    }));
+
+
+    store("paymentMethods", new PaymentMethods());
+    store("shippingZones", new ShippingZones());
+
+    (async ()=>{
+        await store("paymentMethods").load();
+        console.log(store("paymentMethods").methods);
+        await store("shippingZones").load();
+        console.log(store("shippingZones").zones);
+    })();
+
 }

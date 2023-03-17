@@ -26,3 +26,5 @@ Session.vim
 Base de Datos WEB.xlsx
 /public_html/json/Productos.json
 /public_html/json/Variaciones.json
+/public_html/json/ZonasDeEnvio.json
+/public_html/json/MetodosDePago.json

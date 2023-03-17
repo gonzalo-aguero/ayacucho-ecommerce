@@ -89,6 +89,6 @@
                 <span x-text="$store.priceFormat($store.cart.total())"></span>
             </div>
         </template>
-        <a href="#" class="bg-green text-white py-1 px-2 text-sm rounded hover:opacity-80">Ir a Finalizar Pedido</a>
+        <a href="{{ route("checkout") }}" class="bg-green text-white py-1 px-2 text-sm rounded hover:opacity-80">Ir a Finalizar Pedido</a>
     </div>
 </div>
