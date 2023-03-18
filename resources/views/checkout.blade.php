@@ -4,12 +4,9 @@
     "sectionTitleStyle" => "font-semibold text-md",
     "options1" => [
         0 => ["title"=>"Seleccionar", "value"=>null, "selected"=>true],
-        1 => ["title"=>"Seleccionar1", "value"=>null, "selected"=>false],
-        2 => ["title"=>"Seleccionar2", "value"=>null, "selected"=>false],
-        3 => ["title"=>"Seleccionar3", "value"=>null, "selected"=>false]
     ],
     "options2" => [
-        0 => ["title"=>"Seleccionar", "value"=>null,"selected"=>true],
+        0 => ["title"=>"Seleccionar", "value"=>null, "selected"=>true]
     ],
     "noteStyle" => "border border-gray-light2 bg-gray-light-transparent rounded p-2 w-full text-sm"
 ])
@@ -18,7 +15,7 @@
         <form
             method="POST"
             action="{{ route('order-create') }}"
-                class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-between w-4/5"
+                class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-center items-start w-4/5"
             >
             <h2 class="w-full text-center uppercase text-2xl font-semibold drop-shadow-2xl">Checkout</h2>
             @csrf
@@ -34,23 +31,27 @@
                 <x-form.input type="text" name="note" max="250">Nota del pedido</x-form.input>
             </div>
 
-            <div class="{{$sectionStyle}} border-none p-0 flex-col gap-6">
+            <div class="{{$sectionStyle}} border-none !p-0 flex-col gap-6">
                 {{--PAYMENT METHOD SECTION--}}
                 <div class="{{$sectionStyle}} h-min" x-data="paymentMethodSelect">
                     <h2 class="{{$sectionTitleStyle}}">MÉTODO DE PAGO</h2>
-                    <x-form.input type="select" name="paymentMethod" required requiredSign="0" :options="$options1" alpine_data="paymentMethodSelect"></x-form.input>
-                    <template x-if="$data.showNote">
-                        <p class="{{$noteStyle}}" x-text="$data.selected">Some optional text here...</p>
+                    <x-form.input type="select" name="paymentMethod" required
+                        requiredSign="0"
+                        :options="$options1"
+                        getSelectedFrom="$store.paymentMethods.methods"
+                        saveSelectedIn="$store.paymentMethodSelected"
+                        >
+                    </x-form.input>
+                    <template x-if="undefined !== $store.paymentMethodSelected">
+                        <p class="{{$noteStyle}}" x-text="$store.paymentMethodSelected.note"></p>
                     </template>
                     <script>
                         document.addEventListener('alpine:init', () => {
                             Alpine.data('paymentMethodSelect', ()=>({
-                                showDefaultOption: true,//show option "select"
+                                showDefaultOption: true,//set true to show the option "Select"
                                 defaultOptionText: "Seleccionar",
                                 showBladeOptions: false,
                                 options: [],
-                                showNote: true,
-                                selected: "null",
                                 init() {
                                     this.$watch('$store.paymentMethods', (val) => {
                                         this.options = val.methods;
@@ -62,10 +63,29 @@
                 </div>
 
                 {{--PAYMENT METHOD SECTION--}}
-                <div class="{{$sectionStyle}} h-min">
+                <div class="{{$sectionStyle}} h-min" x-data="shippingZoneSelect">
                     <h2 class="{{$sectionTitleStyle}}">ENTREGA</h2>
-                    <x-form.input type="select" name="paymentMethod" required requiredSign="0" :options="$options2"></x-form.input>
-                    <p class="{{$noteStyle}}">Some optional text here...</p>
+                    <x-form.input type="select" name="shippingZone" required
+                        requiredSign="0"
+                        :options="$options2"
+                        >
+                    </x-form.input>
+                    <script>
+                        document.addEventListener('alpine:init', () => {
+                            Alpine.data('shippingZoneSelect', ()=>({
+                                showDefaultOption: true,//set true to show the option "Select"
+                                defaultOptionText: "Seleccionar",
+                                showBladeOptions: false,
+                                options: [],
+                                init() {
+                                    this.$watch('$store.shippingZones', (val) => {
+                                        const texts = Alpine.store("shippingZones").selectorTexts();
+                                        this.options = texts;
+                                    });
+                                }
+                            }));
+                        });
+                    </script>
                 </div>
             </div>
 

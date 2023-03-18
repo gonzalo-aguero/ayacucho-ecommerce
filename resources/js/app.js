@@ -149,22 +149,20 @@ function Confirm(message){
 function HOME(){
     console.log("THIS IS THE HOME PAGE.");
 }
-function CHECKOUT(){
+async function CHECKOUT(){
     console.log("THIS IS THE CHECKOUT PAGE.");
 
-    Alpine.data('paymentMethodSelect', () => ({
-        loaded: false
-    }));
-
+    store("paymentMethodSelected", undefined);
+    store("shippingZoneSelected", undefined);
 
     store("paymentMethods", new PaymentMethods());
     store("shippingZones", new ShippingZones());
 
-    (async ()=>{
+    //(async ()=>{
         await store("paymentMethods").load();
         console.log(store("paymentMethods").methods);
         await store("shippingZones").load();
-        console.log(store("shippingZones").zones);
-    })();
+    console.log("ZONAS:",store("shippingZones").zones);
+    //})();
 
 }

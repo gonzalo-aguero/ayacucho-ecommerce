@@ -17,6 +17,15 @@ class ShippingZones{
                 this.zones = data;
             });
     }
+    selectorTexts(){
+        let texts = [];
+        for(let i = 0; i < this.zones.length; i++){
+            texts[i] = {
+                name: this.zones[i].name + ": $" + this.zones[i].cost
+            }
+        }
+        return texts;
+    }
 }
 
 export default ShippingZones;
