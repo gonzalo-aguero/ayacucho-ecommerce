@@ -17,7 +17,10 @@ class ShippingZones{
                 this.zones = data;
             });
     }
-    selectorTexts(){
+    /**
+     * Returns all the formated texts with the name and cost of each shipping zone.
+     **/
+    texts(){
         let texts = [];
         for(let i = 0; i < this.zones.length; i++){
             texts[i] = {
