@@ -14,8 +14,8 @@
         [
             'img' => asset('images/UI-Icons/icons8-checkout-48.png'),
             'text' => "Checkout",
-            'url' => "href=".route('checkout'),
-            'action' => '',
+            'url' => '',
+            'action' => '$store.gotoCheckout("'. route('checkout') .'")',
         ]
 
     ]

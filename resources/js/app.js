@@ -1,3 +1,4 @@
+"use strict";
 //import './bootstrap';
 import Cart from './classes/Cart';
 import PaymentMethods from './classes/PaymentMethods';
@@ -6,11 +7,13 @@ import ShippingZones from './classes/ShippingZones';
 import Notify from './Notification-Bar/notify';
 //import {AxiosHeaders} from 'axios';
 import Order from './classes/Order';
-"use strict";
 
 if(DEBUG) console.log("Code working");
 
-// helper
+/***************************
+ ********* HELPERS *********
+ ***************************/
+
 function store(key, value){
     if(value === undefined){
         return Alpine.store(key);
@@ -18,6 +21,21 @@ function store(key, value){
         Alpine.store(key, value);
     }
 }
+function priceFormat(value){
+    return '$' + new Intl.NumberFormat("de-DE").format(
+        value,
+    );
+}
+function Confirm(message){
+    return confirm(message);
+}
+function gotoCheckout(route){
+    console.log(store("cart").length());
+    if(store("cart").length() === 0){
+        store("Notify").Warning("Su carrito está vacío.", 1250);
+    }else location.href = route;
+}
+
 
 
 document.addEventListener('alpine:init', async function(){
@@ -33,6 +51,7 @@ document.addEventListener('alpine:init', async function(){
     // *** HELPERS ***
     store('priceFormat', priceFormat);
     store('Confirm', Confirm);
+    store("gotoCheckout", gotoCheckout);
 
     await loadProducts();
     console.log("PRODUCTOS CARGADOS 2");
@@ -87,7 +106,6 @@ function sortByCategories(){
         }
     });
 
-    //Object.assign(GLOBAL.sortedProducts, sortedProducts);
     store("sortedProducts", sortedProducts);
 }
 /**
@@ -107,12 +125,10 @@ function printProducts(max){
             productsToPrint.push(currCategory);
         });
     }else{
-        //Object.assign(productsToPrint, GLOBAL.sortedProducts);
         store("productsToPrint", store("sortedProducts"));// !
     }
 
     if(DEBUG) console.log("Products To Print:",productsToPrint);
-    //store('productsToPrint', productsToPrint);
     store("productsToPrint", store("sortedProducts"));// !
 }
 /**
@@ -138,14 +154,6 @@ async function loadProducts(){
             printProducts(store("printedProductsMax"));
             console.log("PRODUCTOS CARGADOS");
         });
-}
-function priceFormat(value){
-    return '$' + new Intl.NumberFormat("de-DE").format(
-        value,
-    );
-}
-function Confirm(message){
-    return confirm(message);
 }
 function HOME(){
     console.log("THIS IS THE HOME PAGE.");

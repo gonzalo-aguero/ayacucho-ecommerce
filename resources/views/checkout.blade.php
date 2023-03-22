@@ -36,7 +36,8 @@
                 {{--PAYMENT METHOD SECTION--}}
                 <div class="{{$sectionStyle}} h-min" x-data="paymentMethodSelect">
                     <h2 class="{{$sectionTitleStyle}}">MÉTODO DE PAGO</h2>
-                    <x-form.input type="select" name="paymentMethod" required
+                    <x-form.input type="select" name="paymentMethod"
+                        {{--required--}}
                         requiredSign="0"
                         :options="$options1"
                         getSelectedFrom="$store.paymentMethods.methods"
@@ -67,7 +68,8 @@
                 {{--SHIPPING ZONE SECTION--}}
                 <div class="{{$sectionStyle}} h-min" x-data="shippingZoneSelect">
                     <h2 class="{{$sectionTitleStyle}}">ENTREGA</h2>
-                    <x-form.input type="select" name="shippingZone" required
+                    <x-form.input type="select" name="shippingZone"
+                        {{--required--}}
                         requiredSign="0"
                         :options="$options2"
                         getSelectedFrom="$store.shippingZones.zones"
@@ -133,7 +135,13 @@
                     </ul>
                 </div>
             </template>
-            <input type="submit" value="Finalizar Compra" class="bg-green text-white py-2 px-8 rounded text-lg cursor-pointer w-full hover:opacity-80"/>
+            <template x-if="$store.cart.length() > 0">
+                <input type="submit" value="Finalizar Compra" class="bg-green text-white py-2 px-8 rounded text-lg cursor-pointer w-full hover:opacity-80">
+            </template>
+            <template x-if="$store.cart.length() == 0">
+                <input type="submit" value="Finalizar Compra" class="bg-gray text-white py-2 px-8 rounded text-lg cursor-default w-full opacity-80" disabled>
+            </template>
+
         </form>
     </div>
 </x-store-layout>
