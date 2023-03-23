@@ -1,3 +1,4 @@
+"use strict";
 //import './bootstrap';
 import Cart from './classes/Cart';
 import PaymentMethods from './classes/PaymentMethods';
@@ -5,11 +6,14 @@ import { StaticProduct } from './classes/Product';
 import ShippingZones from './classes/ShippingZones';
 import Notify from './Notification-Bar/notify';
 //import {AxiosHeaders} from 'axios';
-"use strict";
+import Order from './classes/Order';
 
 if(DEBUG) console.log("Code working");
 
-// helper
+/***************************
+ ********* HELPERS *********
+ ***************************/
+
 function store(key, value){
     if(value === undefined){
         return Alpine.store(key);
@@ -17,6 +21,21 @@ function store(key, value){
         Alpine.store(key, value);
     }
 }
+function priceFormat(value){
+    return '$' + new Intl.NumberFormat("de-DE").format(
+        value,
+    );
+}
+function Confirm(message){
+    return confirm(message);
+}
+function gotoCheckout(route){
+    console.log(store("cart").length());
+    if(store("cart").length() === 0){
+        store("Notify").Warning("Su carrito está vacío.", 1250);
+    }else location.href = route;
+}
+
 
 
 document.addEventListener('alpine:init', async function(){
@@ -32,6 +51,7 @@ document.addEventListener('alpine:init', async function(){
     // *** HELPERS ***
     store('priceFormat', priceFormat);
     store('Confirm', Confirm);
+    store("gotoCheckout", gotoCheckout);
 
     await loadProducts();
     console.log("PRODUCTOS CARGADOS 2");
@@ -86,7 +106,6 @@ function sortByCategories(){
         }
     });
 
-    //Object.assign(GLOBAL.sortedProducts, sortedProducts);
     store("sortedProducts", sortedProducts);
 }
 /**
@@ -106,12 +125,10 @@ function printProducts(max){
             productsToPrint.push(currCategory);
         });
     }else{
-        //Object.assign(productsToPrint, GLOBAL.sortedProducts);
         store("productsToPrint", store("sortedProducts"));// !
     }
 
     if(DEBUG) console.log("Products To Print:",productsToPrint);
-    //store('productsToPrint', productsToPrint);
     store("productsToPrint", store("sortedProducts"));// !
 }
 /**
@@ -138,33 +155,30 @@ async function loadProducts(){
             console.log("PRODUCTOS CARGADOS");
         });
 }
-function priceFormat(value){
-    return '$' + new Intl.NumberFormat("de-DE").format(
-        value,
-    );
-}
-function Confirm(message){
-    return confirm(message);
-}
 function HOME(){
     console.log("THIS IS THE HOME PAGE.");
 }
-function CHECKOUT(){
+async function CHECKOUT(){
     console.log("THIS IS THE CHECKOUT PAGE.");
 
-    Alpine.data('paymentMethodSelect', () => ({
-        loaded: false
-    }));
-
+    store("selectedPaymentMethod", undefined);
+    store("selectedShippingZone", undefined);
 
     store("paymentMethods", new PaymentMethods());
     store("shippingZones", new ShippingZones());
 
-    (async ()=>{
-        await store("paymentMethods").load();
-        console.log(store("paymentMethods").methods);
-        await store("shippingZones").load();
-        console.log(store("shippingZones").zones);
-    })();
+    await store("paymentMethods").load();
+    if(DEBUG) console.log("MÉTODOS DE PAGO: ",store("paymentMethods").methods);
+    await store("shippingZones").load();
+    if(DEBUG) console.log("ZONAS: ",store("shippingZones").zones);
 
+    store("order", new Order(store("cart")));
+
+    store("showSummary", ()=>{
+        return (
+            store("cart") !== undefined
+            && store("paymentMethods") !== undefined
+            && store("shippingZones") !== undefined
+        );
+    });
 }

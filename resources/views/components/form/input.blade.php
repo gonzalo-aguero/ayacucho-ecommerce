@@ -6,10 +6,11 @@
     "placeholder" => "",
     'required' => false,
     "requiredSign" => true,
-    'inputStyle' => "bg-gray-light-transparent border border-gray-light2 rounded px-2",
+    'inputStyle' => "bg-gray-light-transparent border border-gray-light2 rounded px-2 w-full",
     "is_valid" => "",
     "is_invalid"=> "border-red",
-    "alpine_data" => ""
+    "saveSelectedIn" => "const saveSelectedTo_".time(),
+    "getSelectedFrom" => "[]" //it's used to find the selected item data from its array.
 ])
 @aware([
     "options"=>[]
@@ -35,29 +36,30 @@
             "
             value="{{ old($name) }}">
     @elseif($type == "select")
-        <select
-            name="{{ $name }}"
-            placeholder="{{$placeholder}}"
-            {{ $required ? "required" : "" }}
-            class="
-                {{$inputStyle}}
-                @error($name) {{$is_invalid}} @else {{$is_valid}} @enderror
-            "
-            selected="{{ old($name) }}" x-data="{{$alpine_data}}" x-modelable="$data.selected">
+        <div x-data="{ selected: '' }">
+            <select
+                name="{{ $name }}"
+                {{ $required ? "required" : "" }}
+                class="{{$inputStyle}} @error($name) {{$is_invalid}} @else {{$is_valid}} @enderror"
+                selected="{{ old($name) }}"
+                x-model="selected" x-init="$watch('selected', (value)=>{
+                    //'value' corresponds to the index position of the selected method in the items data array.
+                    {{ $saveSelectedIn }} = {{ $getSelectedFrom }}[value];
+                });">
 
-            <template x-if="$data.showDefaultOption">
-                    <option value="" selected x-text="$data.defaultOptionText"></option>
-            </template>
-            <template x-for="option in $data.options">
-                <option :value="option.name" x-text="option.name"></option>
-            </template>
-            @foreach($options as $option)
-                <template x-if="$data.showBladeOptions">
-                    <option value="{{$option["value"]}}" {{ $option["selected"] ? "selected" : "" }}>{{$option["title"]}}</option>
+                <template x-if="$data.showDefaultOption">
+                        <option value="" selected x-text="$data.defaultOptionText"></option>
                 </template>
-            @endforeach
-        </select>
-        <span x-text="$data.selected"></span>
+                <template x-for="(option, index) in $data.options">
+                    <option :value="index" x-text="option.name"></option>
+                </template>
+                @foreach($options as $option)
+                    <template x-if="$data.showBladeOptions">
+                        <option value="{{$option["value"]}}" {{ $option["selected"] ? "selected" : "" }}>{{$option["title"]}}</option>
+                    </template>
+                @endforeach
+            </select>
+        </div>
     @endif
     @error($name)
         <div class="text-red text-xs my-1">{{ $message }}</div>

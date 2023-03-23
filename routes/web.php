@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return view('home', ["DEBUG"=>env("APP_DEBUG")]);
+    return view('home', ["DEBUG" => config("app.debug")]);
 })->name('home');
 Route::get('/checkout', function () {
-    return view('checkout', ["DEBUG"=>env("APP_DEBUG")]);
+    return view('checkout', ["DEBUG" => config("app.debug")]);
 })->name('checkout');
 Route::post('order/create', [OrderController::class, 'create'])->name('order-create');
 

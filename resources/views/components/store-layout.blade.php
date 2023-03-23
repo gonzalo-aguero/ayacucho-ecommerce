@@ -1,4 +1,7 @@
-@aware(['pageTitle' => config('app.name')])
+@aware([
+    'pageTitle' => config('app.name'),
+    "headTags" => []
+])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -7,6 +10,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ $pageTitle }}</title>
+
+        @foreach($headTags as $tag)
+            {{ $tag }}
+        @endforeach
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
