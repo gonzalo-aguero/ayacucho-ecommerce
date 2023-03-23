@@ -9,9 +9,12 @@
         0 => ["title"=>"Seleccionar", "value"=>null, "selected"=>true]
     ],
     "noteStyle" => "border border-gray-light2 bg-gray-light-transparent rounded p-2 w-full text-sm",
-    "orderSummaryItemsStyles" => "flex justify-between bg-white py-2 px-1"
+    "orderSummaryItemsStyles" => "flex justify-between bg-white py-2 px-1",
+    "headTags" => [
+        '<meta name="robots" content="noindex">'
+    ]
 ])
-<x-store-layout pageTitle="{{$pageTitle}}">
+<x-store-layout pageTitle="{{$pageTitle}}" :$headTags>
     <div class="relative flex flex-col items-center mt-40 mb-20 px-2 py-10 gap-8">
         <form
             method="POST"
@@ -28,7 +31,7 @@
                 <x-form.input type="email" name="email" min="5" max="75">Correo Electrónico</x-form.input>
                 <x-form.input type="telephone" name="telephone" required>Teléfono o Celular</x-form.input>
                 <x-form.input type="text" name="city" min="2" max="75" required>Localidad</x-form.input>
-                <x-form.input type="text" name="Street address" min="3" max="75" required>Dirección</x-form.input>
+                <x-form.input type="text" name="streetaddress" min="3" max="75" required>Dirección</x-form.input>
                 <x-form.input type="text" name="note" max="250">Nota del pedido</x-form.input>
             </div>
 
@@ -37,7 +40,7 @@
                 <div class="{{$sectionStyle}} h-min" x-data="paymentMethodSelect">
                     <h2 class="{{$sectionTitleStyle}}">MÉTODO DE PAGO</h2>
                     <x-form.input type="select" name="paymentMethod"
-                        {{--required--}}
+                        required
                         requiredSign="0"
                         :options="$options1"
                         getSelectedFrom="$store.paymentMethods.methods"
@@ -69,7 +72,7 @@
                 <div class="{{$sectionStyle}} h-min" x-data="shippingZoneSelect">
                     <h2 class="{{$sectionTitleStyle}}">ENTREGA</h2>
                     <x-form.input type="select" name="shippingZone"
-                        {{--required--}}
+                        required
                         requiredSign="0"
                         :options="$options2"
                         getSelectedFrom="$store.shippingZones.zones"
@@ -132,6 +135,11 @@
                         <li class="{{ $orderSummaryItemsStyles }}"><span>Costo de envío:</span><span x-text="shippingCost" class="text-right"></span></li>
                         <li class="{{ $orderSummaryItemsStyles }}"><span>Método de pago:</span><span x-text="paymentMethod" class="text-right"></span></li>
                         <li class="{{ $orderSummaryItemsStyles }} font-bold"><span>Total a pagar:</span><span x-text="orderTotal" class="text-right"></span></li>
+                        <input type="hidden" x-model="shippingZone" name="_shippingZone"/>
+                        <input type="hidden" x-model="paymentMethod" name="_paymentMethod"/>
+                        <input type="hidden" x-model="cartTotal" name="cartTotal"/>
+                        <input type="hidden" x-model="shippingCost" name="shippingCost"/>
+                        <input type="hidden" x-model="orderTotal" name="orderTotal"/>
                     </ul>
                 </div>
             </template>
