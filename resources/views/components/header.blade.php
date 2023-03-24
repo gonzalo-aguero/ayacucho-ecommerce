@@ -20,9 +20,14 @@
 
     ]
 ])
-<header class="fixed top-0 left-0 z-10 w-screen flex flex-nowrap justify-evenly items-center shadow-md bg-white" x-data="{
+<header class="fixed top-0 left-0 z-10 w-screen flex flex-nowrap justify-between md:justify-evenly px-5 md:px-0 items-center shadow-md bg-white" x-data="{
+        smartphone: window.screen.width < 768,
+        menuOpened: true || window.screen.width >= 768,
         toggleCart(){
             Alpine.store('cartOpened', !$store.cartOpened);
+        },
+        toggleMenu(){
+            this.menuOpened = !this.menuOpened;
         }
     }">
     {{--Logo and Title--}}
@@ -36,13 +41,22 @@
         </a>
     </div>
     <nav clas="text-orange h-full">
-        <ul class="text-orange flex flex-nowrap py-1 px-2 h-16">
+        <button @click="toggleMenu" x-show="smartphone" x-cloak class="active:opacity-80 text-center">
+            <img src="{{ asset('images/UI-Icons/icons8-menu-rounded-100.png') }}" class="h-12">
+        </button>
+        <ul class="fixed z-10 w-2/3 left-0 !top-0 top-[5.4rem] pt-[5.4rem] shadow-md h-full gap-0
+            md:relative flex flex-col md:flex-row md:flex-nowrap md:h-16 md:w-auto md:left-auto md:top-auto md:shadow-none
+            py-1 px-2  bg-white text-orange"
+            x-show="!smartphone || menuOpened"
+            x-cloak @click.outside="toggleMenu"
+        >
             @foreach($navItems as $item)
-                <li class="flex flex-nowrap items-center gap-1 font-base py-2 px-8 cursor-pointer hover:bg-gray-light" x-on:click="{{ $item["action"] }}">
+                <li class="flex flex-nowrap items-center gap-1 font-base py-10 md:py-2 px-8 cursor-pointer hover:bg-gray-light" x-on:click="{{ $item["action"] }}">
                     <a {{ $item["url"] }}><img src="{{ $item["img"] }}" class="h-6 w-6 shrink"/></a>
-                    <a {{ $item["url"] }} class="text-base">{{ $item["text"] }}</a>
+                    <a {{ $item["url"] }} class="text-lg md:text-base">{{ $item["text"] }}</a>
                 </li>
             @endforeach
         </ul>
+        <div class="fixed left-0 top-0 bg-black/60 w-screen h-screen" x-cloak x-show="menuOpened"></div>
     </nav>
 </header>

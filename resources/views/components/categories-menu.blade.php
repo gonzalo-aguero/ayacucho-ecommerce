@@ -2,9 +2,9 @@
         loadingProducts: ()=>{
             return $store.productsToPrint.length == 0;
         }
-    }" class="flex flex-col items-center justify-center w-5/6 bg-white rounded-md shadow-2xl">
+    }" class="flex flex-col items-center justify-center w-full sm:w-5/6 bg-white rounded-md shadow-2xl">
     <template x-for="category in $store.productsToPrint">
-        <div x-data="{ open: false }" class="block w-full shadow">
+        <div x-data="{ open: true }" class="block w-full shadow">
             <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-bold
                 hover:bg-gray-light rounded-md hover:underline decoration-orange-medium underline-offset-2" @click="open = !open"></h2>
             <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
@@ -20,7 +20,11 @@
                                 else return 0;
                             },
                             defaultImage(){
-                                return product.thumbnail !== null ? product.thumbnail :'{{asset('images/defaultImage.svg')}}';
+                                const image =
+                                    product.image !== null
+                                    ? '{{ asset('images/products') }}/' + product.id + '.' + product.image
+                                    : '{{ asset('images/defaultImage.svg') }}';
+                                return image;
                             },
                             {{-- Measurable per square meter--}}
                             squareMeter: (product.m2Price != null && product.m2ByUnit != null),

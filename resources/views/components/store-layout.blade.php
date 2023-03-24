@@ -38,7 +38,7 @@
 
         {{--Background image--}}
         <div id="background" class="fixed z-[-1] top-0 left-0 h-full w-full bg-black select-none object-cover">
-            <img src="{{ asset('images/background.jpeg') }}" class="absolute top-0 left-0 w-full blur-[3px] object-cover"/>
+            <img src="{{ asset('images/background.jpeg') }}" class="absolute top-0 left-0 blur-[3px] h-full w-auto lg:w-full object-cover"/>
             <div class="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         </div>
 
