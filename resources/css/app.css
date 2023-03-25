@@ -7,13 +7,17 @@
 }
 @media (min-width: 200px) {
     :root{
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 @media (min-width: 480px) {
     :root{
         font-size: 16px;
     }
+}
+
+.very_fast_animation{
+    --animate-duration: 200ms;
 }
 
 .dropdown {
@@ -34,7 +38,9 @@
   cursor: pointer;
 }
 .dropdown_menu-6 {
+  /*animation: growDown 200ms ease-in-out reverse;*/
   animation: growDown 200ms ease-in-out forwards;
+  animation-direction: alternate;
   transform-origin: top center;
 }
 .dropdown_menu {

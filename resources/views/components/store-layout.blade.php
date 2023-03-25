@@ -30,9 +30,20 @@
         {{--Header--}}
         <x-header></x-header>
 
+        {{--Cart black-transparent background--}}
+        <div class="fixed z-10 left-0 top-0 bg-black/30 w-screen h-screen animate__animated very_fast_animation"
+            x-cloak
+            x-show="$store.cartOpened"
+            x-transition:enter="animate__fadeIn"
+            x-transition:leave="animate__fadeOut"
+        ></div>
         {{--Cart Container--}}
-        <div x-cloak x-show="$store.cartOpened" class="fixed bg-white top-1/4 right-0 w-[800px] h-1/2 z-10 py-4 px-4 shadow-lg rounded-l-lg
-            animate__animated cart_container" x-transition:enter="animate__fadeInRightBig" x-transition:leave="animate__fadeOutRightBig">
+        <div x-cloak x-show="$store.cartOpened"
+            class="fixed bg-white top-1/4 right-0 w-[800px] h-1/2 z-10 py-4 px-4 shadow-lg rounded-l-lg animate__animated cart_container"
+            x-transition:enter="animate__fadeInRightBig"
+            x-transition:leave="animate__fadeOutRightBig"
+            @click.outside="$store.cartOpened = false"
+            >
             <x-cart.panel></x-cart.panel>
         </div>
 
