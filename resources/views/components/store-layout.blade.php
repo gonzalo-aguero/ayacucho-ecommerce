@@ -39,7 +39,7 @@
         ></div>
         {{--Cart Container--}}
         <div x-cloak x-show="$store.cartOpened"
-            class="fixed bg-white top-1/8 md-820:top-1/4 right-[2.5%] md-820:right-0 w-[95%] md-820:w-[800px] h-3/4 md-820:h-1/2 z-10 py-4 px-4 shadow-lg rounded-ls-lg animate__animated cart_container"
+            class="fixed bg-white top-1/8 md-820:top-1/4 right-[2.5%] md-820:right-0 w-[95%] md-820:w-[800px] h-3/4 md-820:h-1/2 z-10 py-4 px-4 shadow-lg rounded-lg md:rounded-r-none animate__animated cart_container"
             x-transition:enter="animate__fadeInRightBig"
             x-transition:leave="animate__fadeOutRightBig"
             @click.outside="$store.cartOpened = false"
