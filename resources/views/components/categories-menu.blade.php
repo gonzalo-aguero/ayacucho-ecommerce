@@ -2,17 +2,22 @@
         loadingProducts: ()=>{
             return $store.productsToPrint.length == 0;
         }
-    }" class="flex flex-col items-center justify-center w-5/6 bg-white rounded-md shadow-2xl">
+    }" class="flex flex-col items-center justify-center w-[95%] sm:w-5/6 bg-white rounded-md shadow-2xl">
     <template x-for="category in $store.productsToPrint">
         <div x-data="{ open: false }" class="block w-full shadow">
             <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-bold
                 hover:bg-gray-light rounded-md hover:underline decoration-orange-medium underline-offset-2" @click="open = !open"></h2>
-            <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
+            <div class="flex gap-2 justify-left w-full overflow-auto p-2 bg-gray-light very_fast_animation"
+                x-show="open"
+                :class="open ? 'dropdown_menu-6': ''"
+                {{--x-transition:enter="growDown"--}}
+                {{--x-transition:leave=""--}}
+                >
                 <template x-for="product in category.products">
                     {{-----------------------
                         Product card template
                     ---------------------------}}
-                    <div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
+                    <div class="relative z-[-1] bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
                         x-data="{
                             units: 1,
                             get squareMeters() {
@@ -20,7 +25,11 @@
                                 else return 0;
                             },
                             defaultImage(){
-                                return product.thumbnail !== null ? product.thumbnail :'{{asset('images/defaultImage.svg')}}';
+                                const image =
+                                    product.image !== null
+                                    ? '{{ asset('images/products') }}/' + product.id + '.' + product.image
+                                    : '{{ asset('images/defaultImage.svg') }}';
+                                return image;
                             },
                             {{-- Measurable per square meter--}}
                             squareMeter: (product.m2Price != null && product.m2ByUnit != null),

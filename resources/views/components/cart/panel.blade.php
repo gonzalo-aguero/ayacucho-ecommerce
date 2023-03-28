@@ -1,13 +1,13 @@
 <div class="w-full h-full flex flex-col">
     <h2 class="text-center font-bold text-lg uppercase text-orange mb-2">Tu carrito</h2>
-    <div class="grid grid-cols-cart-table grid-flow-row text-xs font-semibold bg-gray-light-transparent">
+    <div class="grid grid-cols-cart-table grid-flow-row overflow-x-auto text-xs font-semibold bg-gray-light-transparent">
         <span></span>
         <span>Producto</span>
         <span>Precio</span>
         <span>Unidades</span>
         <span>Subtotal</span>
     </div>
-    <ul class="h-full w-full overflow-auto flex flex-col gap-4">
+    <ul class="h-full md:w-full overflow-auto flex flex-col gap-4">
         <template x-if="$store.productsLength > 0 && $store.cart.content.length > 0">
             <template x-for="item in $store.cart.content">
                 <li x-data="{
@@ -27,9 +27,9 @@
                             units = item.units;
                         });
                     "
-                    class="grid grid-cols-cart-table grid-flow-row gap-2 text-sm items-center p-2">
+                    class="grid grid-cols-cart-table gap-2 text-sm items-center p-2">
                     {{--REMOVE PRODUCT BUTTON--}}
-                    <button class="hover:opacity-80" @click="
+                    <button class="w-5 hover:opacity-80" @click="
                         if($store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`)){
                             $store.cart.remove(item);
                         }
@@ -76,24 +76,24 @@
             </template>
         </template>
     </ul>
-    <div class="flex justify-between">
-        <button x-show="$store.cart.length() > 0" class="bg-red text-white py-1 px-2 text-sm rounded hover:opacity-80" @click="
+    <div class="flex justify-between flex-wrap md:flex-nowrap  md:items-stretch h-20 md:h-auto">
+        <button x-show="$store.cart.length() > 0" class="bg-red text-white py-1 px-2 text-sm rounded hover:opacity-80 w-[48%] md:w-auto" @click="
             if($store.Confirm('Se vaciará tu carrito.\n¿Estás seguro?')){
                 $store.cart.clear();
                 $store.cartOpened = false;
             }
         ">Vaciar Carrito</button>
-        <button x-show="$store.cart.length() === 0" disabled class="bg-gray text-white py-1 px-2 text-sm rounded opacity-80">Vaciar Carrito</button>
+        <button x-show="$store.cart.length() === 0" disabled class="bg-gray text-white py-1 px-2 text-sm rounded opacity-80 w-[48%] md:w-auto">Vaciar Carrito</button>
 
         <template x-if="$store.productsLength > 0">
-            <div>
+            <div class="text-center order-first md:order-none w-full md:w-auto">
                 <span class="font-semibold">TOTAL: </span>
                 <span x-text="$store.priceFormat($store.cart.total())"></span>
             </div>
         </template>
 
         {{--BOTON Finalizar pedido--}}
-        <button x-show="$store.cart.length() === 0" @click="$store.gotoCheckout('{{ route("checkout") }}')" class="bg-gray cursor-default text-white py-1 px-2 text-sm rounded opacity-80">Ir a Finalizar Pedido</button>
-        <button x-show="$store.cart.length() > 0" @click="$store.gotoCheckout('{{ route("checkout") }}')" class="bg-green text-white py-1 px-2 text-sm rounded hover:opacity-80">Ir a Finalizar Pedido</button>
+        <button x-show="$store.cart.length() === 0" @click="$store.gotoCheckout('{{ route("checkout") }}')" class="bg-gray cursor-default text-white py-1 px-2 text-sm rounded opacity-80 w-[48%] md:w-auto">Ir a Finalizar Pedido</button>
+        <button x-show="$store.cart.length() > 0" @click="$store.gotoCheckout('{{ route("checkout") }}')" class="bg-green text-white py-1 px-2 text-sm rounded hover:opacity-80 w-[48%] md:w-auto">Ir a Finalizar Pedido</button>
     </div>
 </div>

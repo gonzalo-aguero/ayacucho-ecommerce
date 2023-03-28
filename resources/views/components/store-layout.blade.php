@@ -30,15 +30,26 @@
         {{--Header--}}
         <x-header></x-header>
 
+        {{--Cart black-transparent background--}}
+        <div class="fixed z-10 left-0 top-0 bg-black/30 w-screen h-screen animate__animated very_fast_animation"
+            x-cloak
+            x-show="$store.cartOpened"
+            x-transition:enter="animate__fadeIn"
+            x-transition:leave="animate__fadeOut"
+        ></div>
         {{--Cart Container--}}
-        <div x-cloak x-show="$store.cartOpened" class="fixed bg-white top-1/4 right-0 w-[800px] h-1/2 z-10 py-4 px-4 shadow-lg rounded-l-lg
-            animate__animated cart_container" x-transition:enter="animate__fadeInRightBig" x-transition:leave="animate__fadeOutRightBig">
+        <div x-cloak x-show="$store.cartOpened"
+            class="fixed bg-white top-1/8 md-820:top-1/4 right-[2.5%] md-820:right-0 w-[95%] md-820:w-[800px] h-3/4 md-820:h-1/2 z-10 py-4 px-4 shadow-lg rounded-lg md:rounded-r-none animate__animated cart_container"
+            x-transition:enter="animate__fadeInRightBig"
+            x-transition:leave="animate__fadeOutRightBig"
+            @click.outside="$store.cartOpened = false"
+            >
             <x-cart.panel></x-cart.panel>
         </div>
 
         {{--Background image--}}
         <div id="background" class="fixed z-[-1] top-0 left-0 h-full w-full bg-black select-none object-cover">
-            <img src="{{ asset('images/background.jpeg') }}" class="absolute top-0 left-0 w-full blur-[3px] object-cover"/>
+            <img src="{{ asset('images/background.jpeg') }}" class="absolute top-0 left-0 blur-[3px] h-full w-auto lg:w-full object-cover"/>
             <div class="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         </div>
 

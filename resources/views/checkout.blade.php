@@ -1,6 +1,6 @@
 @props([
     'pageTitle' => "Checkout - " . config('app.name'),
-    "sectionStyle" => "flex flex-wrap items-start w-72 border border-gray-light2 rounded p-4 w-[30rem]",
+    "sectionStyle" => "flex flex-wrap items-start w-72 border border-gray-light2 rounded p-4 w-full md-600:w-[30rem]",
     "sectionTitleStyle" => "font-semibold text-md w-full",
     "options1" => [
         0 => ["title"=>"Seleccionar", "value"=>null, "selected"=>true],
@@ -19,7 +19,7 @@
         <form
             method="POST"
             action="{{ route('order-create') }}"
-                class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-center items-start w-4/5"
+                class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-center items-start w-[95%] md:w-4/5"
             >
             <h2 class="w-full text-center uppercase text-2xl font-semibold drop-shadow-2xl">Checkout</h2>
             @csrf
