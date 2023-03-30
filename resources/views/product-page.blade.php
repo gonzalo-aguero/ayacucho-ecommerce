@@ -1,0 +1,3 @@
+<div>
+    {{ $productID . " / " . $productName}}
+</div>

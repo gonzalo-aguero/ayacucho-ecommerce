@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelConversionController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -19,13 +20,19 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return view('home', ["DEBUG" => config("app.debug")]);
 })->name('home');
+
+Route::get('/{productName}/{productID}', [ProductController::class, 'show']);
+
 Route::get('/checkout', function () {
     return view('checkout', ["DEBUG" => config("app.debug")]);
 })->name('checkout');
+
 Route::post('order/create', [OrderController::class, 'create'])->name('order-create');
+
 
 Route::get('/admin/excel-conversion', [ExcelConversionController::class, 'show']);
 Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'process'])->name('excel.convert');
+
 
 Route::get('/site-set/{action}', function (string $action) {
     if($action == "down"){

@@ -39,7 +39,7 @@ class StaticProduct{
         else return 0;
     }
     static productPage(productData){
-        let url ='producto/' + productData.name + '/' + productData.id;
+        let url ='' + productData.name + '/' + productData.id;
         url = url.replace(/ /g, '-').toLowerCase();
         return url;
     }
