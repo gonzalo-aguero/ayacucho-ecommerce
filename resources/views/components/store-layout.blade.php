@@ -1,6 +1,7 @@
 @aware([
     'pageTitle' => config('app.name'),
-    "headTags" => []
+    "headTags" => [],
+    "isProductPage" => false
 ])
 
 <!DOCTYPE html>
@@ -21,6 +22,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script>
             const DEBUG = {{ config('app.debug') ? "true" : "false" }};
+            const IS_PRODUCT_PAGE = {{ $isProductPage ? "true" : "false" }};
         </script>
         @vite(['resources/css/app.css', 'resources/css/Notification-Bar.css', 'resources/js/app.js'])
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

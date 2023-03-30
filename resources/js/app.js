@@ -66,14 +66,9 @@ document.addEventListener('alpine:init', async function(){
     };
 
     const path = window.location.pathname;
-    switch(path){
-        case '/':
-            HOME();
-            break;
-        case '/checkout':
-            CHECKOUT();
-            break;
-    }
+    if(path === "/") HOME();
+    else if(path === "/checkout") CHECKOUT();
+    else if(IS_PRODUCT_PAGE) PRODUCT_PAGE();
 
 
 
@@ -140,7 +135,7 @@ function printMoreProducts(){
     printProducts(store('printedProductsMax'));
 }
 async function loadProducts(){
-    await fetch("json/Productos.json")
+    await fetch(location.origin + "/json/Productos.json")
         .then(response => response.json())
         .then(data => {
             store('products', data);
@@ -181,4 +176,7 @@ async function CHECKOUT(){
             && store("shippingZones") !== undefined
         );
     });
+}
+function PRODUCT_PAGE(){
+    console.log("This is the Product Page!");
 }
