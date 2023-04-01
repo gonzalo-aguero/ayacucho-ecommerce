@@ -53,13 +53,16 @@
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
-                        <div class="text-center font-light flex-col items-center">
+
+                        {{--PRICE SECTION--}}
+                        <div class="text-center font-light">
                             <!-- Primary price -->
                             <span class="text-base" x-text="'$' + product.price"></span>
                             <!-- Secondary price -->
                             <span class="text-xs" x-text="'$' + product.m2Price + '/m²'" x-show="squareMeter"></span>
                         </div>
-                        <!-- Add to cart functionalities -->
+
+                        {{--ADD TO CART SECTION--}}
                         <div class="flex flex-col w-full items-center pt-2 pb-3">
                             <div class="flex w-full justify-center items-center gap-1">
                                 <input type="number" min="1" x-model="units" :disabled="product.units == 0"

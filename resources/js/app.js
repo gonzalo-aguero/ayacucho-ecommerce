@@ -36,8 +36,6 @@ function gotoCheckout(route){
     }else location.href = route;
 }
 
-
-
 document.addEventListener('alpine:init', async function(){
     store('products', []);
     store('productsLength', 0);

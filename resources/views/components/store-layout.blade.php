@@ -1,7 +1,8 @@
 @aware([
     'pageTitle' => config('app.name'),
     "headTags" => [],
-    "isProductPage" => false
+    "isProductPage" => false,
+    "javascriptData" => []
 ])
 
 <!DOCTYPE html>
@@ -23,6 +24,10 @@
         <script>
             const DEBUG = {{ config('app.debug') ? "true" : "false" }};
             const IS_PRODUCT_PAGE = {{ $isProductPage ? "true" : "false" }};
+            @foreach ($javascriptData as $data)
+                const {{ $data["key"] }} = {{  Js::from($data["value"]) }};
+            @endforeach
+            //asd
         </script>
         @vite(['resources/css/app.css', 'resources/css/Notification-Bar.css', 'resources/js/app.js'])
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
