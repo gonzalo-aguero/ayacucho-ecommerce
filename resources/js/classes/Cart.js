@@ -8,10 +8,10 @@ class Cart{
     /**
      * Saves the position of the product passed as parameter in the products global array.
      **/
-    add(item, units = 1){
+    add(productData, units = 1){
         units = parseInt(units);
         //Product position in products array
-        const posInProducts = Alpine.store('products').findIndex( prod => prod.id === item.id);
+        const posInProducts = Alpine.store('products').findIndex( prod => prod.id === productData.id);
         //Product position in content array (it's -1 if it's not there)
         const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
         if(posInCart !== -1){
@@ -52,7 +52,7 @@ class Cart{
         const secondsInADay = (60*60*24);
         const days = 21*secondsInADay;
         const expirationDate = new Date(new Date().getTime() + days*1000).toUTCString();
-        document.cookie = `cart=${JSON.stringify(this.content)}; expires=date-in-GMTString-format=${expirationDate};`;
+        document.cookie = `cart=${JSON.stringify(this.content)}; expires=date-in-GMTString-format=${expirationDate}; path=/`;
     }
     load(){
         // Cookie format: cookie1=value; cookie2=value
