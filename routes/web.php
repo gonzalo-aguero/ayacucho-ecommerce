@@ -21,7 +21,6 @@ Route::get('/', function () {
     return view('home', ["DEBUG" => config("app.debug")]);
 })->name('home');
 
-Route::get('/{productName}/{productID}', [ProductController::class, 'show']);
 
 Route::get('/checkout', function () {
     return view('checkout', ["DEBUG" => config("app.debug")]);
@@ -43,3 +42,6 @@ Route::get('/site-set/{action}', function (string $action) {
 
     return $exitCode;
 });
+
+
+Route::get('/{productName}/{productID}', [ProductController::class, 'show']);

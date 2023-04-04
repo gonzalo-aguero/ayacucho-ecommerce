@@ -214,4 +214,10 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+
+    /**
+     * OTHER APP CONFIGURATIONS
+     **/
+    'excel_name' => env('APP_EXCEL_NAME', 'Base de Datos.xlsx'),
+
 ];

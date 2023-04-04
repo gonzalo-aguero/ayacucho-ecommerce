@@ -14,7 +14,7 @@ async function convert(e){
     };
 
     await fetch(url, init)
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
             console.log(data);
             Alpine.store('conversion', data.conversion);
