@@ -1,6 +1,6 @@
 <div class="w-full h-full flex flex-col">
     <h2 class="text-center font-bold text-lg uppercase text-orange mb-2">Tu carrito</h2>
-    <div class="grid grid-cols-cart-table grid-flow-row overflow-x-auto text-xs font-semibold bg-gray-light-transparent">
+    <div class="grid grid-cols-cart-table grid-flow-row text-xs font-semibold bg-gray-light-transparent">
         <span></span>
         <span>Producto</span>
         <span>Precio</span>

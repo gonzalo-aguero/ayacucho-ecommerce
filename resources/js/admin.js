@@ -16,13 +16,14 @@ async function convert(e){
     await fetch(url, init)
         .then(response => response.text())
         .then(data => {
+            const jsonData = JSON.parse(data);
             console.log(data);
-            Alpine.store('conversion', data.conversion);
+            Alpine.store('conversion', jsonData.conversion);
         });
 }
 
 document.addEventListener('alpine:init', () => {
     Alpine.store('convert', convert);
     Alpine.store('tried', false);
-    Alpine.store('conversion', false);
+    Alpine.store('conversion', "");
 });

@@ -5,12 +5,12 @@
     "src": "resources/css/Notification-Bar.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-cff86798.css",
+    "file": "assets/app-908ec8b0.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-5ff7a3d9.js",
+    "file": "assets/admin-0075365f.js",
     "isEntry": true,
     "src": "resources/js/admin.js"
   },

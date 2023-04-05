@@ -34,8 +34,8 @@
                 @csrf
                 <button id="button" x-text="loading ? 'Procesando...' : 'Iniciar Conversión'" @click="process" class="bg-green text-white p-2.5 rounded mt-5 active:opacity-80"></button>
                 <div x-show="$store.tried" class="my-2 text-sm font-bold">
-                    <p x-show="$store.conversion === true" class="text-[#35c735]" x-cloak>Los archivos se han convertido correctamente.</p>
-                    <p x-show="$store.conversion !== true" class="text-[#ed4242]" x-cloak>Ha ocurrido un error al intentar convertir los archivos.</p>
+                    <p x-show="$store.conversion !== '' && $store.conversion" class="text-[#35c735]" x-cloak>Los archivos se han convertido correctamente.</p>
+                    <p x-show="$store.conversion !== '' && !$store.conversion" class="text-[#ed4242]" x-cloak>Ha ocurrido un error al intentar convertir los archivos.</p>
                 </div>
             </form>
             <div id="iframes-container" class="flex flex-wrap gap-2 justify-center">
