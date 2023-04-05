@@ -12,7 +12,7 @@ class Product{
         else return 0;
     }
     productPage(){
-        let url ='producto/' + this.data.name;
+        let url = location.origin + '/' + this.data.name + '/' + this.data.id;
         url = url.replace(/ /g, '-').toLowerCase();
         return url;
     }
@@ -22,12 +22,14 @@ class Product{
     }
     addToCart({units}){
         console.log("Controlar que se envíen las unidades por referencia.");
-        if(Alpine.store('cart').add(this.data, units)){
-            Alpine.store('Notify').Success('Agregado al carrito', 1500);
-            units = 1;
-        }else{
-            Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
-        }
+        if(units > 0){
+            if(Alpine.store('cart').add(this.data, units)){
+                Alpine.store('Notify').Success('Agregado al carrito', 1500);
+                units = 1;
+            }else{
+                Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
+            }
+        }else Alpine.store('Notify').Warning('Debe agregar una cantidad mayor a cero', 1500);
     }
 }
 class StaticProduct{
@@ -39,7 +41,7 @@ class StaticProduct{
         else return 0;
     }
     static productPage(productData){
-        let url ='producto/' + productData.name + '/' + productData.id;
+        let url = location.origin + '/' + productData.name + '/' + productData.id;
         url = url.replace(/ /g, '-').toLowerCase();
         return url;
     }
@@ -49,15 +51,17 @@ class StaticProduct{
     static measurableInM2(productData){
         return productData.m2Price != null && productData.m2ByUnit != null;
     }
-    static addToCart({units}, productData){
-        if(Alpine.store('cart').add(productData, units)){
-            Alpine.store('Notify').Success('Agregado al carrito', 1500);
-            units = 1;
-        }else{
-            Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
-        }
+    /**
+     * units se pasa como objecto para que se pase como referencia y poder actualizar su valor desde el origen.
+     **/
+    static addToCart(units, productData){
+        if(units > 0){
+            if(Alpine.store('cart').add(productData, units)){
+                Alpine.store('Notify').Success('Agregado al carrito', 1500);
+            }else{
+                Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
+            }
+        }else Alpine.store('Notify').Warning('Debe agregar al menos una unidad', 1500);
     }
-
-
 }
 export { Product, StaticProduct };

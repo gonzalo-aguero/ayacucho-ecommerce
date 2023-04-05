@@ -53,16 +53,20 @@
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
-                        <div class="text-center font-light flex-col items-center">
+
+                        {{--PRICE SECTION--}}
+                        <div class="text-center font-light">
                             <!-- Primary price -->
                             <span class="text-base" x-text="'$' + product.price"></span>
                             <!-- Secondary price -->
                             <span class="text-xs" x-text="'$' + product.m2Price + '/m²'" x-show="squareMeter"></span>
                         </div>
-                        <!-- Add to cart functionalities -->
+
+                        {{--ADD TO CART SECTION--}}
                         <div class="flex flex-col w-full items-center pt-2 pb-3">
                             <div class="flex w-full justify-center items-center gap-1">
-                                <input type="number" min="1" x-model="units" class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
+                                <input type="number" min="1" x-model="units" :disabled="product.units == 0"
+                                    class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
                                 <span class="text-xs font-light">Unidades</span>
                             </div>
                             <div class="text-xs font-normal" x-show="squareMeter">
@@ -70,9 +74,13 @@
                                 <span x-text="squareMeters"></span>
                                 <span>m²</span>
                             </div>
-                            <button class="bg-orange-light text-white text-sm p-1 mt-2 rounded active:opacity-80 hover:opacity-80
-                                active:scale-95	"
-                                x-on:click="addToCart">Añadir al carrito</button>
+                            <button class="text-white text-sm p-1 mt-2 rounded "
+                                :class=" product.units == 0
+                                    ? 'bg-gray opacity-80'
+                                    : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
+                                x-on:click="addToCart"
+                                :disabled="product.units == 0"
+                                >Añadir al carrito</button>
                         </div>
                     </div>
                     {{---------------------------

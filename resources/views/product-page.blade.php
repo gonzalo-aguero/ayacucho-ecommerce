@@ -1,0 +1,99 @@
+@props([
+    'pageTitle' => $product->name. " - " . config('app.name'),
+    "javascriptData" => [
+        ["key" => "product", "value" => $product]
+    ],
+    {{--Measurable per square meter--}}
+    "squareMeter" => $product->m2Price != null && $product->m2ByUnit != null,
+    "hasAttributes" => ($product->m2Price != null && $product->m2ByUnit != null)
+])
+<x-store-layout pageTitle="{{$pageTitle}}" isProductPage="true" :$javascriptData>
+    <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{ units: 1 }">
+        {{--MAIN INFO SECTION--}}
+        <div>
+            <div class="relative">
+                {{--"NO STOCK" SIGN--}}
+                @if($product->units == 0)
+                    <div class="bg-red text-white text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
+                @endif
+
+                <img
+                    src="{{
+                        $product->image != null && $product->image != ""
+                        ? asset('images/products/'. $product->id . "." . $product->image)
+                        : asset('images/defaultImage.svg');
+                    }}"
+                    class="w-80 h-auto object-cover"
+                    alt="{{ $product->name }}" title="{{ $product->description }}"
+                >
+            </div>
+            <h1 class="text-2xl font-semibold my-2">{{ $product->name }}</h1>
+
+            {{--PRICE SECTION--}}
+            <div class="text-center font-light">
+                <!-- Primary price -->
+                <span class="text-2xl" x-text="$store.priceFormat(product.price)">{{ $product->price }}</span>
+                <!-- Secondary price -->
+                @if($squareMeter)
+                    <span class="text-base" x-text="$store.priceFormat(product.m2Price) + '/m²'">{{ $product->m2Price }}</span>
+                @endif
+            </div>
+
+            {{--ADD TO CART SECTION--}}
+            <div class="flex flex-col m-w-80 pt-2 pb-3">
+                <div class="flex w-full justify-center items-center gap-1">
+                    <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model="units" :disabled="product.units == 0"
+                        class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
+                    <span class="text-base font-light">Unidades</span>
+                    @if($product->showUnits)
+                       <span class="text-base font-light">({{$product->units}} disponibles)</span>
+                    @endif
+                </div>
+                @if($squareMeter)
+                    <div class="text-base font-normal text-center">
+                        <span class="text-lg">=</span>
+                        <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
+                        <span>m²</span>
+                        @if($product->showUnits)
+                            <span class="text-base font-light">({{number_format($product->units * $product->m2ByUnit, 2, ',', '.')}}m² disponibles)</span>
+                        @endif
+                    </div>
+                @endif
+                <button class="text-white text-xl p-2 mt-2 rounded"
+                    :class=" product.units == 0
+                        ? 'bg-gray opacity-80'
+                        : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
+                        x-on:click="$store.StaticProduct.addToCart(units, product)"
+                    :disabled="product.units == 0"
+                    >Añadir al carrito</button>
+            </div>
+        </div>
+
+        {{--More info section--}}
+        <div class="border border-gray-light2 bg-gray-light-transparent rounded-md px-4 py-6">
+            <div class="mb-4">
+                <h2 class="text-lg font-medium uppercase">Descripción</h2>
+                <p>{{ $product->description }}</p>
+            </div>
+            <div class="mb-4">
+                <h2 class="text-lg font-medium uppercase">Categoría</h2>
+                <p>{{ $product->category }}</p>
+            </div>
+            @if($hasAttributes)
+                <div class="mb-4">
+                    <h2 class="text-lg font-medium uppercase mt-2">Características</h2>
+                    @if($squareMeter)
+                        <div class="text-base">
+                            <h3 class="inline-block">Metros cuadrados por unidad: </h3>
+                            <span>{{ number_format($product->m2ByUnit, 2, ',', '.') }}</span>
+                        </div>
+                        <div class="text-base">
+                            <h3 class="inline-block">Precio por metro cuadrado: </h3>
+                            <span>${{ number_format($product->m2Price, 2, ',', '.') }}</span>
+                        </div>
+                    @endif
+                </div>
+            @endif
+        </div>
+    </div>
+</x-store-layout>

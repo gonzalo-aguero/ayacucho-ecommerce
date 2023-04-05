@@ -1,6 +1,6 @@
 "use strict";
 class ShippingZones{
-    static api = "./json/ZonasDeEnvio.json";
+    static api = location.origin + "/json/ZonasDeEnvio.json";
     constructor(zones = []){
         this.zones = zones;
     }

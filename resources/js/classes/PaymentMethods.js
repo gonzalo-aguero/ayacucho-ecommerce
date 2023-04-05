@@ -1,6 +1,6 @@
 "use strict";
 class PaymentMethods{
-    static api = "./json/MetodosDePago.json";
+    static api = location.origin + "/json/MetodosDePago.json";
     constructor(methods = []){
         this.methods = methods;
     }
