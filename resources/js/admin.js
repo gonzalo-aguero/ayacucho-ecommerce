@@ -16,9 +16,14 @@ async function convert(e){
     await fetch(url, init)
         .then(response => response.text())
         .then(data => {
-            const jsonData = JSON.parse(data);
-            console.log(data);
-            Alpine.store('conversion', jsonData.conversion);
+            let jsonData;
+            try{
+                jsonData= JSON.parse(data);
+                Alpine.store('conversion', jsonData.conversion);
+            }catch(err){
+                console.error(err);
+                console.log(data);
+            };
         });
 }
 
@@ -26,4 +31,9 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('convert', convert);
     Alpine.store('tried', false);
     Alpine.store('conversion', "");
+    Alpine.store("reloadIframes", reloadIframes);
 });
+
+function reloadIframes(){
+    setTimeout(()=> location.reload(), 1500);
+}

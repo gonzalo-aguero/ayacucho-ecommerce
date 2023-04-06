@@ -14,10 +14,13 @@
                         units: 1,
                         product: 0,
                         variation: '',
-                        defaultImage(){
-                            return this.product.thumbnail !== null ? this.product.thumbnail :'{{ asset('images/defaultImage.svg') }}';
+                        productImage(){
+                            const image =
+                                this.product.image !== null
+                                ? '{{ asset('images/products') }}/' + this.product.id + '.' + this.product.image
+                                : '{{ asset('images/defaultImage.svg') }}';
+                            return image;
                         }
-
                     }"
                     x-init="
                         product = $store.products[item.pos];
@@ -38,7 +41,7 @@
                     </button>
                     {{--PRODUCT IMAGE AND NAME--}}
                     <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2">
-                        <img :src="defaultImage" class="h-6 w-6"/>
+                        <img :src="productImage" class="h-6 w-6"/>
                         <span x-text="product.name + variation" class="truncate text-xs break-words" :title="product.name"></span>
                     </a>
                     {{--PRODUCT PRICES--}}

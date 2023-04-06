@@ -55,13 +55,17 @@ class StaticProduct{
      * units se pasa como objecto para que se pase como referencia y poder actualizar su valor desde el origen.
      **/
     static addToCart(units, productData){
+        let success = false;
         if(units > 0){
             if(Alpine.store('cart').add(productData, units)){
                 Alpine.store('Notify').Success('Agregado al carrito', 1500);
+                success = true;
             }else{
                 Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
             }
         }else Alpine.store('Notify').Warning('Debe agregar al menos una unidad', 1500);
+
+        return success;
     }
 }
 export { Product, StaticProduct };

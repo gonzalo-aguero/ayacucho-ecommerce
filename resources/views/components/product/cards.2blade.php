@@ -3,13 +3,7 @@
         <h2 x-text="category.category"></h2>
         <template x-for="product in category.products">
             <div class="bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0"
-                x-data="{
-                    units: 1,
-                    get squareMeters() {
-                        if(this.units >= 0) return (this.units * 2.64).toPrecision(3);
-                        else return 0;
-                    }
-                }">
+                x-data="{ units: 1 }">
                 <div class="shrink-0 mb-2">
                     <img class="h-40 w-full" src="{{ asset('images/defaultImage.svg') }}" alt="Product Thumbnail">
                 </div>
