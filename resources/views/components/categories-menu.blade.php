@@ -20,26 +20,16 @@
                     <div class="relative z-[-1] bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
                         x-data="{
                             units: 1,
-                            get squareMeters() {
-                                if(this.units >= 0) return (this.units * product.m2ByUnit).toPrecision(3);
-                                else return 0;
-                            },
-                            defaultImage(){
+                            productImage(){
                                 const image =
                                     product.image !== null
                                     ? '{{ asset('images/products') }}/' + product.id + '.' + product.image
                                     : '{{ asset('images/defaultImage.svg') }}';
                                 return image;
                             },
-                            {{-- Measurable per square meter--}}
-                            squareMeter: (product.m2Price != null && product.m2ByUnit != null),
                             addToCart(){
-                                if($store.cart.add(product, this.units)){
-                                    $store.Notify.Success('Agregado al carrito', 1500);
+                                if($store.StaticProduct.addToCart(this.units, product))
                                     this.units = 1;
-                                }else{
-                                    $store.Notify.Error('Ha ocurrido un error al agregar al carrito', 2000);
-                                }
                             }
                         }">
                         {{--"NO STOCK" SIGN--}}
@@ -49,7 +39,7 @@
                         {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
                             <a :href="$store.StaticProduct.productPage(product)">
-                                <img class="h-40 w-full" :src="defaultImage" :alt="product.name" :title="product.description">
+                                <img class="h-40 w-full" :src="productImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
@@ -59,7 +49,7 @@
                             <!-- Primary price -->
                             <span class="text-base" x-text="'$' + product.price"></span>
                             <!-- Secondary price -->
-                            <span class="text-xs" x-text="'$' + product.m2Price + '/m²'" x-show="squareMeter"></span>
+                            <span class="text-xs" x-text="'$' + product.m2Price + '/m²'" x-show="$store.StaticProduct.measurableInM2(product)"></span>
                         </div>
 
                         {{--ADD TO CART SECTION--}}
@@ -69,9 +59,9 @@
                                     class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
                                 <span class="text-xs font-light">Unidades</span>
                             </div>
-                            <div class="text-xs font-normal" x-show="squareMeter">
+                            <div class="text-xs font-normal" x-show="$store.StaticProduct.measurableInM2(product)">
                                 <span class="text-sm">=</span>
-                                <span x-text="squareMeters"></span>
+                                <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
                                 <span>m²</span>
                             </div>
                             <button class="text-white text-sm p-1 mt-2 rounded "

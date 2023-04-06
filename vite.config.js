@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import obfuscator from 'rollup-plugin-obfuscator';
 import laravel from 'laravel-vite-plugin';
 
 
@@ -10,4 +11,28 @@ export default defineConfig({
             publicDirectory: 'public_html'
         }),
     ],
+    //build: {
+        //rollupOptions: {
+            //output: {
+                //plugins: [ // <-- use plugins inside output to not merge chunks on one file
+                    //obfuscator({
+                        //fileOptions: {
+                            //// options
+                        //})
+                //]
+            //}
+        //},
+        //minify: 'terser',
+        //target: 'es2019',
+        //terserOptions: {
+            //compress: {
+                //defaults: false,
+            //}
+        //}
+    //}
 });
+
+const obfuscator_options = {
+    compact: true,
+    debugProtection: false,
+};

@@ -22,11 +22,8 @@
                     this.loading = false;
                     document.body.classList.remove('cursor-progress');
                     document.getElementById('button').classList.remove('cursor-progress', 'animate-pulse');
-                    this.reloadIframe();
+                    $store.reloadIframes();
                 },
-                reloadIframe(){
-                    document.getElementById('iframe').src = document.getElementById('iframe').src;
-                }
             }">
             <h2 class="text-2xl font-bold">Software de conversión de Excel a JSON</h2>
             <p>Una vez que haya subido el archivo <strong>.xlsx</strong> a la carpeta especificada por el desarrollador, presione en "Iniciar Conversión".</p>
@@ -41,19 +38,19 @@
             <div id="iframes-container" class="flex flex-wrap gap-2 justify-center">
                 <div>
                     <h2>Productos</h2>
-                    <iframe id="iframe" src="../json/Productos.json"></iframe>
+                    <iframe class="json_iframe" src="../json/Productos.json"></iframe>
                 </div>
                 <div>
                     <h2>Variaciones</h2>
-                    <iframe id="iframe" src="../json/Variaciones.json"></iframe>
+                    <iframe class="json_iframe" src="../json/Variaciones.json"></iframe>
                 </div>
                 <div>
                     <h2>Zonas de envío</h2>
-                    <iframe id="iframe" src="../json/ZonasDeEnvio.json"></iframe>
+                    <iframe class="json_iframe" src="../json/ZonasDeEnvio.json"></iframe>
                 </div>
                 <div>
                     <h2>Métodos de pago</h2>
-                    <iframe id="iframe" src="../json/MetodosDePago.json"></iframe>
+                    <iframe class="json_iframe" src="../json/MetodosDePago.json"></iframe>
                 </div>
             </div>
         </div>

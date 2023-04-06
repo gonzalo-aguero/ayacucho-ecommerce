@@ -8,9 +8,14 @@
     "devDependencies": {
         "autoprefixer": "^10.4.13",
         "axios": "^1.1.2",
+        "javascript-obfuscator": "^4.0.2",
         "laravel-vite-plugin": "^0.7.2",
         "postcss": "^8.4.21",
+        "rollup-plugin-obfuscator": "^1.0.2",
         "tailwindcss": "^3.2.7",
-        "vite": "^4.0.0"
+        "terser": "^5.16.8",
+        "vite": "^4.0.0",
+        "vite-plugin-minify": "^1.5.2",
+        "vite-plugin-obfuscator": "^1.0.5"
     }
 }
