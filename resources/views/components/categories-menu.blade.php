@@ -81,17 +81,17 @@
         </div>
      </template>
     @for ($i = 0; $i < 6; $i++)
-    <template x-if="loadingProducts">
-        <div x-data="{ open: false }" class="block w-full bg-white rounded shadow-lg">
-            <h2 class="h-[52px] flex justify-center items-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
-                <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
-            </h2>
-            <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
-                @for($j = 0; $j < 10; $j++)
-                <x-product.loading-product-card></x-product.loading-product-card>
-                @endfor
+        <template x-if="loadingProducts">
+            <div x-data="{ open: false }" class="block w-full bg-white rounded shadow-lg">
+                <h2 class="h-[52px] flex justify-center items-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
+                    <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
+                </h2>
+                <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
+                    @for($j = 0; $j < 10; $j++)
+                       <x-product.loading-product-card></x-product.loading-product-card>
+                    @endfor
+                </div>
             </div>
-        </div>
-    </template>
+        </template>
     @endfor
 </div>
