@@ -25,8 +25,28 @@ class Cart{
         this.save();
         return true;
     }
+    /**
+     * Returns the content array.
+     **/
     get content(){
         return this.content;
+    }
+    /**
+     * Given a product id (string), it returns its units in the cart.
+     **/
+    getUnits(id){
+        let units = false;
+        //Product position in products array
+        const posInProducts = Alpine.store('products').findIndex( prod => prod.id === id);
+        if(posInProducts !== -1){
+            //Product position in content array
+            const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+            if(posInCart !== -1){
+                units = this.content[posInCart].units;
+            }else units = 0;
+        }
+
+        return units;
     }
     remove(item){
         let done = false;

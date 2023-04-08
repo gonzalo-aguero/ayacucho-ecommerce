@@ -27,7 +27,7 @@
                     alt="{{ $product->name }}" title="{{ $product->description }}"
                 >
             </div>
-            <h1 class="text-2xl font-semibold my-2">{{ $product->name }}</h1>
+            <h1 class="text-2xl font-semibold my-2 text-center">{{ $product->name }}</h1>
 
             {{--PRICE SECTION--}}
             <div class="text-center font-light">
@@ -46,7 +46,9 @@
                         class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
                     <span class="text-base font-light">Unidades</span>
                     @if($product->showUnits)
-                       <span class="text-base font-light">({{$product->units}} disponibles)</span>
+                        @if(!$squareMeter)
+                            <span class="text-base font-light">({{$product->units}} disponibles)</span>
+                        @endif
                     @endif
                 </div>
                 @if($squareMeter)
@@ -55,7 +57,7 @@
                         <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
                         <span>m²</span>
                         @if($product->showUnits)
-                            <span class="text-base font-light">({{number_format($product->units * $product->m2ByUnit, 2, ',', '.')}}m² disponibles)</span>
+                            <span class="text-base font-light">({{number_format($product->units, 2, ',', '.')}}m² disponibles)</span>
                         @endif
                     </div>
                 @endif

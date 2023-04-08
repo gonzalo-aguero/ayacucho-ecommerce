@@ -39,7 +39,7 @@
                         {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
                             <a :href="$store.StaticProduct.productPage(product)">
-                                <img class="h-40 w-full" :src="productImage" :alt="product.name" :title="product.description">
+                                <img class="h-40 w-full object-contain" :src="productImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
