@@ -5,7 +5,6 @@ use App\Http\Controllers\ExcelConversionController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,8 +44,9 @@ Route::get('/site/{token}', function (string $token) {
 
     }else{
         abort(404);
-    };
+    }
     $exitCode = $viewExitCode. "<br>" . $routeExitCode;
+
     return $exitCode;
  });
 
@@ -61,7 +61,7 @@ Route::get('/site/{token}/{action}', function (string $token, string $action) {
         }
     }else{
         abort(404);
-    };
+    }
 
     return $exitCode;
 });
