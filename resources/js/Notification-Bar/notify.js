@@ -84,6 +84,15 @@ var Notify;
             var component = e.target.closest('.component-notify');
             Close(component);
         })
+        wrapp.addEventListener('click', function (e)
+        {
+            e.stopPropagation();
+            var component = e.target.closest('.component-notify');
+            Close(component);
+        })
+
+
+
         btnClose.innerHTML = '<span>&#10006;</span>';
 
         wrapp.appendChild(textContent);

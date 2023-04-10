@@ -22,9 +22,12 @@ class ProductController extends Controller
         $product = array_filter($products, function($prod){
             return $prod->id == $this->productID;
         });
-
-        return view('product-page', [
-            "product" => array_values($product)[0]
-        ]);
+        if(count(array_values($product)) > 0){
+            return view('product-page', [
+                "product" => array_values($product)[0]
+            ]);
+        }else{
+            abort(404);
+        }
     }
 }

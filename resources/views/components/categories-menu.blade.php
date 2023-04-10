@@ -39,7 +39,7 @@
                         {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
                             <a :href="$store.StaticProduct.productPage(product)">
-                                <img class="h-40 w-full" :src="productImage" :alt="product.name" :title="product.description">
+                                <img class="h-40 w-full object-cover" :src="productImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
@@ -53,7 +53,14 @@
                         </div>
 
                         {{--ADD TO CART SECTION--}}
-                        <div class="flex flex-col w-full items-center pt-2 pb-3">
+                        <div class="flex flex-col w-full items-center pt-2 pb-3" x-data="{
+                                unitsText(){
+                                    if($store.StaticProduct.measurableInM2(product)){
+                                        return product.units + 'm² disponibles';
+                                    }
+                                    return product.units + ' disponibles';
+                                }
+                            }">
                             <div class="flex w-full justify-center items-center gap-1">
                                 <input type="number" min="1" x-model="units" :disabled="product.units == 0"
                                     class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
@@ -71,6 +78,9 @@
                                 x-on:click="addToCart"
                                 :disabled="product.units == 0"
                                 >Añadir al carrito</button>
+                            <template x-if="product.showUnits">
+                                <span class="text-xs font-light mt-2 text-gray" x-text="unitsText"></span>
+                            </template>
                         </div>
                     </div>
                     {{---------------------------
@@ -81,17 +91,17 @@
         </div>
      </template>
     @for ($i = 0; $i < 6; $i++)
-    <template x-if="loadingProducts">
-        <div x-data="{ open: false }" class="block w-full bg-white rounded shadow-lg">
-            <h2 class="h-[52px] flex justify-center items-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
-                <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
-            </h2>
-            <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
-                @for($j = 0; $j < 10; $j++)
-                <x-product.loading-product-card></x-product.loading-product-card>
-                @endfor
+        <template x-if="loadingProducts">
+            <div x-data="{ open: false }" class="block w-full bg-white rounded shadow-lg">
+                <h2 class="h-[52px] flex justify-center items-center uppercase cursor-pointer font-bold shadow drop-shadow-lg animate-pulse" @click="open = !open">
+                    <div class="bg-orange w-40 py-2 rounded opacity-70"></div>
+                </h2>
+                <div class="flex gap-2 justify-left w-full overflow-auto p-2 dropdown_menu-6 bg-gray-light" x-show="open">
+                    @for($j = 0; $j < 10; $j++)
+                       <x-product.loading-product-card></x-product.loading-product-card>
+                    @endfor
+                </div>
             </div>
-        </div>
-    </template>
+        </template>
     @endfor
 </div>

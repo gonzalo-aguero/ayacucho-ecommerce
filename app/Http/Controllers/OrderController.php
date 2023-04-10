@@ -3,11 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
+    private function getBusinessPhoneNumber(){
+        $result = Order::find(1);
+        $number = $result->lastPhoneNumber;//current number in database
+        $number1 = config('company.phone_number_1');//option 1
+        $number2 = config('company.phone_number_2');//option 2
+
+        //alternate number in database
+        if($number == 1 && $number2 != null){
+            $result->lastPhoneNumber = 2;
+            $result->save();
+        }else if($number == 2 && $number1 != null){
+            $result->lastPhoneNumber = 1;
+            $result->save();
+        }
+
+        //choose the correct number to return
+        if($number == 1 && $number1 != null){
+            $number = $number1;
+        }else if($number == 2 && $number2 != null){
+            $number = $number2;
+        }else{
+            abort(500, "No company phone number specified");
+        }
+
+        return $number;
+    }
     private function title($text){
-        return "● *$text:*\n";
+        return "*$text:*\n";
     }
     private function dataItem($title, $value){
         return "   *$title:* ". $value ."\n";
@@ -15,8 +42,7 @@ class OrderController extends Controller
     /**
      * Generates a WhatsApp URL with the order detail as message.
      * */
-    private function generateURL(Request $request){
-        $compPhoneNumber = config('company.phone_number');
+    private function generateURL(Request $request, $compPhoneNumber){
         $compName = config("app.name");
 
         // Get the cart from the cookies and the products from its json file.
@@ -57,11 +83,11 @@ class OrderController extends Controller
         return "https://wa.me/$compPhoneNumber?text=$urlEncodedText";
     }
     public function create(Request $request){
+        //PENDING: FULL VALIDATION!!!
         $request->validate([
             'name' => 'required|min:3|max:75',
         ]);
 
-        return redirect($this->generateURL($request))->withoutCookie('cart');
-
+        return redirect($this->generateURL($request, $this->getBusinessPhoneNumber()))->withoutCookie('cart');
     }
 }

@@ -19,6 +19,7 @@
         "ext-xmlwriter": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
+        "doctrine/dbal": "^3.6",
         "ezyang/htmlpurifier": "^4.15",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
