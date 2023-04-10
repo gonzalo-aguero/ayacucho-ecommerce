@@ -56,12 +56,18 @@
                     </div>
                     {{--PRODUCT UNITS--}}
                     <div>
-                        <input type="number" min="1" x-model.lazy="units" x-init="
+                        <input type="number" min="1" x-model="units" x-init="
                             $watch('units', (value, valueBef) => {
                                 if(value === '') units = valueBef;
                                 else{
-                                    item.units = Number.parseInt(value);
-                                    $store.cart.save();
+                                    const newUnits = Number.parseInt(value);
+                                    if($store.StaticProduct.validUnits(newUnits, product)){
+                                        item.units = newUnits;
+                                        $store.cart.save();
+                                    }else{
+                                        units = $store.StaticProduct.maxAvailableUnits(product);
+                                        Alpine.store('Notify').Warning('No hay suficiente stock disponible.')
+                                    }
                                 }
                             });
                             $watch('item.units', value => units = value);

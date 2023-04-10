@@ -54,18 +54,11 @@ class StaticProduct{
     /**
      * units se pasa como objecto para que se pase como referencia y poder actualizar su valor desde el origen.
      **/
-    static addToCart(units, productData){
+    static addToCart(units = 1, productData){
+        units = parseInt(units);
         let success = false;
         if(units > 0){
-            const unitsInCart = Alpine.store("cart").getUnits(productData.id);
-            let condition = true;
-            if(StaticProduct.measurableInM2(productData)){
-                const m2ByUnit = productData.m2ByUnit;
-                condition = (unitsInCart*m2ByUnit + units*m2ByUnit) <= productData.units;
-            }else{
-                condition = unitsInCart + units <= productData.units;
-            }
-            if(condition){
+            if(StaticProduct.canBeAdded(units, productData)){
                 if(Alpine.store('cart').add(productData, units)){
                     Alpine.store('Notify').Success('Agregado al carrito', 1500);
                     success = true;
@@ -76,6 +69,52 @@ class StaticProduct{
         }else Alpine.store('Notify').Warning('Debe agregar al menos una unidad', 1500);
 
         return success;
+    }
+    /**
+     * Returns True if "units to be added + units already added"
+     * do not exceed the available stock.
+     **/
+    static canBeAdded(units = 1, productData){
+        let can = true;
+        const unitsInCart = Alpine.store("cart").getUnits(productData.id);
+        if(this.measurableInM2(productData)){
+            const m2ByUnit = productData.m2ByUnit;
+            can = this.validUnits(unitsInCart + units, productData);
+        }else{
+            can = this.validUnits(unitsInCart + units, productData);
+        }
+
+        return can;
+    }
+    /**
+     * This returns true if the number of units is
+     * not greater than the available stock.
+     */
+    static validUnits(units, productData){
+        let isValid;
+        if(this.measurableInM2(productData)){
+            const m2ByUnit = productData.m2ByUnit;
+            isValid = units*m2ByUnit <= productData.units;
+        }else{
+            isValid = units <= productData.units;
+        }
+
+        return isValid;
+    }
+    /**
+     * Returns the maximum number of boxes or packages.
+     * In the case of being ceramic, it returns the maximum
+     * available number of boxes according to the available square meters.
+     **/
+    static maxAvailableUnits(productData){
+        let max;
+        if(this.measurableInM2(productData)){
+            max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
+        }else{
+            max = productData.units;
+        }
+
+        return parseInt(max);
     }
 }
 export { Product, StaticProduct };

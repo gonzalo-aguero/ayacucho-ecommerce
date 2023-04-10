@@ -8,7 +8,13 @@
     "hasAttributes" => ($product->m2Price != null && $product->m2ByUnit != null)
 ])
 <x-store-layout pageTitle="{{$pageTitle}}" isProductPage="true" :$javascriptData>
-    <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{ units: 1 }">
+    <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
+            units: 1,
+            addToCart(){
+                if($store.StaticProduct.addToCart(this.units, product))
+                    this.units = 1;
+            }
+        }">
         {{--MAIN INFO SECTION--}}
         <div>
             <div class="relative">
@@ -65,7 +71,7 @@
                     :class=" product.units == 0
                         ? 'bg-gray opacity-80'
                         : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
-                        x-on:click="$store.StaticProduct.addToCart(units, product)"
+                        x-on:click="addToCart"
                     :disabled="product.units == 0"
                     >Añadir al carrito</button>
             </div>
