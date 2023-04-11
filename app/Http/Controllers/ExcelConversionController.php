@@ -110,7 +110,7 @@ class ExcelConversionController extends Controller
                         "image" => $image,
                         "thumbnail" => $thumbnail,
                         "category" => $category,
-                        "units" => (int) $units,
+                        "units" => $units,
                         "showUnits" => $showUnits,
                         "m2ByUnit" => $m2ByUnit,
                         "variationId" => $variationId
