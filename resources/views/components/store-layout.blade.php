@@ -8,17 +8,17 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        @foreach($headTags as $tag)
+            {{!! $tag !!}}
+        @endforeach
 
         <title>{{ $pageTitle }}</title>
 
-        @foreach($headTags as $tag)
-            {{ $tag }}
-        @endforeach
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script>
@@ -27,11 +27,9 @@
             @foreach ($javascriptData as $data)
                 const {{ $data["key"] }} = {{  Js::from($data["value"]) }};
             @endforeach
-            //asd
         </script>
         @vite(['resources/css/app.css', 'resources/css/Notification-Bar.css', 'resources/js/app.js'])
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        @livewireStyles
     </head>
     <body class="antialiased scroll-smooth" x-init="">
         {{--Header--}}
@@ -65,6 +63,5 @@
 
         {{--Footer--}}
         <x-footer></x-footer>
-        @livewireScripts
     </body>
 </html>

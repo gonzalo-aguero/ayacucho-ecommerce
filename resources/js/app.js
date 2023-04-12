@@ -5,6 +5,7 @@ import PaymentMethods from './classes/PaymentMethods';
 import { StaticProduct } from './classes/Product';
 import ShippingZones from './classes/ShippingZones';
 import Notify from './Notification-Bar/notify';
+import Variations from './classes/Variations';
 //import {AxiosHeaders} from 'axios';
 import Order from './classes/Order';
 
@@ -13,7 +14,6 @@ if(DEBUG) console.log("Code working");
 /***************************
  ********* HELPERS *********
  ***************************/
-
 function store(key, value){
     if(value === undefined){
         return Alpine.store(key);
@@ -38,6 +38,7 @@ function gotoCheckout(route){
 
 document.addEventListener('alpine:init', async function(){
     store('products', []);
+    store("variations", new Variations())
     store('productsLength', 0);
     store('sortedProducts', []);
     store('productsToPrint', []);
@@ -52,14 +53,14 @@ document.addEventListener('alpine:init', async function(){
     store("gotoCheckout", gotoCheckout);
 
     await loadProducts();
-    console.log("PRODUCTOS CARGADOS 2");
+    store("variations").load();
 
     Notify.Settings = {
         soundsOff: false,
         animDuration: {
-            success: 5000,
-            warning: 5000,
-            error: 5000
+            success: 3500,
+            warning: 3500,
+            error: 3500
         }
     };
 
@@ -67,16 +68,6 @@ document.addEventListener('alpine:init', async function(){
     if(path === "/") HOME();
     else if(path === "/checkout") CHECKOUT();
     else if(IS_PRODUCT_PAGE) PRODUCT_PAGE();
-
-
-
-           //setTimeout(()=>{
-        //let interval = setInterval(()=>{
-            //printMoreProducts();
-        //}, 3000);
-    //}, 2000);
-
-    //Livewire.emit("setProductsLoaded");
 });
 function sortByCategories(){
     const sortedProducts = [];
@@ -145,14 +136,13 @@ async function loadProducts(){
             if(DEBUG) console.log("Productos ordenados:", store("sortedProducts"));
 
             printProducts(store("printedProductsMax"));
-            console.log("PRODUCTOS CARGADOS");
         });
 }
 function HOME(){
-    console.log("THIS IS THE HOME PAGE.");
+    if(DEBUG) console.log("THIS IS THE HOME PAGE.");
 }
 async function CHECKOUT(){
-    console.log("THIS IS THE CHECKOUT PAGE.");
+    if(DEBUG) console.log("THIS IS THE CHECKOUT PAGE.");
 
     store("selectedPaymentMethod", undefined);
     store("selectedShippingZone", undefined);
@@ -176,5 +166,6 @@ async function CHECKOUT(){
     });
 }
 function PRODUCT_PAGE(){
-    console.log("This is the Product Page!");
+    if(DEBUG) console.log("This is the Product Page!");
+    store("selectedVariation", undefined);
 }

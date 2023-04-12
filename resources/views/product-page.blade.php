@@ -57,6 +57,34 @@
                         @endif
                     @endif
                 </div>
+                <div class="mt-2" x-data="variationSelect">
+                    <h2 class="text-base" x-text="undefined !== variation ? variation.title : ''"></h2>
+                    <x-form.input type="select" name="variation"
+                        required
+                        requiredSign="0"
+                        getSelectedFrom="$store.variations.get({{ $product->variationId }}).options"
+                        saveSelectedIn="$store.selectedVariation"
+                        >
+                    </x-form.input>
+                    <script>
+                        document.addEventListener('alpine:init', () => {
+                            Alpine.data('variationSelect', ()=>({
+                                showDefaultOption: true,//set true to show the option "Select"
+                                defaultOptionText: "Seleccionar",
+                                showBladeOptions: false,
+                                options: [],
+                                variation: undefined,
+                                init() {
+                                    this.$watch('$store.variations', (val) => {
+                                        const texts = Alpine.store("variations").texts({{ $product->variationId }});
+                                        this.options = texts;
+                                        this.variation = Alpine.store("variations").get({{ $product->variationId }});
+                                    });
+                                }
+                            }));
+                        });
+                    </script>
+                </div>
                 @if($squareMeter)
                     <div class="text-base font-normal text-center">
                         <span class="text-lg">=</span>

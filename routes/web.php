@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 
 Route::get('/checkout', function () {
-    return view('checkout', ["DEBUG" => config("app.debug")]);
+    return view('checkout', [ "DEBUG" => config("app.debug") ]);
 })->name('checkout');
 
 
