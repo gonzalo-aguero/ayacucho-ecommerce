@@ -7,17 +7,16 @@
         <div x-data="{ open: false }" class="block w-full shadow">
             <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-bold
                 hover:bg-gray-light rounded-md hover:underline decoration-orange-medium underline-offset-2" @click="open = !open"></h2>
-            <div class="flex gap-2 justify-left w-full overflow-auto p-2 bg-gray-light very_fast_animation"
+            <div class="flex gap-2 justify-left w-full overflow-auto p-2 bg-gray-light"
                 x-show="open"
-                :class="open ? 'dropdown_menu-6': ''"
-                {{--x-transition:enter="growDown"--}}
-                {{--x-transition:leave=""--}}
+                x-transition:enter="dropdown_menu-6"
+                x-transition:leave="dropup_menu-6"
                 >
                 <template x-for="product in category.products">
                     {{-----------------------
                         Product card template
                     ---------------------------}}
-                    <div class="relative z-[-1] bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
+                    <div class="relative bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
                         x-data="{
                             units: 1,
                             productImage(){
@@ -34,12 +33,12 @@
                         }">
                         {{--"NO STOCK" SIGN--}}
                         <template x-if="product.units == 0">
-                            <div class="bg-red text-white text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
+                            <div class="bg-red text-white font-medium text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
                         </template>
                         {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
                             <a :href="$store.StaticProduct.productPage(product)">
-                                <img class="h-40 w-full object-cover" :src="productImage" :alt="product.name" :title="product.description">
+                                <img class="h-40 w-full object-cover rounded-t" :src="productImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
                         <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
@@ -47,9 +46,9 @@
                         {{--PRICE SECTION--}}
                         <div class="text-center font-light">
                             <!-- Primary price -->
-                            <span class="text-base" x-text="'$' + product.price"></span>
+                            <span class="text-base" x-text="$store.priceFormat(product.price)"></span>
                             <!-- Secondary price -->
-                            <span class="text-xs" x-text="'$' + product.m2Price + '/m²'" x-show="$store.StaticProduct.measurableInM2(product)"></span>
+                            <span class="text-xs" x-text="$store.priceFormat(product.m2Price) + '/m²'" x-show="$store.StaticProduct.measurableInM2(product)"></span>
                         </div>
 
                         {{--ADD TO CART SECTION--}}
@@ -71,7 +70,7 @@
                                 <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
                                 <span>m²</span>
                             </div>
-                            <button class="text-white text-sm p-1 mt-2 rounded "
+                            <button class="text-white text-sm p-1 mt-2 rounded " name="Añadir al carrito"
                                 :class=" product.units == 0
                                     ? 'bg-gray opacity-80'
                                     : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"

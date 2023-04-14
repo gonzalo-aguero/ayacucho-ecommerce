@@ -8,7 +8,7 @@ class Product{
      * Calculates the equivalent units in square meters.
      **/
     squareMeters(units){
-        if(units >= 0) return (units * this.data.m2ByUnit).toPrecision(3);
+        if(units >= 0) return (units * this.data.m2ByUnit).toFixed(2);
         else return 0;
     }
     productPage(){
@@ -37,7 +37,7 @@ class StaticProduct{
      * Calculates the equivalent units in square meters.
      **/
     static squareMeters(units, productData){
-        if(units >= 0) return (units * productData.m2ByUnit).toPrecision(3);
+        if(units >= 0) return (units * productData.m2ByUnit).toFixed(2);
         else return 0;
     }
     static productPage(productData){
@@ -77,13 +77,7 @@ class StaticProduct{
     static canBeAdded(units = 1, productData){
         let can = true;
         const unitsInCart = Alpine.store("cart").getUnits(productData.id);
-        if(this.measurableInM2(productData)){
-            const m2ByUnit = productData.m2ByUnit;
-            can = this.validUnits(unitsInCart + units, productData);
-        }else{
-            can = this.validUnits(unitsInCart + units, productData);
-        }
-
+        can = this.validUnits(unitsInCart + units, productData);
         return can;
     }
     /**

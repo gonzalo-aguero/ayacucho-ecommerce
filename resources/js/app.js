@@ -26,8 +26,43 @@ function priceFormat(value){
         value,
     );
 }
+Confirm("Se eliminará el siguiente producto.\n¿Estás seguro?");
 function Confirm(message){
-    return confirm(message);
+    const container = document.getElementById("aux_black_transparent_bg");
+    const modal = document.getElementById("confirm_modal");
+
+    // Agregar el mensaje a la ventana modal
+    const messageElement = modal.querySelector("p");
+    messageElement.innerText = message;
+
+    // Crear los botones de confirmar y cancelar
+    const confirmButton = modal.querySelector(".confirm_btn");
+    confirmButton.innerText = "Confirmar";
+
+    var cancelButton = modal.querySelector(".cancel_btn");
+    cancelButton.innerText = "Cancelar";
+
+    // Agregar el modal al cuerpo del documento
+    container.classList.replace("hidden", "fixed");
+    modal.classList.replace("hidden", "fixed");
+
+    // Función para ocultar la ventana modal
+    function hideModal() {
+        modal.classList.replace("fixed", "hidden");
+        container.classList.replace("fixed", "hidden");
+    }
+
+    // Event listener para ocultar la ventana modal cuando se hace clic en el botón de cancelar
+    cancelButton.addEventListener("click", function() {
+        hideModal();
+        callback(false);
+    });
+
+    // Event listener para realizar una acción cuando se hace clic en el botón de confirmar
+    confirmButton.addEventListener("click", function() {
+        hideModal();
+        callback(true);
+    });
 }
 function gotoCheckout(route){
     console.log(store("cart").length());

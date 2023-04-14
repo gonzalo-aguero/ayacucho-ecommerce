@@ -63,5 +63,22 @@
 
         {{--Footer--}}
         <x-footer></x-footer>
+
+        {{--Auxiliary black-transparent background--}}
+        <div id="aux_black_transparent_bg" class="hidden z-10 left-0 top-0 bg-black/30 w-screen h-screen animate__animated very_fast_animation"
+            x-cloak
+            x-transition:enter="animate__fadeIn"
+            x-transition:leave="animate__fadeOut"
+        ></div>
+        <div id="confirm_modal" class="fixed z-10 shadow bg-white rounded-lg
+                left-[5%] top-[35%] w-[90%] h-[30%] ">
+            <div class="flex flex-col p-4 justify-between h-full">
+                <p class="text-lg text-center"></p>
+                <div class="flex justify-between">
+                    <button class="confirm_btn border border-gray-light2 font-medium rounded p-2" name="Confirmar"></button>
+                    <button class="cancel_btn border border-gray-light2 font-medium rounded p-2" name="Cancelar"></button>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

@@ -72,19 +72,38 @@ class Cart{
         const secondsInADay = (60*60*24);
         const days = 21*secondsInADay;
         const expirationDate = new Date(new Date().getTime() + days*1000).toUTCString();
-        document.cookie = `cart=${JSON.stringify(this.content)}; expires=date-in-GMTString-format=${expirationDate}; path=/`;
+        console.log("expirationDate", expirationDate);
+        console.log("days", days);
+        document.cookie = `cart=${JSON.stringify(this.content)}; expires=${expirationDate}; max-age=${days*21};path=/; SameSite=Lax`;
     }
     load(){
-        // Cookie format: cookie1=value; cookie2=value
-        const exists = document.cookie.split(';').some( item => item.includes("cart"));
-        if(exists){
-            const cartCookie = document.cookie.split(';').find( item => item.startsWith("cart=")).slice(5);
-            let cart = JSON.parse(cartCookie);
-            cart = cart.map( prod => {
-                return { pos: prod.pos, units: parseInt(prod.units) };
-            });
-            this.content = cart;
-        }else this.save();
+        try{
+            // Cookie format: cookie1=value; cookie2=value
+            const exists = document.cookie.split(';').some( item => item.includes("cart"));
+            if(exists){
+                let ws;// have white space (bool). Created because a bug was found in the Firefox browser.
+                let cartCookie = document.cookie.split(';').find( item => {
+                    if(item.startsWith("cart=")){
+                        ws = false;
+                        return true;
+                    }else if(item.startsWith(" cart=")){
+                        ws = true;
+                        return true;
+                    }
+                });
+                if(ws) cartCookie = cartCookie.slice(6);
+                else cartCookie = cartCookie.slice(5);
+
+                let cart = JSON.parse(cartCookie);
+                cart = cart.map( prod => {
+                    return { pos: prod.pos, units: parseInt(prod.units) };
+                });
+                this.content = cart;
+            }else this.save();
+        }catch(err){
+            this.save();
+            console.error("Cart has been saved empty.\n", err);
+        }
     }
     length(){
         return this.content.length;
