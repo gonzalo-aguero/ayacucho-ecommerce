@@ -33,9 +33,11 @@
                     class="grid grid-cols-cart-table gap-2 text-sm items-center p-2">
                     {{--REMOVE PRODUCT BUTTON--}}
                     <button class="w-5 hover:opacity-80" @click="
-                        if($store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`)){
-                            $store.cart.remove(item);
-                        }
+                        $store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`, (response)=>{
+                            if(response){
+                                $store.cart.remove(item);
+                            }
+                        });
                     ">
                         <img src="{{ asset('images/UI-Icons/icons8-remove-48.png') }}" class="h-5 w-5"/>
                     </button>
@@ -87,10 +89,12 @@
     </ul>
     <div class="flex justify-between flex-wrap md:flex-nowrap  md:items-stretch h-20 md:h-auto">
         <button x-show="$store.cart.length() > 0" class="bg-red text-white py-1 px-2 text-sm rounded hover:opacity-80 w-[48%] md:w-auto" @click="
-            if($store.Confirm('Se vaciará tu carrito.\n¿Estás seguro?')){
-                $store.cart.clear();
-                $store.cartOpened = false;
-            }
+            $store.Confirm('Se vaciará tu carrito.\n¿Estás seguro?', (response)=>{
+                if(response){
+                    $store.cart.clear();
+                    $store.cartOpened = false;
+                }
+            });
         ">Vaciar Carrito</button>
         <button x-show="$store.cart.length() === 0" disabled class="bg-gray text-white py-1 px-2 text-sm rounded opacity-80 w-[48%] md:w-auto">Vaciar Carrito</button>
 

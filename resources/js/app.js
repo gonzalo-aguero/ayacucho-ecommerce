@@ -26,8 +26,8 @@ function priceFormat(value){
         value,
     );
 }
-Confirm("Se eliminará el siguiente producto.\n¿Estás seguro?");
-function Confirm(message){
+//Confirm("Se eliminará el siguiente producto.\n¿Estás seguro?");
+function Confirm(message, callback){
     const container = document.getElementById("aux_black_transparent_bg");
     const modal = document.getElementById("confirm_modal");
 
@@ -45,24 +45,32 @@ function Confirm(message){
     // Agregar el modal al cuerpo del documento
     container.classList.replace("hidden", "fixed");
     modal.classList.replace("hidden", "fixed");
+    store("ConfirmVisible", true);
 
     // Función para ocultar la ventana modal
     function hideModal() {
         modal.classList.replace("fixed", "hidden");
         container.classList.replace("fixed", "hidden");
+        cancelButton.removeEventListener("click", clickCancelBtnHandler);
+        confirmButton.removeEventListener("click", clickConfirmBtnHandler);
+        setTimeout(()=>{
+            store("ConfirmVisible", false);
+        }, 500);
     }
 
-    // Event listener para ocultar la ventana modal cuando se hace clic en el botón de cancelar
-    cancelButton.addEventListener("click", function() {
+    function clickCancelBtnHandler(){
         hideModal();
         callback(false);
-    });
+    }
+    // Event listener para ocultar la ventana modal cuando se hace clic en el botón de cancelar
+    cancelButton.addEventListener("click", clickCancelBtnHandler);
 
-    // Event listener para realizar una acción cuando se hace clic en el botón de confirmar
-    confirmButton.addEventListener("click", function() {
+    function clickConfirmBtnHandler(){
         hideModal();
         callback(true);
-    });
+    }
+    // Event listener para realizar una acción cuando se hace clic en el botón de confirmar
+    confirmButton.addEventListener("click", clickConfirmBtnHandler);
 }
 function gotoCheckout(route){
     console.log(store("cart").length());
@@ -82,6 +90,7 @@ document.addEventListener('alpine:init', async function(){
     store('StaticProduct', StaticProduct);
     store('Notify', Notify);
     store('cartOpened', false);
+    store("ConfirmVisible", false);
     // *** HELPERS ***
     store('priceFormat', priceFormat);
     store('Confirm', Confirm);
