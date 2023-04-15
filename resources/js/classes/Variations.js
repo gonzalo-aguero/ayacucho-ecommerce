@@ -13,7 +13,16 @@ class Variations{
     }
     get(variationId){
         return this.list[variationId - 1];
-
+    }
+    getByIndex(variationIndex){
+        return this.list[variationIndex];
+    }
+    /**
+     * Finds and returns the option value according to the variationId and the value of the option.
+     **/
+    getByName(variationId, value){
+        const optionData = this.list.find( (variation, index) => index === variationId-1).options.find( (option) => option === value );
+        console.log("optionData", optionData);
     }
     /**
      * Returns all the formated texts with the name.

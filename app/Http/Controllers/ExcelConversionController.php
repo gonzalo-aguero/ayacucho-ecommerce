@@ -192,12 +192,15 @@ class ExcelConversionController extends Controller
                 if($variationId != "" && $variationId != null && $variationId != 0){
                     $variationId = (int) $variationId;
                     $optionId = (int) $worksheet->getCell('C' . $row->getRowIndex())->getValue();
-                    $value= (string) $worksheet->getCell('D' . $row->getRowIndex())->getValue();
+                    $value = (string) $worksheet->getCell('D' . $row->getRowIndex())->getValue();
+                    $units = (float) $worksheet->getCell('E' . $row->getRowIndex())->getValue();
 
                     $index = $variationId - 1;
-                    if(isset($data[$index])){//Si ya existe dicha variacion de agrega la nueva opcion.
+                    if(isset($data[$index])){
+                        //Si ya existe dicha variacion de agrega la nueva opcion.
                         array_push($data[$index]["options"], $value);
-                    }else{//Si no existe, se crea y se agrega la nueva opcion.
+                    }else{
+                        //Si no existe, se crea y se agrega la nueva opcion.
                         $title = (string) $worksheet->getCell('B' . $row->getRowIndex())->getValue();
                         array_push($data, array(
                             "title" => $title,

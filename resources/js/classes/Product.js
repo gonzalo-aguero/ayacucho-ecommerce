@@ -57,14 +57,19 @@ class StaticProduct{
     static addToCart(units = 1, productData){
         units = parseInt(units);
         let success = false;
+        const option = Alpine.store("selectedVariation");
         if(units > 0){
             if(StaticProduct.canBeAdded(units, productData)){
-                if(Alpine.store('cart').add(productData, units)){
-                    Alpine.store('Notify').Success('Agregado al carrito', 1500);
-                    success = true;
-                }else{
-                    Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
-                }
+                if(productData.variationId !== null){
+                    success = Alpine.store('cart').add(
+                        productData,
+                        units,
+                        option
+                    );
+                }else success = Alpine.store('cart').add(productData, units);
+
+                if(success) Alpine.store('Notify').Success('Agregado al carrito', 1500);
+                else Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
             }else Alpine.store("Notify").Warning("No hay suficiente stock disponible.")
         }else Alpine.store('Notify').Warning('Debe agregar al menos una unidad', 1500);
 
@@ -100,9 +105,10 @@ class StaticProduct{
      * In the case of being ceramic, it returns the maximum
      * available number of boxes according to the available square meters.
      **/
-    static maxAvailableUnits(productData){
+    static maxAvailableUnits(productData, option){
         let max;
         if(this.measurableInM2(productData)){
+            //if(option != null)
             max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
         }else{
             max = productData.units;

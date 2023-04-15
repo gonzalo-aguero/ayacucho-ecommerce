@@ -2,24 +2,31 @@
 class Cart{
     content;
     constructor(){
-        this.content = [];// [{item, units}, {item, units}]
+        this.content = [];// [{item, units, ?option}, {item, units, ?option}]
         this.load();
     }
     /**
      * Saves the position of the product passed as parameter in the products global array.
      **/
-    add(productData, units = 1){
+    add(productData, units = 1, option){
         units = parseInt(units);
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === productData.id);
         //Product position in content array (it's -1 if it's not there)
-        const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        let posInCart;
+        if(productData.variationId !== null){
+            posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option == option);
+        }else{
+            posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        }
+
         if(posInCart !== -1){
             this.content[posInCart].units += units;
         }else{
             this.content.push({
                 pos: posInProducts,
-                units
+                units,
+                option
             });
         }
         this.save();
@@ -96,7 +103,7 @@ class Cart{
 
                 let cart = JSON.parse(cartCookie);
                 cart = cart.map( prod => {
-                    return { pos: prod.pos, units: parseInt(prod.units) };
+                    return { pos: prod.pos, units: parseInt(prod.units), option: prod.option };
                 });
                 this.content = cart;
             }else this.save();

@@ -5,7 +5,8 @@
     ],
     {{--Measurable per square meter--}}
     "squareMeter" => $product->m2Price != null && $product->m2ByUnit != null,
-    "hasAttributes" => ($product->m2Price != null && $product->m2ByUnit != null)
+    "hasAttributes" => ($product->m2Price != null && $product->m2ByUnit != null),
+    "disabledAddToCartCondition" => 'product.units === 0 || (product.variationId !== null && undefined === $store.selectedVariation)',
 ])
 <x-store-layout pageTitle="{{$pageTitle}}" isProductPage="true" :$javascriptData>
     <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
@@ -57,34 +58,36 @@
                         @endif
                     @endif
                 </div>
-                <div class="mt-2" x-data="variationSelect">
-                    <h2 class="text-base" x-text="undefined !== variation ? variation.title : ''"></h2>
-                    <x-form.input type="select" name="variation"
-                        required
-                        requiredSign="0"
-                        getSelectedFrom="$store.variations.get({{ $product->variationId }}).options"
-                        saveSelectedIn="$store.selectedVariation"
-                        >
-                    </x-form.input>
-                    <script>
-                        document.addEventListener('alpine:init', () => {
-                            Alpine.data('variationSelect', ()=>({
-                                showDefaultOption: true,//set true to show the option "Select"
-                                defaultOptionText: "Seleccionar",
-                                showBladeOptions: false,
-                                options: [],
-                                variation: undefined,
-                                init() {
-                                    this.$watch('$store.variations', (val) => {
-                                        const texts = Alpine.store("variations").texts({{ $product->variationId }});
-                                        this.options = texts;
-                                        this.variation = Alpine.store("variations").get({{ $product->variationId }});
-                                    });
-                                }
-                            }));
-                        });
-                    </script>
-                </div>
+                @if($product->variationId != null)
+                    <div class="mt-2" x-data="variationSelect">
+                        <x-form.input type="select" name="variation"
+                            required
+                            requiredSign="1"
+                            getSelectedFrom="$store.variations.get({{ $product->variationId }}).options"
+                            saveSelectedIn="$store.selectedVariation"
+                            >
+                            <span class="text-base font-medium" x-text="undefined !== variation ? variation.title : ''"></span>
+                        </x-form.input>
+                        <script>
+                            document.addEventListener('alpine:init', () => {
+                                Alpine.data('variationSelect', ()=>({
+                                    showDefaultOption: true,//set true to show the option "Select"
+                                    defaultOptionText: "Seleccionar",
+                                    showBladeOptions: false,
+                                    options: [],
+                                    variation: undefined,
+                                    init() {
+                                        this.$watch('$store.variations', (val) => {
+                                            const texts = Alpine.store("variations").texts({{ $product->variationId }});
+                                            this.options = texts;
+                                            this.variation = Alpine.store("variations").get({{ $product->variationId }});
+                                        });
+                                    }
+                                }));
+                            });
+                        </script>
+                    </div>
+                @endif
                 @if($squareMeter)
                     <div class="text-base font-normal text-center">
                         <span class="text-lg">=</span>
@@ -95,12 +98,13 @@
                         @endif
                     </div>
                 @endif
+                {{--ADD TO CART BUTTON--}}
                 <button class="text-white text-xl p-2 mt-2 rounded"
-                    :class=" product.units == 0
+                    x-bind:class="{{ $disabledAddToCartCondition }}
                         ? 'bg-gray opacity-80'
                         : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
                         x-on:click="addToCart"
-                    :disabled="product.units == 0"
+                    :disabled="{{ $disabledAddToCartCondition }}"
                     >Añadir al carrito</button>
             </div>
         </div>

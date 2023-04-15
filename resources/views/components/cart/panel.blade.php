@@ -13,7 +13,7 @@
                 <li x-data="{
                         units: 1,
                         product: 0,
-                        variation: '',
+                        option: '',
                         productImage(){
                             const image =
                                 this.product.image !== null
@@ -25,6 +25,7 @@
                     x-init="
                         product = $store.products[item.pos];
                         units = item.units;
+                        option = item.option;
                         $watch('$store.cart.content', ()=>{
                             product = $store.products[item.pos];
                             units = item.units;
@@ -44,7 +45,7 @@
                     {{--PRODUCT IMAGE AND NAME--}}
                     <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2">
                         <img :src="productImage" class="h-6 w-6"/>
-                        <span x-text="product.name + variation" class="truncate text-xs break-words" :title="product.name"></span>
+                        <span x-text="product.name + ' - ' + option" class="truncate text-xs break-words" :title="product.name + ' - ' + option"></span>
                     </a>
                     {{--PRODUCT PRICES--}}
                     <div>
@@ -58,7 +59,7 @@
                     </div>
                     {{--PRODUCT UNITS--}}
                     <div>
-                        <input type="number" min="1" x-model="units" x-init="
+                        <input type="number" min="1" x-model.lazy="units" x-init="
                             $watch('units', (value, valueBef) => {
                                 if(value === '') units = valueBef;
                                 else{
