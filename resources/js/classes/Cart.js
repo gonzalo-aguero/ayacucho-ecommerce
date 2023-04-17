@@ -41,13 +41,20 @@ class Cart{
     /**
      * Given a product id (string), it returns its units in the cart.
      **/
-    getUnits(id){
+    getUnits(id, option){
         let units = false;
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === id);
         if(posInProducts !== -1){
             //Product position in content array
-            const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+            const product = Alpine.store("products")[posInProducts];
+            let posInCart = -1;
+            if(undefined === option)
+                posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+            else{
+                posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === option);
+            }
+
             if(posInCart !== -1){
                 units = this.content[posInCart].units;
             }else units = 0;
@@ -79,8 +86,6 @@ class Cart{
         const secondsInADay = (60*60*24);
         const days = 21*secondsInADay;
         const expirationDate = new Date(new Date().getTime() + days*1000).toUTCString();
-        console.log("expirationDate", expirationDate);
-        console.log("days", days);
         document.cookie = `cart=${JSON.stringify(this.content)}; expires=${expirationDate}; max-age=${days*21};path=/; SameSite=Lax`;
     }
     load(){

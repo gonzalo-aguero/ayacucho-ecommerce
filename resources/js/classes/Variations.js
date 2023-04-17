@@ -14,18 +14,25 @@ class Variations{
     get(variationId){
         return this.list[variationId - 1];
     }
+    getValues(variationId){
+        let values = [];
+        this.list[variationId - 1].options.forEach( option => {
+            values.push(option.value);
+        });
+        return values;
+    }
     getByIndex(variationIndex){
         return this.list[variationIndex];
     }
     /**
-     * Finds and returns the option value according to the variationId and the value of the option.
+     * Finds and returns the option data according to the "variationId" and "value" (the option value).
      **/
-    getByName(variationId, value){
-        const optionData = this.list.find( (variation, index) => index === variationId-1).options.find( (option) => option === value );
-        console.log("optionData", optionData);
+    getByValue(variationId, value){
+        const optionData = this.list.find( (variation, index) => index === variationId-1).options.find( (option) => option.value === value );
+        return optionData;
     }
     /**
-     * Returns all the formated texts with the name.
+     * Returns an array with all the formated texts with the option value.
      * It's used in the variation selector.
      **/
     texts(variationId){
@@ -33,7 +40,7 @@ class Variations{
         const options = this.list[variationId - 1].options;
         for(let i = 0; i < options.length; i++){
             texts[i] = {
-                name: options[i]
+                name: options[i].value
             }
         }
         return texts;

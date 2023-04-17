@@ -68,4 +68,4 @@ Route::get('/site/{token}/{action}', function (string $token, string $action) {
 
 
 
-Route::get('/{productName}/{productID}', [ProductController::class, 'show']);
+Route::get('/{productName}/{productId}', [ProductController::class, 'show']);

@@ -95,7 +95,11 @@ class StaticProduct{
             const m2ByUnit = productData.m2ByUnit;
             isValid = units*m2ByUnit <= productData.units;
         }else{
-            isValid = units <= productData.units;
+            if(productData.variationId !== null){
+                const varId = productData.variationId;
+                const value = Alpine.store("selectedVariation");
+                isValid = units <= Alpine.store("variations").getByValue(varId, value).units;
+            }else isValid = units <= productData.units;
         }
 
         return isValid;
@@ -108,10 +112,12 @@ class StaticProduct{
     static maxAvailableUnits(productData, option){
         let max;
         if(this.measurableInM2(productData)){
-            //if(option != null)
             max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
         }else{
-            max = productData.units;
+            if(undefined !== option) max = option.units;
+            else max = productData.units;
+
+            console.log("option:",option);
         }
 
         return parseInt(max);

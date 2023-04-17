@@ -1,7 +1,8 @@
 @props([
     'pageTitle' => $product->name. " - " . config('app.name'),
     "javascriptData" => [
-        ["key" => "product", "value" => $product]
+        ["key" => "product", "value" => $product],
+        ["key" => "variation", "value" => $variation],
     ],
     {{--Measurable per square meter--}}
     "squareMeter" => $product->m2Price != null && $product->m2ByUnit != null,
@@ -18,6 +19,7 @@
         }">
         {{--MAIN INFO SECTION--}}
         <div>
+            {{--PRODUCT IMAGE--}}
             <div class="relative">
                 {{--"NO STOCK" SIGN--}}
                 @if($product->units == 0)
@@ -34,6 +36,8 @@
                     alt="{{ $product->name }}" title="{{ $product->description }}"
                 >
             </div>
+
+            {{--PRODUCT NAME--}}
             <h1 class="text-2xl font-semibold my-2 text-center">{{ $product->name }}</h1>
 
             {{--PRICE SECTION--}}
@@ -54,7 +58,17 @@
                     <span class="text-base font-light">Unidades</span>
                     @if($product->showUnits)
                         @if(!$squareMeter)
-                            <span class="text-base font-light">({{$product->units}} disponibles)</span>
+                            @if($product->variationId == null)
+                                <span class="text-base font-light">({{$product->units}} disponibles)</span>
+                            @else
+                                <template x-if="$store.selectedVariation">
+                                    <span class="text-base font-light" x-text="
+                                        '('
+                                        + $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                        + ' disponibles)'
+                                    "></span>
+                                </template>
+                            @endif
                         @endif
                     @endif
                 </div>
@@ -63,7 +77,7 @@
                         <x-form.input type="select" name="variation"
                             required
                             requiredSign="1"
-                            getSelectedFrom="$store.variations.get({{ $product->variationId }}).options"
+                            getSelectedFrom="$store.variations.getValues({{ $product->variationId }})"
                             saveSelectedIn="$store.selectedVariation"
                             >
                             <span class="text-base font-medium" x-text="undefined !== variation ? variation.title : ''"></span>

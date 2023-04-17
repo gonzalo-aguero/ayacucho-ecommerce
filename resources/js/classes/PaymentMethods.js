@@ -26,7 +26,7 @@ class PaymentMethods{
         if(percent === 0){
             text = method.name;
         }else if(percent < 0){
-            text = method.name + " ( " + percent + "% de descuento )";
+            text = method.name + " ( " + percent*(-1) + "% de descuento )";
         }else if(percent > 0){
             text = method.name + " ( " + percent + "% de recargo )";
         }
@@ -53,10 +53,8 @@ class PaymentMethods{
         let finalValue;
         if(percent === 0){
             finalValue = value;
-        }else if(percent < 0){
-            finalValue = value * (1 - percent / 100);
-        }else if(percent > 0){
-            finalValue = value * (1 + percent / 100);
+        }else{
+            finalValue = value * (1 + percent / 100);// The negative percentage already has the less sign.
         }
         return finalValue;
     }
