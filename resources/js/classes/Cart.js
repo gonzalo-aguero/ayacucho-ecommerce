@@ -8,16 +8,16 @@ class Cart{
     /**
      * Saves the position of the product passed as parameter in the products global array.
      **/
-    add(productData, units = 1, option){
+    add(productData, units = 1, optionValue){
         units = parseInt(units);
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === productData.id);
         //Product position in content array (it's -1 if it's not there)
         let posInCart;
-        if(productData.variationId !== null){
-            posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option == option);
-        }else{
+        if(undefined === optionValue){
             posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        }else{
+            posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === optionValue);
         }
 
         if(posInCart !== -1){
@@ -26,7 +26,7 @@ class Cart{
             this.content.push({
                 pos: posInProducts,
                 units,
-                option
+                option: optionValue
             });
         }
         this.save();
@@ -41,18 +41,17 @@ class Cart{
     /**
      * Given a product id (string), it returns its units in the cart.
      **/
-    getUnits(id, option){
+    getUnits(id, optionValue){
         let units = false;
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === id);
         if(posInProducts !== -1){
             //Product position in content array
-            const product = Alpine.store("products")[posInProducts];
             let posInCart = -1;
-            if(undefined === option)
+            if(undefined === optionValue)
                 posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
             else{
-                posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === option);
+                posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === optionValue);
             }
 
             if(posInCart !== -1){
@@ -62,10 +61,13 @@ class Cart{
 
         return units;
     }
-    remove(item){
-        let done = false;
+    remove(item, optionValue){
+        let done = false, posInCart = -1;
         //Product position in content array (it's -1 if it's not there)
-        const posInCart = this.content.findIndex( prod => prod.pos === item.pos);
+        if(undefined === optionValue)
+            posInCart = this.content.findIndex( prod => prod.pos === item.pos);
+        else
+            posInCart = this.content.findIndex( prod => prod.pos === item.pos && prod.option === optionValue);
 
         if(posInCart !== -1){
             this.content.splice(posInCart, 1);

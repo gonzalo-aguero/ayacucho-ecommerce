@@ -51,36 +51,47 @@
                             <span class="text-xs" x-text="$store.priceFormat(product.m2Price) + '/m²'" x-show="$store.StaticProduct.measurableInM2(product)"></span>
                         </div>
 
-                        {{--ADD TO CART SECTION--}}
-                        <div class="flex flex-col w-full items-center pt-2 pb-3" x-data="{
-                                unitsText(){
-                                    if($store.StaticProduct.measurableInM2(product)){
-                                        return product.units + 'm² disponibles';
+
+                        <template x-if="product.variationId === null">
+                            {{--ADD TO CART SECTION--}}
+                            <div class="flex flex-col w-full items-center pt-2 pb-3" x-data="{
+                                    unitsText(){
+                                        if($store.StaticProduct.measurableInM2(product)){
+                                            return product.units + 'm² disponibles';
+                                        }
+                                        return product.units + ' disponibles';
                                     }
-                                    return product.units + ' disponibles';
-                                }
-                            }">
-                            <div class="flex w-full justify-center items-center gap-1">
-                                <input type="number" min="1" x-model="units" :disabled="product.units == 0"
-                                    class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
-                                <span class="text-xs font-light">Unidades</span>
+                                }">
+                                <div class="flex w-full justify-center items-center gap-1">
+                                    <input type="number" min="1" x-model="units" :disabled="product.units == 0"
+                                        class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
+                                    <span class="text-xs font-light">Unidades</span>
+                                </div>
+                                <div class="text-xs font-normal" x-show="$store.StaticProduct.measurableInM2(product)">
+                                    <span class="text-sm">=</span>
+                                    <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
+                                    <span>m²</span>
+                                </div>
+                                <button class="text-white text-sm p-1 mt-2 rounded " name="Añadir al carrito"
+                                    :class=" product.units == 0
+                                        ? 'bg-gray opacity-80'
+                                        : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
+                                    x-on:click="addToCart"
+                                    :disabled="product.units == 0"
+                                    >Añadir al carrito</button>
+                                <template x-if="product.showUnits">
+                                    <span class="text-xs font-light mt-2 text-gray" x-text="unitsText"></span>
+                                </template>
                             </div>
-                            <div class="text-xs font-normal" x-show="$store.StaticProduct.measurableInM2(product)">
-                                <span class="text-sm">=</span>
-                                <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
-                                <span>m²</span>
+                        </template>
+                        <template x-if="product.variationId !== null">
+                            {{--SEE OPTIONS SECTION--}}
+                            <div class="flex flex-col w-full items-center pt-2 pb-3">
+                                <a class="bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95 text-white text-sm p-1 mt-2 rounded" name="Ver opciones"
+                                    :href="$store.StaticProduct.productPage(product)"
+                                    >Ver opciones</a>
                             </div>
-                            <button class="text-white text-sm p-1 mt-2 rounded " name="Añadir al carrito"
-                                :class=" product.units == 0
-                                    ? 'bg-gray opacity-80'
-                                    : 'bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95'"
-                                x-on:click="addToCart"
-                                :disabled="product.units == 0"
-                                >Añadir al carrito</button>
-                            <template x-if="product.showUnits">
-                                <span class="text-xs font-light mt-2 text-gray" x-text="unitsText"></span>
-                            </template>
-                        </div>
+                        </template>
                     </div>
                     {{---------------------------
                         END Product card template

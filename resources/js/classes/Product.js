@@ -4,33 +4,30 @@ class Product{
     constructor(data){
         this.data = data;
     };
-    /**
-     * Calculates the equivalent units in square meters.
-     **/
-    squareMeters(units){
-        if(units >= 0) return (units * this.data.m2ByUnit).toFixed(2);
-        else return 0;
-    }
-    productPage(){
-        let url = location.origin + '/' + this.data.name + '/' + this.data.id;
-        url = url.replace(/ /g, '-').toLowerCase();
-        return url;
-    }
-    // Is measurable per square meter
-    squareMeterMeasurable(){
-        return this.data.m2Price != null && this.data.m2ByUnit != null;
-    }
-    addToCart({units}){
-        console.log("Controlar que se envíen las unidades por referencia.");
-        if(units > 0){
-            if(Alpine.store('cart').add(this.data, units)){
-                Alpine.store('Notify').Success('Agregado al carrito', 1500);
-                units = 1;
-            }else{
-                Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
-            }
-        }else Alpine.store('Notify').Warning('Debe agregar una cantidad mayor a cero', 1500);
-    }
+    //squareMeters(units){
+        //if(units >= 0) return (units * this.data.m2ByUnit).toFixed(2);
+        //else return 0;
+    //}
+    //productpage(){
+        //let url = location.origin + '/' + this.data.name + '/' + this.data.id;
+        //url = url.replace(/ /g, '-').tolowercase();
+        //return url;
+    //}
+    //squareMeterMeasurable(){
+        //return this.data.m2Price != null && this.data.m2ByUnit != null;
+    //}
+    //addToCart({units}){
+        //console.log("Controlar que se envíen las unidades por referencia.");
+        //if(units > 0){
+            //if(Alpine.store('cart').add(this.data, units)){
+                //Alpine.store('Notify').Success('Agregado al carrito', 1500);
+                //units = 1;
+            //}else{
+                //Alpine.store('Notify').Error('Ha ocurrido un error al agregar al carrito', 2000);
+            //}
+        //}else Alpine.store('Notify').Warning('Debe agregar una cantidad mayor a cero', 1500);
+    //}
+
 }
 class StaticProduct{
     /**
@@ -54,17 +51,17 @@ class StaticProduct{
     /**
      * units se pasa como objecto para que se pase como referencia y poder actualizar su valor desde el origen.
      **/
-    static addToCart(units = 1, productData){
+    static addToCart(units = 1, productData, optionValue){
         units = parseInt(units);
         let success = false;
-        const option = Alpine.store("selectedVariation");
+
         if(units > 0){
-            if(StaticProduct.canBeAdded(units, productData)){
-                if(productData.variationId !== null){
+            if(StaticProduct.canBeAdded(units, productData, optionValue)){
+                if(undefined !== optionValue){
                     success = Alpine.store('cart').add(
                         productData,
                         units,
-                        option
+                        optionValue
                     );
                 }else success = Alpine.store('cart').add(productData, units);
 
@@ -77,47 +74,55 @@ class StaticProduct{
     }
     /**
      * Returns True if "units to be added + units already added"
-     * do not exceed the available stock.
+     * do not exceed the available stock. This function considers
+     * product variations as individual items.
      **/
-    static canBeAdded(units = 1, productData){
-        let can = true;
-        const unitsInCart = Alpine.store("cart").getUnits(productData.id);
-        can = this.validUnits(unitsInCart + units, productData);
+    static canBeAdded(units, productData, optionValue){
+        let can = true, unitsInCart = 0;
+        if(undefined === optionValue)
+            unitsInCart = Alpine.store("cart").getUnits(productData.id);
+        else
+            unitsInCart = Alpine.store("cart").getUnits(productData.id, optionValue);
+        can = this.validUnits(unitsInCart + units, productData, optionValue);
+
         return can;
     }
     /**
-     * This returns true if the number of units is
-     * not greater than the available stock.
+     * This function returns true if the number of units is
+     * not greater than the available stock. This function considers the
+     * individual stock of each product variation.
      */
-    static validUnits(units, productData){
+    static validUnits(units, productData, optionValue){
         let isValid;
+
         if(this.measurableInM2(productData)){
             const m2ByUnit = productData.m2ByUnit;
             isValid = units*m2ByUnit <= productData.units;
         }else{
-            if(productData.variationId !== null){
+            if(undefined === optionValue) isValid = units <= productData.units;
+            else{
                 const varId = productData.variationId;
-                const value = Alpine.store("selectedVariation");
-                isValid = units <= Alpine.store("variations").getByValue(varId, value).units;
-            }else isValid = units <= productData.units;
+                isValid = units <= Alpine.store("variations").getByValue(varId, optionValue).units;
+            }
         }
 
         return isValid;
     }
     /**
-     * Returns the maximum number of boxes or packages.
-     * In the case of being ceramic, it returns the maximum
-     * available number of boxes according to the available square meters.
+     * Returns the maximum number of boxes or packages that can be added to the cart.
+     * In the case of being ceramic, it returns the maximum available number
+     * of boxes according to the available square meters.
      **/
-    static maxAvailableUnits(productData, option){
+    static maxAvailableUnits(productData, optionValue){
         let max;
         if(this.measurableInM2(productData)){
             max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
         }else{
-            if(undefined !== option) max = option.units;
-            else max = productData.units;
-
-            console.log("option:",option);
+            if(undefined === optionValue) max = productData.units;
+            else{
+                const varId = productData.variationId;
+                max = Alpine.store("variations").getByValue(varId, optionValue).units;
+            }
         }
 
         return parseInt(max);

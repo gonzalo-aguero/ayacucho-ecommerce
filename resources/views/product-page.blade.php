@@ -13,18 +13,22 @@
     <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
             units: 1,
             addToCart(){
-                if($store.StaticProduct.addToCart(this.units, product))
+                if($store.StaticProduct.addToCart(this.units, product, $store.selectedVariation))
                     this.units = 1;
             }
         }">
         {{--MAIN INFO SECTION--}}
         <div>
             {{--PRODUCT IMAGE--}}
-            <div class="relative">
+            <div class="relative text-center">
                 {{--"NO STOCK" SIGN--}}
-                @if($product->units == 0)
-                    <div class="bg-red text-white text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
-                @endif
+                <div x-cloak class="bg-red text-white text-center rounded-t absolute w-full opacity-80"
+                    x-show="
+                    (product.variationId === null && product.units === 0)
+                    || (product.variationId !== null
+                        && undefined !== $store.selectedVariation
+                        && $store.variations.getByValue(product.variationId, $store.selectedVariation).units === 0
+                        )">SIN STOCK</div>
 
                 <img
                     src="{{

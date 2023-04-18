@@ -27,8 +27,13 @@ class Variations{
     /**
      * Finds and returns the option data according to the "variationId" and "value" (the option value).
      **/
-    getByValue(variationId, value){
-        const optionData = this.list.find( (variation, index) => index === variationId-1).options.find( (option) => option.value === value );
+    getByValue(variationId, optionValue){
+        const variation = this.list.find( (variation, index) => index === variationId-1);
+        let optionData;
+        if(undefined !== variation){
+            optionData = variation.options.find( (option) => option.value === optionValue);
+        }
+
         return optionData;
     }
     /**
