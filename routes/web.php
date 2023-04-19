@@ -66,6 +66,4 @@ Route::get('/site/{token}/{action}', function (string $token, string $action) {
     return $exitCode;
 });
 
-
-
-Route::get('/{productName}/{productId}', [ProductController::class, 'show']);
+Route::get('{productName}/{productId}', [ProductController::class, 'show']);

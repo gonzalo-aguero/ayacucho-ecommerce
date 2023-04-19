@@ -8,6 +8,7 @@ import Notify from './Notification-Bar/notify';
 import Variations from './classes/Variations';
 //import {AxiosHeaders} from 'axios';
 import Order from './classes/Order';
+import GoogleReviews from './classes/GoogleReviews';
 
 if(DEBUG) console.log("Code working");
 
@@ -26,7 +27,6 @@ function priceFormat(value){
         value,
     );
 }
-//Confirm("Se eliminará el siguiente producto.\n¿Estás seguro?");
 function Confirm(message, callback){
     const container = document.getElementById("aux_black_transparent_bg");
     const modal = document.getElementById("confirm_modal");
@@ -182,8 +182,11 @@ async function loadProducts(){
             printProducts(store("printedProductsMax"));
         });
 }
-function HOME(){
+async function HOME(){
     if(DEBUG) console.log("THIS IS THE HOME PAGE.");
+    store("googleReviews", new GoogleReviews());
+    await store("googleReviews").load();
+    if(DEBUG) console.log("REVIEWS: ",store("googleReviews").reviews);
 }
 async function CHECKOUT(){
     if(DEBUG) console.log("THIS IS THE CHECKOUT PAGE.");
