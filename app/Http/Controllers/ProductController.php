@@ -31,7 +31,7 @@ class ProductController extends Controller
                 $variations = json_decode($variations);
                 $hasVariations = true;
             }
-
+            dd($product);
             if(count($products) > 0){
                 return view('product-page', [
                     "product" => $product,
