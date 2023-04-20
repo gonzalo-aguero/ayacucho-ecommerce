@@ -17,14 +17,14 @@ class GoogleReviews {
         }
     }
     run(){
-        //const elements = document.querySelectorAll("#google-reviews > .google-review");
-        //console.log(elements);
-        let i = -1;
+        document.body.style.overflowX = "hidden";
+        let i = 0;
+        this.show[i] = true;
         const interval = setInterval(()=>{
             this.show[i++] = false;
             if(i == this.show.length) i = 0;
             this.show[i] = true;
-        }, 2500);
+        }, 6000);
     }
 }
 export default GoogleReviews;

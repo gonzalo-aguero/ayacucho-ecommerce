@@ -64,7 +64,7 @@ class Cart{
     remove(item, optionValue){
         let done = false, posInCart = -1;
         //Product position in content array (it's -1 if it's not there)
-        if(undefined === optionValue)
+        if(undefined === optionValue || optionValue === "")
             posInCart = this.content.findIndex( prod => prod.pos === item.pos);
         else
             posInCart = this.content.findIndex( prod => prod.pos === item.pos && prod.option === optionValue);

@@ -27,6 +27,11 @@ function priceFormat(value){
         value,
     );
 }
+function decimalFormat(value){
+    return new Intl.NumberFormat("de-DE").format(
+        value,
+    );
+}
 function Confirm(message, callback){
     const container = document.getElementById("aux_black_transparent_bg");
     const modal = document.getElementById("confirm_modal");
@@ -93,6 +98,7 @@ document.addEventListener('alpine:init', async function(){
     store("ConfirmVisible", false);
     // *** HELPERS ***
     store('priceFormat', priceFormat);
+    store('decimalFormat', decimalFormat);
     store('Confirm', Confirm);
     store("gotoCheckout", gotoCheckout);
 

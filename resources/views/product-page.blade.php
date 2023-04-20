@@ -60,6 +60,8 @@
                     <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model="units" :disabled="product.units == 0"
                         class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
                     <span class="text-base font-light">Unidades</span>
+
+                    {{--AVAILABLE UNITS SECTION--}}
                     @if($product->showUnits)
                         @if(!$squareMeter)
                             @if($product->variationId == null)
@@ -76,6 +78,8 @@
                         @endif
                     @endif
                 </div>
+
+                {{--VARIATION SELECTOR SECTION--}}
                 @if($product->variationId != null)
                     <div class="mt-2" x-data="variationSelect">
                         <x-form.input type="select" name="variation"
@@ -106,16 +110,34 @@
                         </script>
                     </div>
                 @endif
+
+
                 @if($squareMeter)
                     <div class="text-base font-normal text-center">
                         <span class="text-lg">=</span>
                         <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
                         <span>m²</span>
+
+                        {{--AVAILABLE UNITS SECTION 2--}}
                         @if($product->showUnits)
-                            <span class="text-base font-light">({{number_format($product->units, 2, ',', '.')}}m² disponibles)</span>
+                            @if($product->variationId == null)
+                                <span class="text-base font-light">({{number_format($product->units, 2, ',', '.')}}m² disponibles)</span>
+                            @else
+                                <template x-if="$store.selectedVariation">
+                                    <span class="text-base font-light" x-text="
+                                        '('
+                                        + $store.decimalFormat(
+                                                $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                            )
+                                        + 'm² disponibles)'
+                                    "></span>
+                                </template>
+                            @endif
                         @endif
                     </div>
                 @endif
+
+
                 {{--ADD TO CART BUTTON--}}
                 <button class="text-white text-xl p-2 mt-2 rounded"
                     x-bind:class="{{ $disabledAddToCartCondition }}

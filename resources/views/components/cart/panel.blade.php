@@ -25,11 +25,11 @@
                     x-init="
                         product = $store.products[item.pos];
                         units = item.units;
-                        optionValue = item.option;
+                        if(undefined !== item.option) optionValue = item.option;
                         $watch('$store.cart.content', ()=>{
                             product = $store.products[item.pos];
                             units = item.units;
-                            optionValue = item.option;
+                            if(undefined !== item.option) optionValue = item.option;
                         });
                     "
                     class="grid grid-cols-cart-table gap-2 text-sm items-center p-2">
@@ -44,9 +44,14 @@
                         <img src="{{ asset('images/UI-Icons/icons8-remove-48.png') }}" class="h-5 w-5"/>
                     </button>
                     {{--PRODUCT IMAGE AND NAME--}}
-                    <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2">
+                    <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2" x-data="{
+                            productNameText(){
+                                if(undefined === optionValue || optionValue === '') return product.name;
+                                else return product.name + ' - ' + optionValue;
+                            }
+                        }">
                         <img :src="productImage" class="h-6 w-6"/>
-                        <span x-text="product.name + ' - ' + optionValue" class="truncate text-xs break-words" :title="product.name + ' - ' + optionValue"></span>
+                        <span x-text="productNameText" class="truncate text-xs break-words" :title="productNameText"></span>
                     </a>
                     {{--PRODUCT PRICES--}}
                     <div>

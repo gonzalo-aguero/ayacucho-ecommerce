@@ -55,7 +55,11 @@ class OrderController extends Controller
             $id = $products[$item->pos]->id;
             $description = $products[$item->pos]->description;
 
-            $productsText .= $this->dataItem("[$id] x".$item->units, $description);
+            if(isset($item->option)){
+                $productsText .= $this->dataItem("[$id] x".$item->units, '('.$item->option.') '.$description);
+            }else {
+                $productsText .= $this->dataItem("[$id] x".$item->units, $description);
+            }
         }
 
         $text = "Hola *$compName*, esta es la información de mi pedido:\n\n"

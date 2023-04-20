@@ -79,10 +79,8 @@ class StaticProduct{
      **/
     static canBeAdded(units, productData, optionValue){
         let can = true, unitsInCart = 0;
-        if(undefined === optionValue)
-            unitsInCart = Alpine.store("cart").getUnits(productData.id);
-        else
-            unitsInCart = Alpine.store("cart").getUnits(productData.id, optionValue);
+
+        unitsInCart = Alpine.store("cart").getUnits(productData.id, optionValue);
         can = this.validUnits(unitsInCart + units, productData, optionValue);
 
         return can;
@@ -94,15 +92,24 @@ class StaticProduct{
      */
     static validUnits(units, productData, optionValue){
         let isValid;
+        const variable = !(undefined === optionValue || optionValue === "" || productData.variationId === null);
 
         if(this.measurableInM2(productData)){
             const m2ByUnit = productData.m2ByUnit;
-            isValid = units*m2ByUnit <= productData.units;
-        }else{
-            if(undefined === optionValue) isValid = units <= productData.units;
-            else{
+            if(!variable){
+                isValid = units*m2ByUnit <= productData.units;
+            }else{
                 const varId = productData.variationId;
-                isValid = units <= Alpine.store("variations").getByValue(varId, optionValue).units;
+                const optionUnits = Alpine.store("variations").getByValue(varId, optionValue).units;
+                isValid = units*m2ByUnit <= optionUnits;
+            }
+        }else{
+            if(!variable){
+                isValid = units <= productData.units;
+            }else{
+                const varId = productData.variationId;
+                const optionUnits = Alpine.store("variations").getByValue(varId, optionValue).units;
+                isValid = units <= optionUnits;
             }
         }
 
@@ -115,14 +122,20 @@ class StaticProduct{
      **/
     static maxAvailableUnits(productData, optionValue){
         let max;
+        const variable = undefined !== optionValue && optionValue !== "";
         if(this.measurableInM2(productData)){
-            max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
+            if(variable){
+                const varId = productData.variationId;
+                const option = Alpine.store("variations").getByValue(varId, optionValue);
+                max = parseFloat(option.units) / parseFloat(productData.m2ByUnit);
+            }else{
+                max = parseFloat(productData.units) / parseFloat(productData.m2ByUnit);
+            }
         }else{
-            if(undefined === optionValue) max = productData.units;
-            else{
+            if(variable){
                 const varId = productData.variationId;
                 max = Alpine.store("variations").getByValue(varId, optionValue).units;
-            }
+            }else  max = productData.units;
         }
 
         return parseInt(max);
