@@ -22,6 +22,7 @@ class ProductController extends Controller
                 return $prod->id == $this->productId;
             });
             $products = array_values($products);
+            dd($products);
             $product = $products[0];
 
             $hasVariations = false;
