@@ -2,24 +2,31 @@
 class Cart{
     content;
     constructor(){
-        this.content = [];// [{item, units}, {item, units}]
+        this.content = [];// [{item, units, ?option}, {item, units, ?option}]
         this.load();
     }
     /**
      * Saves the position of the product passed as parameter in the products global array.
      **/
-    add(productData, units = 1){
+    add(productData, units = 1, optionValue){
         units = parseInt(units);
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === productData.id);
         //Product position in content array (it's -1 if it's not there)
-        const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        let posInCart;
+        if(undefined === optionValue){
+            posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+        }else{
+            posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === optionValue);
+        }
+
         if(posInCart !== -1){
             this.content[posInCart].units += units;
         }else{
             this.content.push({
                 pos: posInProducts,
-                units
+                units,
+                option: optionValue
             });
         }
         this.save();
@@ -34,13 +41,19 @@ class Cart{
     /**
      * Given a product id (string), it returns its units in the cart.
      **/
-    getUnits(id){
+    getUnits(id, optionValue){
         let units = false;
         //Product position in products array
         const posInProducts = Alpine.store('products').findIndex( prod => prod.id === id);
         if(posInProducts !== -1){
             //Product position in content array
-            const posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+            let posInCart = -1;
+            if(undefined === optionValue)
+                posInCart = this.content.findIndex( prod => prod.pos === posInProducts);
+            else{
+                posInCart = this.content.findIndex( prod => prod.pos === posInProducts && prod.option === optionValue);
+            }
+
             if(posInCart !== -1){
                 units = this.content[posInCart].units;
             }else units = 0;
@@ -48,10 +61,13 @@ class Cart{
 
         return units;
     }
-    remove(item){
-        let done = false;
+    remove(item, optionValue){
+        let done = false, posInCart = -1;
         //Product position in content array (it's -1 if it's not there)
-        const posInCart = this.content.findIndex( prod => prod.pos === item.pos);
+        if(undefined === optionValue || optionValue === "")
+            posInCart = this.content.findIndex( prod => prod.pos === item.pos);
+        else
+            posInCart = this.content.findIndex( prod => prod.pos === item.pos && prod.option === optionValue);
 
         if(posInCart !== -1){
             this.content.splice(posInCart, 1);
@@ -72,19 +88,36 @@ class Cart{
         const secondsInADay = (60*60*24);
         const days = 21*secondsInADay;
         const expirationDate = new Date(new Date().getTime() + days*1000).toUTCString();
-        document.cookie = `cart=${JSON.stringify(this.content)}; expires=date-in-GMTString-format=${expirationDate}; path=/`;
+        document.cookie = `cart=${JSON.stringify(this.content)}; expires=${expirationDate}; max-age=${days*21};path=/; SameSite=Lax`;
     }
     load(){
-        // Cookie format: cookie1=value; cookie2=value
-        const exists = document.cookie.split(';').some( item => item.includes("cart"));
-        if(exists){
-            const cartCookie = document.cookie.split(';').find( item => item.startsWith("cart=")).slice(5);
-            let cart = JSON.parse(cartCookie);
-            cart = cart.map( prod => {
-                return { pos: prod.pos, units: parseInt(prod.units) };
-            });
-            this.content = cart;
-        }else this.save();
+        try{
+            // Cookie format: cookie1=value; cookie2=value
+            const exists = document.cookie.split(';').some( item => item.includes("cart"));
+            if(exists){
+                let ws;// have white space (bool). Created because a bug was found in the Firefox browser.
+                let cartCookie = document.cookie.split(';').find( item => {
+                    if(item.startsWith("cart=")){
+                        ws = false;
+                        return true;
+                    }else if(item.startsWith(" cart=")){
+                        ws = true;
+                        return true;
+                    }
+                });
+                if(ws) cartCookie = cartCookie.slice(6);
+                else cartCookie = cartCookie.slice(5);
+
+                let cart = JSON.parse(cartCookie);
+                cart = cart.map( prod => {
+                    return { pos: prod.pos, units: parseInt(prod.units), option: prod.option };
+                });
+                this.content = cart;
+            }else this.save();
+        }catch(err){
+            this.save();
+            console.error("Cart has been saved empty.\n", err);
+        }
     }
     length(){
         return this.content.length;

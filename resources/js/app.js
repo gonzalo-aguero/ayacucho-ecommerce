@@ -5,15 +5,16 @@ import PaymentMethods from './classes/PaymentMethods';
 import { StaticProduct } from './classes/Product';
 import ShippingZones from './classes/ShippingZones';
 import Notify from './Notification-Bar/notify';
+import Variations from './classes/Variations';
 //import {AxiosHeaders} from 'axios';
 import Order from './classes/Order';
+import GoogleReviews from './classes/GoogleReviews';
 
 if(DEBUG) console.log("Code working");
 
 /***************************
  ********* HELPERS *********
  ***************************/
-
 function store(key, value){
     if(value === undefined){
         return Alpine.store(key);
@@ -26,8 +27,55 @@ function priceFormat(value){
         value,
     );
 }
-function Confirm(message){
-    return confirm(message);
+function decimalFormat(value){
+    return new Intl.NumberFormat("de-DE").format(
+        value,
+    );
+}
+function Confirm(message, callback){
+    const container = document.getElementById("aux_black_transparent_bg");
+    const modal = document.getElementById("confirm_modal");
+
+    // Agregar el mensaje a la ventana modal
+    const messageElement = modal.querySelector("p");
+    messageElement.innerText = message;
+
+    // Crear los botones de confirmar y cancelar
+    const confirmButton = modal.querySelector(".confirm_btn");
+    confirmButton.innerText = "Confirmar";
+
+    var cancelButton = modal.querySelector(".cancel_btn");
+    cancelButton.innerText = "Cancelar";
+
+    // Agregar el modal al cuerpo del documento
+    container.classList.replace("hidden", "fixed");
+    modal.classList.replace("hidden", "fixed");
+    store("ConfirmVisible", true);
+
+    // Función para ocultar la ventana modal
+    function hideModal() {
+        modal.classList.replace("fixed", "hidden");
+        container.classList.replace("fixed", "hidden");
+        cancelButton.removeEventListener("click", clickCancelBtnHandler);
+        confirmButton.removeEventListener("click", clickConfirmBtnHandler);
+        setTimeout(()=>{
+            store("ConfirmVisible", false);
+        }, 500);
+    }
+
+    function clickCancelBtnHandler(){
+        hideModal();
+        callback(false);
+    }
+    // Event listener para ocultar la ventana modal cuando se hace clic en el botón de cancelar
+    cancelButton.addEventListener("click", clickCancelBtnHandler);
+
+    function clickConfirmBtnHandler(){
+        hideModal();
+        callback(true);
+    }
+    // Event listener para realizar una acción cuando se hace clic en el botón de confirmar
+    confirmButton.addEventListener("click", clickConfirmBtnHandler);
 }
 function gotoCheckout(route){
     console.log(store("cart").length());
@@ -38,6 +86,7 @@ function gotoCheckout(route){
 
 document.addEventListener('alpine:init', async function(){
     store('products', []);
+    store("variations", new Variations())
     store('productsLength', 0);
     store('sortedProducts', []);
     store('productsToPrint', []);
@@ -46,20 +95,22 @@ document.addEventListener('alpine:init', async function(){
     store('StaticProduct', StaticProduct);
     store('Notify', Notify);
     store('cartOpened', false);
+    store("ConfirmVisible", false);
     // *** HELPERS ***
     store('priceFormat', priceFormat);
+    store('decimalFormat', decimalFormat);
     store('Confirm', Confirm);
     store("gotoCheckout", gotoCheckout);
 
     await loadProducts();
-    console.log("PRODUCTOS CARGADOS 2");
+    store("variations").load();
 
     Notify.Settings = {
         soundsOff: false,
         animDuration: {
-            success: 5000,
-            warning: 5000,
-            error: 5000
+            success: 3500,
+            warning: 3500,
+            error: 3500
         }
     };
 
@@ -67,16 +118,6 @@ document.addEventListener('alpine:init', async function(){
     if(path === "/") HOME();
     else if(path === "/checkout") CHECKOUT();
     else if(IS_PRODUCT_PAGE) PRODUCT_PAGE();
-
-
-
-           //setTimeout(()=>{
-        //let interval = setInterval(()=>{
-            //printMoreProducts();
-        //}, 3000);
-    //}, 2000);
-
-    //Livewire.emit("setProductsLoaded");
 });
 function sortByCategories(){
     const sortedProducts = [];
@@ -145,14 +186,16 @@ async function loadProducts(){
             if(DEBUG) console.log("Productos ordenados:", store("sortedProducts"));
 
             printProducts(store("printedProductsMax"));
-            console.log("PRODUCTOS CARGADOS");
         });
 }
-function HOME(){
-    console.log("THIS IS THE HOME PAGE.");
+async function HOME(){
+    if(DEBUG) console.log("THIS IS THE HOME PAGE.");
+    store("googleReviews", new GoogleReviews());
+    await store("googleReviews").load();
+    if(DEBUG) console.log("REVIEWS: ",store("googleReviews").reviews);
 }
 async function CHECKOUT(){
-    console.log("THIS IS THE CHECKOUT PAGE.");
+    if(DEBUG) console.log("THIS IS THE CHECKOUT PAGE.");
 
     store("selectedPaymentMethod", undefined);
     store("selectedShippingZone", undefined);
@@ -176,5 +219,6 @@ async function CHECKOUT(){
     });
 }
 function PRODUCT_PAGE(){
-    console.log("This is the Product Page!");
+    if(DEBUG) console.log("This is the Product Page!");
+    store("selectedVariation", undefined);
 }

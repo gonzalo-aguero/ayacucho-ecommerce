@@ -38,9 +38,13 @@
   cursor: pointer;
 }
 .dropdown_menu-6 {
-  /*animation: growDown 200ms ease-in-out reverse;*/
-  animation: growDown 200ms ease-in-out forwards;
-  animation-direction: alternate;
+  animation: growDown 200ms ease-in-out;
+  animation-direction: normal;
+  transform-origin: top center;
+}
+.dropup_menu-6{
+  animation: growDown 300ms ease-in-out;
+  animation-direction: reverse;
   transform-origin: top center;
 }
 .dropdown_menu {

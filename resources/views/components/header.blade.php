@@ -36,7 +36,7 @@
     }">
     {{--Logo and Title--}}
     <div class="flex flex-nowrap justify-between items-center gap-2 py-3 px-2">
-        <a href="{{ route('home') }}"><img src="{{asset('logo.png')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16"></a>
+        <a href="{{ route('home') }}"><img src="{{asset('logo.webp')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16"></a>
         <a href="{{ route('home') }}">
             <h1 class="font-bold uppercase">
                 <span class="text-black">{{ config('app.name_1') }}</span>
@@ -45,7 +45,7 @@
         </a>
     </div>
     <nav clas="text-orange h-full">
-        <button @click="openMenu()" x-show="smartphone" x-cloak class="active:opacity-80 text-center">
+        <button name="Abrir Menu" @click="openMenu()" x-show="smartphone" x-cloak class="active:opacity-80 text-center">
             <img src="{{ asset('images/UI-Icons/icons8-menu-rounded-100.png') }}" class="h-12">
         </button>
         <ul class="fixed z-10 w-2/3 left-0 !top-0 top-[5.4rem] pt-[5.4rem] shadow-md h-full gap-0
@@ -57,9 +57,11 @@
             x-transition:leave="animate__fadeOutLeftBig"
         >
             @foreach($navItems as $item)
-                <li class="flex flex-nowrap items-center gap-1 font-base py-10 md:py-2 px-8 cursor-pointer hover:bg-gray-light" x-on:click="{{ $item["action"] }}">
-                    <a {{ $item["url"] }}><img src="{{ $item["img"] }}" class="h-6 w-6 shrink"/></a>
-                    <a {{ $item["url"] }} class="text-lg md:text-base">{{ $item["text"] }}</a>
+                <li class="flex flex-nowrap items-center gap-1 font-base cursor-pointer hover:bg-gray-light" x-on:click="{{ $item["action"] }}">
+                    <a {{ $item["url"] }} class="flex flex-nowrap items-center h-full gap-2 py-10 md:py-2 px-8">
+                        <img src="{{ $item["img"] }}" class="h-6 w-6 shrink" alt="{{ $item["text"] }}"/>
+                        <span class="text-lg md:text-base">{{ $item["text"] }}</span>
+                    </a>
                 </li>
             @endforeach
         </ul>

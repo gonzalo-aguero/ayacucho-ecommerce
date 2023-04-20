@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 
 Route::get('/checkout', function () {
-    return view('checkout', ["DEBUG" => config("app.debug")]);
+    return view('checkout', [ "DEBUG" => config("app.debug") ]);
 })->name('checkout');
 
 
@@ -66,6 +66,4 @@ Route::get('/site/{token}/{action}', function (string $token, string $action) {
     return $exitCode;
 });
 
-
-
-Route::get('/{productName}/{productID}', [ProductController::class, 'show']);
+Route::get('{productName}/{productId}', [ProductController::class, 'show']);

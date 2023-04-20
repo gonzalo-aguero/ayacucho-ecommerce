@@ -5,7 +5,7 @@
     "src": "resources/css/Notification-Bar.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-def52eb1.css",
+    "file": "assets/app-c263e7e2.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -15,7 +15,7 @@
     "src": "resources/js/admin.js"
   },
   "resources/js/app.js": {
-    "file": "assets/app-f854af2f.js",
+    "file": "assets/app-73cd9372.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

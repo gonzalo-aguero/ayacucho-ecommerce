@@ -13,7 +13,7 @@
                 <li x-data="{
                         units: 1,
                         product: 0,
-                        variation: '',
+                        optionValue: '',
                         productImage(){
                             const image =
                                 this.product.image !== null
@@ -25,24 +25,33 @@
                     x-init="
                         product = $store.products[item.pos];
                         units = item.units;
+                        if(undefined !== item.option) optionValue = item.option;
                         $watch('$store.cart.content', ()=>{
                             product = $store.products[item.pos];
                             units = item.units;
+                            if(undefined !== item.option) optionValue = item.option;
                         });
                     "
                     class="grid grid-cols-cart-table gap-2 text-sm items-center p-2">
                     {{--REMOVE PRODUCT BUTTON--}}
                     <button class="w-5 hover:opacity-80" @click="
-                        if($store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`)){
-                            $store.cart.remove(item);
-                        }
+                        $store.Confirm(`Se eliminará ${product.name} de tu carrito.\n¿Estás seguro?`, (response)=>{
+                            if(response){
+                                $store.cart.remove(item, optionValue);
+                            }
+                        });
                     ">
                         <img src="{{ asset('images/UI-Icons/icons8-remove-48.png') }}" class="h-5 w-5"/>
                     </button>
                     {{--PRODUCT IMAGE AND NAME--}}
-                    <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2">
+                    <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2" x-data="{
+                            productNameText(){
+                                if(undefined === optionValue || optionValue === '') return product.name;
+                                else return product.name + ' - ' + optionValue;
+                            }
+                        }">
                         <img :src="productImage" class="h-6 w-6"/>
-                        <span x-text="product.name + variation" class="truncate text-xs break-words" :title="product.name"></span>
+                        <span x-text="productNameText" class="truncate text-xs break-words" :title="productNameText"></span>
                     </a>
                     {{--PRODUCT PRICES--}}
                     <div>
@@ -56,16 +65,16 @@
                     </div>
                     {{--PRODUCT UNITS--}}
                     <div>
-                        <input type="number" min="1" x-model="units" x-init="
+                        <input type="number" min="1" x-model.lazy="units" x-init="
                             $watch('units', (value, valueBef) => {
-                                if(value === '') units = valueBef;
+                                if(value === '' || value == '0') units = valueBef;
                                 else{
                                     const newUnits = Number.parseInt(value);
-                                    if($store.StaticProduct.validUnits(newUnits, product)){
+                                    if($store.StaticProduct.validUnits(newUnits, product, optionValue)){
                                         item.units = newUnits;
                                         $store.cart.save();
                                     }else{
-                                        units = $store.StaticProduct.maxAvailableUnits(product);
+                                        units = $store.StaticProduct.maxAvailableUnits(product, optionValue);
                                         Alpine.store('Notify').Warning('No hay suficiente stock disponible.')
                                     }
                                 }
@@ -87,10 +96,12 @@
     </ul>
     <div class="flex justify-between flex-wrap md:flex-nowrap  md:items-stretch h-20 md:h-auto">
         <button x-show="$store.cart.length() > 0" class="bg-red text-white py-1 px-2 text-sm rounded hover:opacity-80 w-[48%] md:w-auto" @click="
-            if($store.Confirm('Se vaciará tu carrito.\n¿Estás seguro?')){
-                $store.cart.clear();
-                $store.cartOpened = false;
-            }
+            $store.Confirm('Se vaciará tu carrito.\n¿Estás seguro?', (response)=>{
+                if(response){
+                    $store.cart.clear();
+                    $store.cartOpened = false;
+                }
+            });
         ">Vaciar Carrito</button>
         <button x-show="$store.cart.length() === 0" disabled class="bg-gray text-white py-1 px-2 text-sm rounded opacity-80 w-[48%] md:w-auto">Vaciar Carrito</button>
 
