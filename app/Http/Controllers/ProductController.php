@@ -22,7 +22,6 @@ class ProductController extends Controller
                 return $prod->id == $this->productId;
             });
             $products = array_values($products);
-            dd($products);
             $product = $products[0];
 
             $hasVariations = false;
@@ -32,7 +31,7 @@ class ProductController extends Controller
                 $variations = json_decode($variations);
                 $hasVariations = true;
             }
-            dd($product);
+
             if(count($products) > 0){
                 return view('product-page', [
                     "product" => $product,
