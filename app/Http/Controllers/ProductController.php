@@ -42,7 +42,7 @@ class ProductController extends Controller
                 abort(404);
             }
         }catch(\Throwable $th){
-            abort(404, $th);
+            abort(404);
         }
     }
 }
