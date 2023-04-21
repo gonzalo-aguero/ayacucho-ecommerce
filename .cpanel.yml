@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    - export PUBLIC_PATH=/home/c6743/public_html/
-    - export LARAVEL_BACKEND_PATH=/home/c6743/
+    - export PUBLIC_PATH=/home/c6743/public_html
+    - export LARAVEL_BACKEND_PATH=/home/c6743
     - /bin/cp -r ./app $LARAVEL_BACKEND_PATH
     - /bin/cp -r ./bootstrap $LARAVEL_BACKEND_PATH
     - /bin/cp -r ./config $LARAVEL_BACKEND_PATH
@@ -13,3 +13,4 @@ deployment:
     - /bin/cp -r ./storage $LARAVEL_BACKEND_PATH
     - /bin/cp ./artisan $LARAVEL_BACKEND_PATH
     - /bin/cp ./composer.json $LARAVEL_BACKEND_PATH
+    - /bin/php $LARAVEL_BACKEND_PATH/artisan storage:link
