@@ -22,16 +22,17 @@
                 class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-center items-start w-[95%] md:w-4/5"
             >
             <h2 class="w-full text-center uppercase text-2xl font-semibold drop-shadow-2xl">Checkout</h2>
+
             @csrf
             {{--CUSTOMER DETAIL SECTION--}}
             <div class="{{$sectionStyle}}">
                 <h2 class="{{$sectionTitleStyle}}">DATOS DEL CLIENTE</h2>
-                <x-form.input type="text" name="name" min="3" max="75" required>Nombre completo</x-form.input>
-                <x-form.input type="text" name="dni" min="3" max="12" required>DNI</x-form.input>
-                <x-form.input type="email" name="email" min="5" max="75">Correo Electrónico</x-form.input>
-                <x-form.input type="telephone" name="telephone" required>Teléfono o Celular</x-form.input>
-                <x-form.input type="text" name="city" min="2" max="75" required>Localidad</x-form.input>
-                <x-form.input type="text" name="streetaddress" min="3" max="75" required>Dirección</x-form.input>
+                <x-form.input type="text" name="name" min="3" max="50" {{--required--}}>Nombre completo</x-form.input>
+                <x-form.input type="text" name="dni" min="3" max="12" {{--required--}}>DNI</x-form.input>
+                <x-form.input type="email" name="email" min="5" max="50">Correo electrónico</x-form.input>
+                <x-form.input type="telephone" name="telephone" {{--required--}}>Teléfono o celular</x-form.input>
+                <x-form.input type="text" name="city" min="2" max="50" {{--required--}}>Localidad</x-form.input>
+                <x-form.input type="text" name="streetaddress" min="5" max="50" {{--required--}}>Dirección</x-form.input>
                 <x-form.input type="text" name="note" max="250">Nota del pedido</x-form.input>
             </div>
 
@@ -40,7 +41,7 @@
                 <div class="{{$sectionStyle}} h-min" x-data="paymentMethodSelect">
                     <h2 class="{{$sectionTitleStyle}}">MÉTODO DE PAGO</h2>
                     <x-form.input type="select" name="paymentMethod"
-                        required
+                        {{--required--}}
                         requiredSign="0"
                         :options="$options1"
                         getSelectedFrom="$store.paymentMethods.methods"
@@ -66,13 +67,16 @@
                             }));
                         });
                     </script>
+                    @error("_paymentMethod")
+                        <div class="text-red text-xs my-1">Ha ocurrido un error al seleccionar el método de pago.</div>
+                    @enderror
                 </div>
 
                 {{--SHIPPING ZONE SECTION--}}
                 <div class="{{$sectionStyle}} h-min" x-data="shippingZoneSelect">
                     <h2 class="{{$sectionTitleStyle}}">ENTREGA</h2>
                     <x-form.input type="select" name="shippingZone"
-                        required
+                        {{--required--}}
                         requiredSign="0"
                         :options="$options2"
                         getSelectedFrom="$store.shippingZones.zones"
@@ -95,6 +99,9 @@
                             }));
                         });
                     </script>
+                    @error("_shippingZone")
+                        <div class="text-red text-xs my-1">Ha ocurrido un error al seleccionar la entrega.</div>
+                    @enderror
                 </div>
             </div>
 

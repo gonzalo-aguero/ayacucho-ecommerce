@@ -13,4 +13,4 @@ deployment:
     - /bin/cp -r ./storage $LARAVEL_BACKEND_PATH
     - /bin/cp ./artisan $LARAVEL_BACKEND_PATH
     - /bin/cp ./composer.json $LARAVEL_BACKEND_PATH
-    - /bin/php $LARAVEL_BACKEND_PATH/artisan storage:link
+    - cd $LARAVEL_BACKEND_PATH
