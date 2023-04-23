@@ -156,7 +156,7 @@
             <template x-if="$store.cart.length() == 0">
                 <input type="submit" value="Finalizar Compra" class="bg-gray text-white py-2 px-8 rounded text-lg cursor-default w-full opacity-80" disabled>
             </template>
-
+            <span class="text-sm font-light text-black w-full md-600:w-4/5 md:w-2/3 lg:w-1/2 text-center">Serás redirigido al chat de WhatsApp de la empresa. Una vez allí, por favor envía el mensaje generado.</span>
         </form>
     </div>
 </x-store-layout>
