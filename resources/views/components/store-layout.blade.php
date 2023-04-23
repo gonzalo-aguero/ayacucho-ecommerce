@@ -1,6 +1,10 @@
 @aware([
     'pageTitle' => config('app.name'),
-    "headTags" => [],
+    "pageDescription" => "",
+    "keywords" => "",
+    "noIndex" => false,
+    "revisit" => false,
+
     "isProductPage" => false,
     "javascriptData" => []
 ])
@@ -8,14 +12,18 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8"/>
+        <meta http-equiv="content-type" charset="text/html; utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        @foreach($headTags as $tag)
-            {{!! $tag !!}}
-        @endforeach
-
         <title>{{ $pageTitle }}</title>
-
+        @if($noIndex)
+            <meta name="robots" content="noindex">
+        @endif
+        @if($revisit)
+            <meta name="revisit" content="5 days">
+        @endif
+        <meta name="description" content="{{ $pageDescription }}">
+        <meta name="keywords" content="{{ $keywords }}"/>
+        <meta http-equiv="expires" content="432000"/>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>

@@ -1,5 +1,8 @@
 @props([
     'pageTitle' => "Checkout - " . config('app.name'),
+    "noIndex" => true,
+
+
     "sectionStyle" => "flex flex-wrap items-start w-72 border border-gray-light2 rounded p-4 w-full md-600:w-[30rem]",
     "sectionTitleStyle" => "font-semibold text-md w-full",
     "options1" => [
@@ -10,11 +13,8 @@
     ],
     "noteStyle" => "border border-gray-light2 bg-gray-light-transparent rounded p-2 w-full text-sm",
     "orderSummaryItemsStyles" => "flex justify-between bg-white py-2 px-1",
-    "headTags" => [
-        '<meta name="robots" content="noindex">'
-    ]
 ])
-<x-store-layout pageTitle="{{$pageTitle}}" :$headTags>
+<x-store-layout pageTitle="{{$pageTitle}}" :$noIndex>
     <div class="relative flex flex-col items-center mt-40 mb-20 px-2 py-10 gap-8">
         <form
             method="POST"
@@ -22,16 +22,17 @@
                 class="bg-white rounded-lg p-8 flex flex-wrap gap-6 justify-center items-start w-[95%] md:w-4/5"
             >
             <h2 class="w-full text-center uppercase text-2xl font-semibold drop-shadow-2xl">Checkout</h2>
+
             @csrf
             {{--CUSTOMER DETAIL SECTION--}}
             <div class="{{$sectionStyle}}">
                 <h2 class="{{$sectionTitleStyle}}">DATOS DEL CLIENTE</h2>
-                <x-form.input type="text" name="name" min="3" max="75" required>Nombre completo</x-form.input>
+                <x-form.input type="text" name="name" min="3" max="50" required>Nombre completo</x-form.input>
                 <x-form.input type="text" name="dni" min="3" max="12" required>DNI</x-form.input>
-                <x-form.input type="email" name="email" min="5" max="75">Correo Electrónico</x-form.input>
-                <x-form.input type="telephone" name="telephone" required>Teléfono o Celular</x-form.input>
-                <x-form.input type="text" name="city" min="2" max="75" required>Localidad</x-form.input>
-                <x-form.input type="text" name="streetaddress" min="3" max="75" required>Dirección</x-form.input>
+                <x-form.input type="email" name="email" min="5" max="50">Correo electrónico</x-form.input>
+                <x-form.input type="telephone" name="telephone" required>Teléfono o celular</x-form.input>
+                <x-form.input type="text" name="city" min="2" max="50" required>Localidad</x-form.input>
+                <x-form.input type="text" name="streetaddress" min="5" max="50" required>Dirección</x-form.input>
                 <x-form.input type="text" name="note" max="250">Nota del pedido</x-form.input>
             </div>
 
@@ -66,6 +67,9 @@
                             }));
                         });
                     </script>
+                    @error("_paymentMethod")
+                        <div class="text-red text-xs my-1">Ha ocurrido un error al seleccionar el método de pago.</div>
+                    @enderror
                 </div>
 
                 {{--SHIPPING ZONE SECTION--}}
@@ -95,6 +99,9 @@
                             }));
                         });
                     </script>
+                    @error("_shippingZone")
+                        <div class="text-red text-xs my-1">Ha ocurrido un error al seleccionar la entrega.</div>
+                    @enderror
                 </div>
             </div>
 
@@ -149,7 +156,7 @@
             <template x-if="$store.cart.length() == 0">
                 <input type="submit" value="Finalizar Compra" class="bg-gray text-white py-2 px-8 rounded text-lg cursor-default w-full opacity-80" disabled>
             </template>
-
+            <span class="text-sm font-light text-black w-full md-600:w-4/5 md:w-2/3 lg:w-1/2 text-center">Serás redirigido al chat de WhatsApp de la empresa. Una vez allí, por favor envía el mensaje generado.</span>
         </form>
     </div>
 </x-store-layout>

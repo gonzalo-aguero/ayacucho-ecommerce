@@ -87,9 +87,19 @@ class OrderController extends Controller
         return "https://wa.me/$compPhoneNumber?text=$urlEncodedText";
     }
     public function create(Request $request){
-        //PENDING: FULL VALIDATION!!!
         $request->validate([
-            'name' => 'required|min:3|max:75',
+            'name' => 'required|min:3|max:50',
+            'dni' => 'required|min:5|max:12',
+            'email' => 'max:50',
+            'telephone' => 'required|min:7|max:18',
+            'city' => 'required|min:2|max:50',
+            'streetaddress' => 'required|min:5|max:50',
+            'note' => 'max:250',
+            '_shippingZone' => 'required|min:2|max:100',
+            '_paymentMethod' => 'required|min:2|max:100',
+            'cartTotal' => 'required|min:1|max:100',
+            'shippingCost' => 'required|min:1|max:100',
+            'orderTotal' => 'required|min:1|max:100',
         ]);
 
         return redirect($this->generateURL($request, $this->getBusinessPhoneNumber()))->withoutCookie('cart');

@@ -1,5 +1,8 @@
 @props([
     'pageTitle' => $product->name. " - " . config('app.name'),
+    "pageDescription" => $product->description,
+
+
     "javascriptData" => [
         ["key" => "product", "value" => $product],
         ["key" => "variation", "value" => $variation],
@@ -9,7 +12,13 @@
     "hasAttributes" => ($product->m2Price != null && $product->m2ByUnit != null),
     "disabledAddToCartCondition" => 'product.units === 0 || (product.variationId !== null && undefined === $store.selectedVariation)',
 ])
-<x-store-layout pageTitle="{{$pageTitle}}" isProductPage="true" :$javascriptData>
+<x-store-layout
+    pageTitle="{{$pageTitle}}"
+    :$pageDescription
+    :revisit="true"
+    isProductPage="true"
+    :$javascriptData
+    >
     <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
             units: 1,
             addToCart(){
