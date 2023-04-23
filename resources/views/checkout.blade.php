@@ -1,5 +1,8 @@
 @props([
     'pageTitle' => "Checkout - " . config('app.name'),
+    "noIndex" => true,
+
+
     "sectionStyle" => "flex flex-wrap items-start w-72 border border-gray-light2 rounded p-4 w-full md-600:w-[30rem]",
     "sectionTitleStyle" => "font-semibold text-md w-full",
     "options1" => [
@@ -10,11 +13,8 @@
     ],
     "noteStyle" => "border border-gray-light2 bg-gray-light-transparent rounded p-2 w-full text-sm",
     "orderSummaryItemsStyles" => "flex justify-between bg-white py-2 px-1",
-    "headTags" => [
-        '<meta name="robots" content="noindex">'
-    ]
 ])
-<x-store-layout pageTitle="{{$pageTitle}}" :$headTags>
+<x-store-layout pageTitle="{{$pageTitle}}" :$noIndex>
     <div class="relative flex flex-col items-center mt-40 mb-20 px-2 py-10 gap-8">
         <form
             method="POST"
@@ -27,12 +27,12 @@
             {{--CUSTOMER DETAIL SECTION--}}
             <div class="{{$sectionStyle}}">
                 <h2 class="{{$sectionTitleStyle}}">DATOS DEL CLIENTE</h2>
-                <x-form.input type="text" name="name" min="3" max="50" {{--required--}}>Nombre completo</x-form.input>
-                <x-form.input type="text" name="dni" min="3" max="12" {{--required--}}>DNI</x-form.input>
+                <x-form.input type="text" name="name" min="3" max="50" required>Nombre completo</x-form.input>
+                <x-form.input type="text" name="dni" min="3" max="12" required>DNI</x-form.input>
                 <x-form.input type="email" name="email" min="5" max="50">Correo electrónico</x-form.input>
-                <x-form.input type="telephone" name="telephone" {{--required--}}>Teléfono o celular</x-form.input>
-                <x-form.input type="text" name="city" min="2" max="50" {{--required--}}>Localidad</x-form.input>
-                <x-form.input type="text" name="streetaddress" min="5" max="50" {{--required--}}>Dirección</x-form.input>
+                <x-form.input type="telephone" name="telephone" required>Teléfono o celular</x-form.input>
+                <x-form.input type="text" name="city" min="2" max="50" required>Localidad</x-form.input>
+                <x-form.input type="text" name="streetaddress" min="5" max="50" required>Dirección</x-form.input>
                 <x-form.input type="text" name="note" max="250">Nota del pedido</x-form.input>
             </div>
 
@@ -41,7 +41,7 @@
                 <div class="{{$sectionStyle}} h-min" x-data="paymentMethodSelect">
                     <h2 class="{{$sectionTitleStyle}}">MÉTODO DE PAGO</h2>
                     <x-form.input type="select" name="paymentMethod"
-                        {{--required--}}
+                        required
                         requiredSign="0"
                         :options="$options1"
                         getSelectedFrom="$store.paymentMethods.methods"
@@ -76,7 +76,7 @@
                 <div class="{{$sectionStyle}} h-min" x-data="shippingZoneSelect">
                     <h2 class="{{$sectionTitleStyle}}">ENTREGA</h2>
                     <x-form.input type="select" name="shippingZone"
-                        {{--required--}}
+                        required
                         requiredSign="0"
                         :options="$options2"
                         getSelectedFrom="$store.shippingZones.zones"
