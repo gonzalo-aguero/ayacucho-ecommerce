@@ -58,6 +58,8 @@ Route::get('/site/{token}/{action}', function (string $token, string $action) {
             $exitCode = Artisan::call('up');
         }else if($action == "migrate"){
             $exitCode = Artisan::call('migrate --seed');
+        }else if($action == "symblinks"){
+            $exitCode = Artisan::call('storage:link');
         }
     }else{
         abort(404);
