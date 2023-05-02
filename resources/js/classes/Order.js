@@ -5,8 +5,7 @@ class Order{
     total(){
         let orderTotal = 0;
 
-        const cartTotal = Alpine.store("cart").total();
-        orderTotal += cartTotal;
+        let cartTotal = Alpine.store("cart").total();
 
         const shippingZone = Alpine.store("selectedShippingZone");
         if(shippingZone !== undefined){
@@ -17,10 +16,11 @@ class Order{
 
         const paymentMethod = Alpine.store("selectedPaymentMethod");
         if(paymentMethod !== undefined){
-            orderTotal = Alpine.store("paymentMethods").applyPercent(orderTotal, paymentMethod);
+            cartTotal = Alpine.store("paymentMethods").applyPercent(cartTotal, paymentMethod);
         }else{
             console.log("Falta seleccionar el método de pago.");
         }
+        orderTotal += cartTotal;
 
         return orderTotal;
     }
