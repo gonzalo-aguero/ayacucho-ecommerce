@@ -12,6 +12,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <x-gtag/>
         <meta http-equiv="content-type" charset="text/html; utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>{{ $pageTitle }}</title>

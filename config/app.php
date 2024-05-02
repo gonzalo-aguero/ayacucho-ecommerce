@@ -219,6 +219,7 @@ return [
      * OTHER APP CONFIGURATIONS
      **/
     'excel_name' => env('APP_EXCEL_NAME', 'Base de Datos.xlsx'),
-    'command_token' => env('APP_COMMAND_TOKEN', null)
+    'command_token' => env('APP_COMMAND_TOKEN', null),
+    'gtag_id' => env('GTAG_ID', null)
 
 ];
