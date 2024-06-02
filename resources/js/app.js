@@ -143,8 +143,9 @@ function sortByCategories(){
     store("sortedProducts", sortedProducts);
 }
 /**
- * Copy from "ordered products" at most "max" products to "productsToPrint"
- **/
+ * Copy from "sortedProducts" at most "max" products to "productsToPrint"
+ * @param {number|Boolean} max - The maximum number of products to print. If set to `false`, all products will be printed.
+ */
 function printProducts(max){
     let productsToPrint = [];
     let currCategory;
@@ -165,6 +166,7 @@ function printProducts(max){
     if(DEBUG) console.log("Products To Print:",productsToPrint);
     store("productsToPrint", store("sortedProducts"));// !
 }
+
 /**
  * Update the "GLOBAL.printedProductsMax" and reprint products
  **/

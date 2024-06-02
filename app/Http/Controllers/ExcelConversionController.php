@@ -47,6 +47,7 @@ class ExcelConversionController extends Controller
                     $showUnits = $worksheet->getCell('J' . $row->getRowIndex())->getValue();
                     $m2ByUnit = $worksheet->getCell('K' . $row->getRowIndex())->getValue();
                     $variationId = $worksheet->getCell('L' . $row->getRowIndex())->getValue();
+                    $show = $worksheet->getCell('M' . $row->getRowIndex())->getValue();
 
                     // El campo "m2Price" debe ser del tipo float y, en caso de que sea una cadena
                     // vacía o igual a 0 debe ser remplazado por null.
@@ -81,10 +82,10 @@ class ExcelConversionController extends Controller
                         $category = (string) $category;
                     }
 
-                    // El campo "showUnits" será una cadena que podrá contener "si" o "no",
-                    // tanto en mayúsculas como en minúsculas. Se debe convertir las cadenas "si" a
-                    // valores booleanos true y las cadenas "no" a valores booleanos false.
-                    // En caso de ser una cadena vacía el valor final deberá ser false.
+                    /**
+                     * El campo "showUnits" es una cadena que podrá contener "si" o "no",
+                     * tanto en mayúsculas como en minúsculas.
+                     */
                     $showUnits = strtolower(trim($showUnits));
                     if ($showUnits == "si") {
                         $showUnits = true;
@@ -101,6 +102,17 @@ class ExcelConversionController extends Controller
                     //cadena vacía se deberá remplazar por null.
                     $variationId = isset($variationId) && $variationId !== "" ? intval($variationId) : null;
 
+                    /**
+                     * El campo "show" es una cadena que podrá contener "si" o "no",
+                     * tanto en mayúsculas como en minúsculas.
+                     */
+                    $show = strtolower(trim($show));
+                    if ($show == "si") {
+                        $show = true;
+                    } else {
+                        $show = false;
+                    }
+
                     $data[] = array(
                         "id" => $id,
                         'name' => (string) $name,
@@ -113,7 +125,8 @@ class ExcelConversionController extends Controller
                         "units" => $units,
                         "showUnits" => $showUnits,
                         "m2ByUnit" => $m2ByUnit,
-                        "variationId" => $variationId
+                        "variationId" => $variationId,
+                        "show" => $show
                     );
                 }
             }

@@ -25,7 +25,7 @@
                     $store.reloadIframes();
                 },
             }">
-            <h2 class="text-2xl font-bold">Software de conversión de Excel a JSON</h2>
+            <h2 class="text-2xl font-bold">Conversión de Excel a JSON</h2>
             <p>Una vez que haya subido el archivo <strong>.xlsx</strong> a la carpeta especificada por el desarrollador, presione en "Iniciar Conversión".</p>
             <form id="ajax-form" class="text-center flex flex-col justify-center items-center mb-4">
                 @csrf
