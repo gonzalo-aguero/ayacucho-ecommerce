@@ -12,11 +12,13 @@
                 x-transition:enter="dropdown_menu-6"
                 x-transition:leave="dropup_menu-6"
                 >
-                <template x-for="product in category.products">
-                    {{-----------------------
+                <template x-for="product in category.products.filter(product => product.show)">
+                    {{--
+                        --------------------------
                         Product card template
-                    ---------------------------}}
-                    <div class="relative bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0 relative"
+                        ---------------------------
+                    ---}}
+                    <div class="relative bg-gray-light text-black w-40 rounded shadow-lg border-t-0 border border-gray-light-transparent shrink-0"
                         x-data="{
                             units: 1,
                             productImage(){
@@ -30,7 +32,8 @@
                                 if($store.StaticProduct.addToCart(this.units, product))
                                     this.units = 1;
                             }
-                        }">
+                        }"
+                        >
                         {{--"NO STOCK" SIGN--}}
                         <template x-if="product.units == 0">
                             <div class="bg-red text-white font-medium text-center rounded-t absolute w-full opacity-80">SIN STOCK</div>
