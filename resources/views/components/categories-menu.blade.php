@@ -71,13 +71,17 @@
                                     <template x-if="product.category == 'REVESTIMIENTOS PARED'
                                             || product.category == 'CERÁMICOS'
                                             || product.category == 'PORCELANATOS'
-                                            || product.category == 'CERAMICOS PREMIUM'">
+                                            || product.category == 'CERAMICOS PREMIUM'
+                                            || product.category == 'PORCELANICO'
+                                            ">
                                         <span class="text-xs font-light">Cajas</span>
                                     </template>
                                     <template x-if="product.category != 'REVESTIMIENTOS PARED'
                                             && product.category != 'CERÁMICOS'
                                             && product.category != 'PORCELANATOS'
-                                            && product.category != 'CERAMICOS PREMIUM'">
+                                            && product.category != 'CERAMICOS PREMIUM'
+                                            && product.category != 'PORCELANICO'
+                                            ">
                                         <span class="text-xs font-light">Unidades</span>
                                     </template>
                                 </div>

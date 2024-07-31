@@ -4,7 +4,7 @@
         <span></span>
         <span>Producto</span>
         <span>Precio</span>
-        <span>Unidades</span>
+        <span>Unidades / Cajas</span>
         <span>Subtotal</span>
     </div>
     <ul class="h-full md:w-full overflow-auto flex flex-col gap-4">
@@ -46,12 +46,21 @@
                     {{--PRODUCT IMAGE AND NAME--}}
                     <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2" x-data="{
                             productNameText(){
-                                if(undefined === optionValue || optionValue === '') return product.name;
-                                else return product.name + ' - ' + optionValue;
+                                let productName = product.name;
+                                if(product.name.length > 25) productName = product.name.substring(0, 22) + '...';
+
+                                if(undefined === optionValue || optionValue === '') return productName;
+                                else return productName + ' - ' + optionValue;
+                            },
+                            fullProductName(){
+                                let productName = product.name;
+
+                                if(undefined === optionValue || optionValue === '') return productName;
+                                else return productName + ' - ' + optionValue;
                             }
                         }">
                         <img :src="productImage" class="h-6 w-6"/>
-                        <span x-text="productNameText" class="truncate text-xs break-words" :title="productNameText"></span>
+                        <span x-text="productNameText" class="truncate text-xs break-words" :title="fullProductName"></span>
                     </a>
                     {{--PRODUCT PRICES--}}
                     <div>

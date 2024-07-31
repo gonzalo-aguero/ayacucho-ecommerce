@@ -73,6 +73,7 @@
                                 OR $product->category == "CERÁMICOS"
                                 OR $product->category == "PORCELANATOS"
                                 OR $product->category == "CERAMICOS PREMIUM"
+                                OR $product->category == "PORCELANICO"
                             )
                             Cajas
                         @else
