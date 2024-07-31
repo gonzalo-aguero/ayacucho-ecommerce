@@ -68,7 +68,18 @@
                                 <div class="flex w-full justify-center items-center gap-1">
                                     <input type="number" min="1" x-model="units" :disabled="product.units == 0"
                                         class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
-                                    <span class="text-xs font-light">Unidades</span>
+                                    <template x-if="product.category == 'REVESTIMIENTOS PARED'
+                                            || product.category == 'CERÁMICOS'
+                                            || product.category == 'PORCELANATOS'
+                                            || product.category == 'CERAMICOS PREMIUM'">
+                                        <span class="text-xs font-light">Cajas</span>
+                                    </template>
+                                    <template x-if="product.category != 'REVESTIMIENTOS PARED'
+                                            && product.category != 'CERÁMICOS'
+                                            && product.category != 'PORCELANATOS'
+                                            && product.category != 'CERAMICOS PREMIUM'">
+                                        <span class="text-xs font-light">Unidades</span>
+                                    </template>
                                 </div>
                                 <div class="text-xs font-normal" x-show="$store.StaticProduct.measurableInM2(product)">
                                     <span class="text-sm">=</span>
