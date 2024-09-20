@@ -36,6 +36,7 @@ class ProductController extends Controller
                 return view('product-page', [
                     "product" => $product,
                     "variation" => $hasVariations ? $variations[$product->variationId - 1] : null,
+                    "boxedCategories" => config("products.boxed_categories")
                 ]);
             }else{
                 abort(404);

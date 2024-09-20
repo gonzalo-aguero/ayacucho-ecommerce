@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return view('home', ["DEBUG" => config("app.debug")]);
+    return view('home', [
+        "DEBUG" => config("app.debug"),
+        "boxedCategories" => config("products.boxed_categories")
+    ]);
 })->name('home');
 
 

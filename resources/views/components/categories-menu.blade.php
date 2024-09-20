@@ -68,20 +68,16 @@
                                 <div class="flex w-full justify-center items-center gap-1">
                                     <input type="number" min="1" x-model="units" :disabled="product.units == 0"
                                         class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
-                                    <template x-if="product.category == 'REVESTIMIENTOS PARED'
-                                            || product.category == 'CERÁMICOS'
-                                            || product.category == 'PORCELANATOS'
-                                            || product.category == 'CERAMICOS PREMIUM'
-                                            || product.category == 'PORCELANICO'
-                                            ">
+
+                                    <script>
+                                        window.boxedCategories = @json($boxedCategories);
+                                    </script>
+
+                                    <template x-if="boxedCategories.includes(product.category)">
                                         <span class="text-xs font-light">Cajas</span>
                                     </template>
-                                    <template x-if="product.category != 'REVESTIMIENTOS PARED'
-                                            && product.category != 'CERÁMICOS'
-                                            && product.category != 'PORCELANATOS'
-                                            && product.category != 'CERAMICOS PREMIUM'
-                                            && product.category != 'PORCELANICO'
-                                            ">
+
+                                    <template x-if="!boxedCategories.includes(product.category)">
                                         <span class="text-xs font-light">Unidades</span>
                                     </template>
                                 </div>

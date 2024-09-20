@@ -69,12 +69,10 @@
                     <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model="units" :disabled="product.units == 0"
                         class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
                     <span class="text-base font-light">
-                        @if($product->category == "REVESTIMIENTOS PARED"
-                                OR $product->category == "CERÁMICOS"
-                                OR $product->category == "PORCELANATOS"
-                                OR $product->category == "CERAMICOS PREMIUM"
-                                OR $product->category == "PORCELANICO"
-                            )
+                        @php
+                            $isCategoryMatch = in_array($product->category, $boxedCategories);
+                        @endphp
+                        @if($isCategoryMatch)
                             Cajas
                         @else
                             Unidades
