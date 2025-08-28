@@ -8,7 +8,7 @@
         <span>Subtotal</span>
     </div>
     <ul class="h-full md:w-full overflow-auto flex flex-col gap-4">
-        <template x-if="$store.productsLength > 0 && $store.cart.content.length > 0">
+        <template x-if="$store.productService.products.length > 0 && $store.cart.content.length > 0">
             <template x-for="item in $store.cart.content">
                 <li x-data="{
                         units: 1,
@@ -23,11 +23,11 @@
                         }
                     }"
                     x-init="
-                        product = $store.products[item.pos];
+                        product = $store.productService.products[item.pos];
                         units = item.units;
                         if(undefined !== item.option) optionValue = item.option;
                         $watch('$store.cart.content', ()=>{
-                            product = $store.products[item.pos];
+                            product = $store.productService.products[item.pos];
                             units = item.units;
                             if(undefined !== item.option) optionValue = item.option;
                         });
@@ -44,7 +44,7 @@
                         <img src="{{ asset('images/UI-Icons/icons8-remove-48.png') }}" class="h-5 w-5"/>
                     </button>
                     {{--PRODUCT IMAGE AND NAME--}}
-                    <a :href="$store.StaticProduct.productPage(product)" class="flex flex-nowrap gap-2" x-data="{
+                    <a :href="$store.productService.getProductPageUrl(product)" class="flex flex-nowrap gap-2" x-data="{
                             productNameText(){
                                 let productName = product.name;
                                 if(product.name.length > 25) productName = product.name.substring(0, 22) + '...';
@@ -65,7 +65,7 @@
                     {{--PRODUCT PRICES--}}
                     <div>
                         <span x-text="$store.priceFormat(product.price)"></span>
-                        <template x-if="$store.StaticProduct.measurableInM2(product)">
+                        <template x-if="$store.productService.measurableInM2(product)">
                             <div class="flex flex-nowrap">
                                 <span x-text="$store.priceFormat(product.m2Price)" class="text-xs"></span>
                                 <span class="text-xs">/m²</span>
@@ -79,20 +79,20 @@
                                 if(value === '' || value == '0') units = valueBef;
                                 else{
                                     const newUnits = Number.parseInt(value);
-                                    if($store.StaticProduct.validUnits(newUnits, product, optionValue)){
+                                    if($store.productService.validUnits(newUnits, product, optionValue)){
                                         item.units = newUnits;
                                         $store.cart.save();
                                     }else{
-                                        units = $store.StaticProduct.maxAvailableUnits(product, optionValue);
+                                        units = $store.productService.maxAvailableUnits(product, optionValue);
                                         Alpine.store('Notify').Warning('No hay suficiente stock disponible.')
                                     }
                                 }
                             });
                             $watch('item.units', value => units = value);
                         " class="w-12 bg-gray-light-transparent border border-gray-light2"/>
-                        <template x-if="$store.StaticProduct.measurableInM2(product)">
+                        <template x-if="$store.productService.measurableInM2(product)">
                             <div class="flex flex-nowrap">
-                                <span x-text="'=' + $store.StaticProduct.squareMeters(units, product)" class="text-xs"></span>
+                                <span x-text="'=' + $store.productService.squareMeters(units, product)" class="text-xs"></span>
                                 <span class="text-xs">m²</span>
                             </div>
                         </template>
@@ -117,7 +117,7 @@
         <template x-if="$store.productsLength > 0">
             <div class="text-center order-first md:order-none w-full md:w-auto">
                 <span class="font-semibold">TOTAL: </span>
-                <span x-text="$store.priceFormat($store.cart.total())"></span>
+                <span x-text="$store.priceFormat($store.productService.cartTotal())"></span>
             </div>
         </template>
 

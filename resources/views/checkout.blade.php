@@ -110,7 +110,7 @@
                 <div class="{{$sectionStyle}}">
                     <h2 class="{{$sectionTitleStyle}}">RESUMEN DEL PEDIDO</h2>
                     <ul class="flex flex-col w-full gap-[1px] mt-2 bg-gray-light2" x-data="{
-                            cartTotal: $store.priceFormat($store.cart.total()),
+                            cartTotal: $store.priceFormat($store.productService.cartTotal()),
                             shippingZone: 'Debe seleccionar',
                             shippingCost: $store.priceFormat(0),
                             paymentMethod: 'Debe seleccionar',
@@ -120,7 +120,7 @@
                             },
                             init() {
                                 $watch('$store.cart', () => {
-                                    this.cartTotal = $store.priceFormat($store.cart.total());
+                                    this.cartTotal = $store.priceFormat($store.productService.cartTotal());
                                     this.updateOrderTotal();
                                 });
                                 $watch('$store.selectedShippingZone', (val) => {

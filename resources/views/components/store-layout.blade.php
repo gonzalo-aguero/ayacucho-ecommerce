@@ -31,11 +31,33 @@
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script>
-            const DEBUG = {{ config('app.debug') ? "true" : "false" }};
-            const IS_PRODUCT_PAGE = {{ $isProductPage ? "true" : "false" }};
-            @foreach ($javascriptData as $data)
-                const {{ $data["key"] }} = {{  Js::from($data["value"]) }};
-            @endforeach
+           // Core application constants as window globals
+            window.DEBUG = {{ Js::from(config('app.debug', false)) }};
+            window.IS_PRODUCT_PAGE = {{ Js::from($isProductPage ?? false) }};
+
+            // Dynamic JavaScript data injection as window globals
+            @if(isset($javascriptData) && is_array($javascriptData))
+                @foreach ($javascriptData as $data)
+                    @if(isset($data['key']) && isset($data['value']))
+                        window["{{ $data['key'] }}"] = {{ Js::from($data['value']) }};
+                    @endif
+                @endforeach
+            @endif
+
+            // Fallback for critical variables
+            if (typeof window.DEBUG === 'undefined') {
+                console.warn('DEBUG global not defined, defaulting to false');
+                window.DEBUG = false;
+            }
+
+            if (typeof window.IS_PRODUCT_PAGE === 'undefined') {
+                console.warn('IS_PRODUCT_PAGE global not defined, defaulting to false');
+                window.IS_PRODUCT_PAGE = false;
+            }
+
+            // legacy support
+            const DEBUG = window.DEBUG;
+            const IS_PRODUCT_PAGE = window.IS_PRODUCT_PAGE;
         </script>
         @vite(['resources/css/app.css', 'resources/css/Notification-Bar.css', 'resources/js/app.js'])
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

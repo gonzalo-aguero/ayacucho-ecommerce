@@ -1,9 +1,9 @@
 <div x-data="{
         loadingProducts: ()=>{
-            return $store.productsToPrint.length == 0;
+            return $store.productService.productsToPrint.length == 0;
         }
     }" class="flex flex-col items-center justify-center w-[95%] sm:w-5/6 bg-white rounded-md shadow-2xl">
-    <template x-for="category in $store.productsToPrint">
+    <template x-for="category in $store.productService.productsToPrint">
         <div x-data="{ open: false }" class="block w-full shadow">
             <h2 x-text="category.category" class="text-center py-3 text-xl uppercase cursor-pointer text-orange-medium font-bold
                 hover:bg-gray-light rounded-md hover:underline decoration-orange-medium underline-offset-2" @click="open = !open"></h2>
@@ -29,8 +29,9 @@
                                 return image;
                             },
                             addToCart(){
-                                if($store.StaticProduct.addToCart(this.units, product))
+                                if($store.productService.addToCart(this.units, product)){
                                     this.units = 1;
+                                }
                             }
                         }"
                         >
@@ -40,18 +41,18 @@
                         </template>
                         {{--PRODUCT NAME--}}
                         <div class="shrink-0 mb-2">
-                            <a :href="$store.StaticProduct.productPage(product)">
+                            <a :href="$store.productService.getProductPageUrl(product)">
                                 <img class="h-40 w-full object-cover rounded-t" :src="productImage" :alt="product.name" :title="product.description">
                             </a>
                         </div>
-                        <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.StaticProduct.productPage(product)" x-text="product.name"></a></h3>
+                        <h3 class="text-center text-sm font-medium mb-1"><a :href="$store.productService.getProductPageUrl(product)" x-text="product.name"></a></h3>
 
                         {{--PRICE SECTION--}}
                         <div class="text-center font-light">
                             <!-- Primary price -->
                             <span class="text-base" x-text="$store.priceFormat(product.price)"></span>
                             <!-- Secondary price -->
-                            <span class="text-xs" x-text="$store.priceFormat(product.m2Price) + '/m²'" x-show="$store.StaticProduct.measurableInM2(product)"></span>
+                            <span class="text-xs" x-text="$store.priceFormat(product.m2Price) + '/m²'" x-show="$store.productService.measurableInM2(product)"></span>
                         </div>
 
 
@@ -59,7 +60,7 @@
                             {{--ADD TO CART SECTION--}}
                             <div class="flex flex-col w-full items-center pt-2 pb-3" x-data="{
                                     unitsText(){
-                                        if($store.StaticProduct.measurableInM2(product)){
+                                        if($store.productService.measurableInM2(product)){
                                             return product.units + 'm² disponibles';
                                         }
                                         return product.units + ' disponibles';
@@ -70,7 +71,7 @@
                                         class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
 
                                     <script>
-                                        window.boxedCategories = @json($boxedCategories);
+                                        window.boxedCategories = {{ Js::from($boxedCategories) }};
                                     </script>
 
                                     <template x-if="boxedCategories.includes(product.category)">
@@ -81,9 +82,9 @@
                                         <span class="text-xs font-light">Unidades</span>
                                     </template>
                                 </div>
-                                <div class="text-xs font-normal" x-show="$store.StaticProduct.measurableInM2(product)">
+                                <div class="text-xs font-normal" x-show="$store.productService.measurableInM2(product)">
                                     <span class="text-sm">=</span>
-                                    <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
+                                    <span x-text="$store.productService.squareMeters(units, product)"></span>
                                     <span>m²</span>
                                 </div>
                                 <button class="text-white text-sm p-1 mt-2 rounded " name="Añadir al carrito"
@@ -102,7 +103,7 @@
                             {{--SEE OPTIONS SECTION--}}
                             <div class="flex flex-col w-full items-center pt-2 pb-3">
                                 <a class="bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95 text-white text-sm p-1 mt-2 rounded" name="Ver opciones"
-                                    :href="$store.StaticProduct.productPage(product)"
+                                    :href="$store.productService.productPage(product)"
                                     >Ver opciones</a>
                             </div>
                         </template>

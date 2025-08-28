@@ -22,7 +22,7 @@
     <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
             units: 1,
             addToCart(){
-                if($store.StaticProduct.addToCart(this.units, product, $store.selectedVariation))
+                if($store.productService.addToCart(this.units, product, $store.selectedVariation))
                     this.units = 1;
             }
         }">
@@ -133,7 +133,7 @@
                 @if($squareMeter)
                     <div class="text-base font-normal text-center">
                         <span class="text-lg">=</span>
-                        <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
+                        <span x-text="$store.productService.squareMeters(units, product)"></span>
                         <span>m²</span>
 
                         {{--AVAILABLE UNITS SECTION 2--}}

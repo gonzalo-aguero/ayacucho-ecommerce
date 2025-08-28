@@ -1,62 +1,226 @@
 "use strict";
-class PaymentMethods{
-    static api = location.origin + "/json/MetodosDePago.json";
-    constructor(methods = []){
+import { api } from '../services/apiService';
+import { handleError, logInfo } from '../utils/errorHandler';
+
+export class PaymentMethods {
+    constructor(methods = []) {
         this.methods = methods;
+        this._validateMethods(methods);
     }
-    get _methods(){
-        return this.methods;
-    }
-    set _methods(methods = []){
-        this.methods = methods;
-    }
-    async load(){
-        await fetch(PaymentMethods.api)
-            .then(response => response.json())
-            .then(data => {
-                this.methods = data;
-            });
-    }
+
     /**
-     * Returns a formated text with the name and percent of the payment method.
-     **/
-    getText(method){
-        const percent = method.percent;
-        let text;
-        if(percent === 0){
-            text = method.name;
-        }else if(percent < 0){
-            text = method.name + " ( " + percent*(-1) + "% de descuento )";
-        }else if(percent > 0){
-            text = method.name + " ( " + percent + "% de recargo )";
+     * Validates payment methods array
+     * @param {Array} methods - Payment methods array
+     * @private
+     */
+    _validateMethods(methods) {
+        if (!Array.isArray(methods)) {
+            throw new Error('Methods must be an array');
         }
-        return text;
-    }
-    /**
-     * Returns all the formated texts with the name and percent of each payment method.
-     **/
-    texts(){
-        let texts = [];
-        for(let i = 0; i < this.methods.length; i++){
-            texts[i] = {
-                name: this.getText(this.methods[i])
+
+        methods.forEach((method, index) => {
+            if (!method || typeof method !== 'object') {
+                throw new Error(`Invalid method at index ${index}`);
             }
-        }
-        return texts;
+            if (typeof method.name !== 'string' || method.name.trim() === '') {
+                throw new Error(`Method at index ${index} must have a valid name`);
+            }
+            if (typeof method.percent !== 'number') {
+                throw new Error(`Method at index ${index} must have a valid percent`);
+            }
+        });
     }
+
+    /**
+     * Gets the methods array
+     * @returns {Array} Methods array
+     */
+    get methods() {
+        return [...this._methods]; // Return copy to prevent external modification
+    }
+
+    /**
+     * Sets the methods array
+     * @param {Array} methods - Methods array
+     */
+    set methods(methods) {
+        this._validateMethods(methods);
+        this._methods = [...methods]; // Store copy
+    }
+
+    /**
+     * Loads payment methods from the API
+     * @returns {Promise<boolean>} Success status
+     */
+    async load() {
+        try {
+            const data = await api.getPaymentMethods();
+
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid payment methods data format');
+            }
+
+            this.methods = data;
+            logInfo(`Loaded ${this.methods.length} payment methods`, 'PaymentMethods.load');
+            return true;
+        } catch (error) {
+            handleError(error, 'PaymentMethods.load');
+            return false;
+        }
+    }
+
+    /**
+     * Gets a payment method by index
+     * @param {number} index - Method index
+     * @returns {Object|null} Payment method or null if invalid index
+     */
+    getByIndex(index) {
+        if (index >= 0 && index < this._methods.length) {
+            return { ...this._methods[index] }; // Return copy
+        }
+        return null;
+    }
+
+    /**
+     * Gets a payment method by name
+     * @param {string} name - Method name
+     * @returns {Object|null} Payment method or null if not found
+     */
+    getByName(name) {
+        if (typeof name !== 'string') {
+            return null;
+        }
+
+        const method = this._methods.find(m => m.name.toLowerCase() === name.toLowerCase());
+        return method ? { ...method } : null; // Return copy
+    }
+
+    /**
+     * Gets the number of payment methods
+     * @returns {number} Number of methods
+     */
+    getCount() {
+        return this._methods.length;
+    }
+
+    /**
+     * Checks if methods are loaded
+     * @returns {boolean} True if methods are loaded
+     */
+    isLoaded() {
+        return this._methods.length > 0;
+    }
+
+    /**
+     * Returns a formatted text with the name and percent of the payment method
+     * @param {Object} method - Payment method object
+     * @returns {string} Formatted text
+     */
+    getText(method) {
+        try {
+            if (!method || typeof method !== 'object') {
+                throw new Error('Invalid method parameter');
+            }
+
+            const { name, percent } = method;
+
+            if (typeof name !== 'string' || typeof percent !== 'number') {
+                throw new Error('Method must have name and percent properties');
+            }
+
+            if (percent === 0) {
+                return name;
+            } else if (percent < 0) {
+                return `${name} (${Math.abs(percent)}% de descuento)`;
+            } else {
+                return `${name} (${percent}% de recargo)`;
+            }
+        } catch (error) {
+            handleError(error, 'PaymentMethods.getText');
+            return 'Método de pago inválido';
+        }
+    }
+
+    /**
+     * Returns all formatted texts with the name and percent of each payment method
+     * @returns {Array} Array of formatted texts
+     */
+    getTexts() {
+        try {
+            return this._methods.map((method, index) => ({
+                index,
+                name: this.getText(method),
+                originalName: method.name,
+                percent: method.percent
+            }));
+        } catch (error) {
+            handleError(error, 'PaymentMethods.getTexts');
+            return [];
+        }
+    }
+
     /**
      * Returns the value of the price with the discount or surcharge percentage
-     * corresponding to the payment method passed as a parameter.
-     **/
-    applyPercent(value, method){
-        const percent = method.percent;
-        let finalValue;
-        if(percent === 0){
-            finalValue = value;
-        }else{
-            finalValue = value * (1 + percent / 100);// The negative percentage already has the less sign.
+     * @param {number} value - Original value
+     * @param {Object} method - Payment method object
+     * @returns {number} Final value
+     */
+    applyPercent(value, method) {
+        try {
+            if (typeof value !== 'number' || isNaN(value)) {
+                throw new Error('Value must be a valid number');
+            }
+
+            if (!method || typeof method !== 'object') {
+                throw new Error('Invalid method parameter');
+            }
+
+            const { percent } = method;
+            if (typeof percent !== 'number' || isNaN(percent)) {
+                throw new Error('Method must have a valid percent property');
+            }
+
+            if (percent === 0) {
+                return value;
+            }
+
+            // The negative percentage already has the minus sign
+            const finalValue = value * (1 + percent / 100);
+            return Math.round(finalValue * 100) / 100; // Round to 2 decimal places
+        } catch (error) {
+            handleError(error, 'PaymentMethods.applyPercent');
+            return value; // Return original value on error
         }
-        return finalValue;
+    }
+
+    /**
+     * Gets methods with zero percent (no fee)
+     * @returns {Array} Methods with no fee
+     */
+    getFreeMethods() {
+        return this._methods
+            .filter(method => method.percent === 0)
+            .map(method => ({ ...method }));
+    }
+
+    /**
+     * Gets methods with discount (negative percent)
+     * @returns {Array} Methods with discount
+     */
+    getDiscountMethods() {
+        return this._methods
+            .filter(method => method.percent < 0)
+            .map(method => ({ ...method }));
+    }
+
+    /**
+     * Gets methods with surcharge (positive percent)
+     * @returns {Array} Methods with surcharge
+     */
+    getSurchargeMethods() {
+        return this._methods
+            .filter(method => method.percent > 0)
+            .map(method => ({ ...method }));
     }
 }
 
