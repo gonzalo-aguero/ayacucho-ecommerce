@@ -40,35 +40,40 @@ Route::post('/admin/excel-conversion', [ExcelConversionController::class, 'proce
 
 
 
-Route::get('/site/{token}', function (string $token) {
-    if(config('app.command_token') != null && config('app.command_token') == $token){
-        $viewExitCode = Artisan::call('view:cache');
-        $routeExitCode = Artisan::call('route:cache');
-
-    }else{
-        abort(404);
-    }
-    $exitCode = $viewExitCode. "<br>" . $routeExitCode;
-
-    return $exitCode;
- });
-
-Route::get('/site/{token}/{action}', function (string $token, string $action) {
-    if(config('app.command_token') != null && config('app.command_token') == $token){
-        if($action == "down"){
-            $exitCode = Artisan::call('down --render="errors.503" --secret="40012jasdjj-246b-jiasdm120-afa1-dd72a4c43515"');
-        }else if($action == "up"){
-            $exitCode = Artisan::call('up');
-        }else if($action == "migrate"){
-            $exitCode = Artisan::call('migrate --seed');
-        }else if($action == "symblinks"){
-            $exitCode = Artisan::call('storage:link');
-        }
-    }else{
-        abort(404);
+Route::post('/deploy', function (\Illuminate\Http\Request $request) {
+    if (!$request->has('token') || $request->input('token') !== config('app.command_token')) {
+        abort(403, 'forbidden');
     }
 
-    return $exitCode;
+    Artisan::call('app:deploy');
+
+    return response()->json(['status' => 'Deployment executed']);
+});
+
+Route::post('/maintenance', function (\Illuminate\Http\Request $request) {
+    if (!$request->has('token') || $request->input('token') !== config('app.command_token')) {
+        abort(403, 'forbidden');
+    }
+
+    if(!$request->has('action')){
+        abort(400, 'Bad Request: action parameter is required');
+    }
+
+    $commands = [
+        'down' => 'down --render="errors.503" --secret="'.config('app.maintenance_secret').'"',
+        'up' => 'up',
+    ];
+
+    $action = $request->input('action');
+    if(!isset($commands[$action])) abort(400, 'Bad Request: invalid action');
+    $exitCode = Artisan::call($commands[$action]);
+    \Illuminate\Support\Facades\Log::info("Maintenance mode: $action by IP ".$request->ip());
+
+    return response()->json([
+        'status' => 'ok',
+        'action' => $action,
+        'exitCode' => $exitCode
+    ]);
 });
 
 Route::get('{productName}/{productId}', [ProductController::class, 'show']);
