@@ -15,7 +15,6 @@ import { PRODUCT_PAGE } from './pages/productPage';
 import GoogleReviews from './classes/GoogleReviews';
 
 
-
 if(DEBUG) console.log("Code working");
 
 
@@ -59,6 +58,6 @@ document.addEventListener('alpine:init', async function(){
 
     const path = window.location.pathname;
     if(path === "/") HOME_PAGE();
-    else if(path === "/checkout") CHECKOUT();
+    else if(path === "/checkout") CHECKOUT_PAGE();
     else if(IS_PRODUCT_PAGE) PRODUCT_PAGE();
 });

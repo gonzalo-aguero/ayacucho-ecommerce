@@ -1,11 +1,12 @@
 "use strict";
-import { api } from '../services/apiService';
+import { api } from './apiService';
 import { handleError, logInfo } from '../utils/errorHandler';
 
-export class PaymentMethods {
+export class PaymentMethodService {
     constructor(methods = []) {
-        this.methods = methods;
         this._validateMethods(methods);
+        this._methods = methods;
+        this._selectedPaymentMethod = undefined;
     }
 
     /**
@@ -36,7 +37,7 @@ export class PaymentMethods {
      * @returns {Array} Methods array
      */
     get methods() {
-        return [...this._methods]; // Return copy to prevent external modification
+        return this._methods;
     }
 
     /**
@@ -45,7 +46,23 @@ export class PaymentMethods {
      */
     set methods(methods) {
         this._validateMethods(methods);
-        this._methods = [...methods]; // Store copy
+        this._methods = methods; // Store copy
+    }
+
+    get selectedPaymentMethod() {
+        return this._selectedPaymentMethod;
+    }
+    set selectedPaymentMethod(method) {
+        if (method === undefined || method === null) {
+            this._selectedPaymentMethod = undefined;
+            return;
+        }
+        const found = this._methods.find(m => m.name === method.name);
+        if (found) {
+            this._selectedPaymentMethod = { ...found }; // Store copy
+        } else {
+            throw new Error('Selected method is not in the methods list');
+        }
     }
 
     /**
@@ -60,8 +77,8 @@ export class PaymentMethods {
                 throw new Error('Invalid payment methods data format');
             }
 
-            this.methods = data;
-            logInfo(`Loaded ${this.methods.length} payment methods`, 'PaymentMethods.load');
+            this._methods = data;
+            logInfo(`Loaded ${this._methods.length} payment methods`, 'PaymentMethods.load');
             return true;
         } catch (error) {
             handleError(error, 'PaymentMethods.load');
@@ -224,4 +241,4 @@ export class PaymentMethods {
     }
 }
 
-export default PaymentMethods;
+export default PaymentMethodService;
