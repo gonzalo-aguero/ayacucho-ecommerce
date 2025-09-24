@@ -26,7 +26,8 @@ export async function CHECKOUT_PAGE(){
     // Initialize other store properties
     store("displayPaymentMethods", false); //it is used to show them when they are already loaded.
     store("displayShippingZones", false); //it is used to show them when they are already loaded.
-    store("order", new Order(store("cart")));
+    const productService = store("productService");
+    store("order", new Order(productService, paymentMethodService, shippingZoneService));
 
     // Computed property to determine if summary can be shown
     store("showSummary", ()=>{
