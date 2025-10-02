@@ -1,5 +1,5 @@
 import { api } from './apiService';
-import { handleError, logInfo } from '../utils/errorHandler';
+import { handleError, logInfo } from '../utils/error';
 
 export class VariationService {
     constructor() {

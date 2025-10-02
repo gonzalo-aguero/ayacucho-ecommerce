@@ -1,6 +1,6 @@
-import { store } from '../helpers/store';
-import PaymentMethodService from '../services/PaymentMethodService';
-import ShippingZoneService from '../services/ShippingZoneService';
+import { store } from '../utils/store';
+import PaymentMethodService from '../services/paymentMethodService';
+import ShippingZoneService from '../services/shippingZoneService';
 import Order from '../classes/Order';
 import { gotoHome } from '../routing/navigation';
 

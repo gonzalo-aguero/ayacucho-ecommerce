@@ -1,5 +1,5 @@
-import { store } from '../helpers/store';
-import { handleError, logInfo } from '../utils/errorHandler';
+import { store } from '../utils/store';
+import { handleError, logInfo } from '../utils/error';
 
 export function sortByCategories(products){
     if(!Array.isArray(products)){

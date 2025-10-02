@@ -1,5 +1,5 @@
 "use strict";
-import { handleError, logWarning } from '../utils/errorHandler';
+import { handleError, logWarning } from '../utils/error';
 
 export class Order {
     constructor(productService, paymentMethodService, shippingZoneService) {

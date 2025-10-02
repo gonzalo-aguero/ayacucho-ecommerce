@@ -1,5 +1,5 @@
 import { api } from '../services/apiService';
-import { handleError, logInfo } from '../utils/errorHandler';
+import { handleError, logInfo } from '../utils/error';
 
 export class GoogleReviews {
     constructor() {

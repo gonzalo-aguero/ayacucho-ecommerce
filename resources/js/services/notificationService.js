@@ -1,5 +1,5 @@
 import { NOTIFICATION_DURATIONS } from '../config/constants';
-import { logWarning } from '../utils/errorHandler';
+import { logWarning } from '../utils/error';
 
 export default class NotificationService {
     constructor(notifyInstance) {

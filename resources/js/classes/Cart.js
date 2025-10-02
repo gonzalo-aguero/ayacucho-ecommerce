@@ -1,6 +1,6 @@
 "use strict";
 import { CART_COOKIE_EXPIRATION_DAYS } from '../config/constants';
-import { handleError, logWarning } from '../utils/errorHandler';
+import { handleError, logWarning } from '../utils/error';
 
 export class Cart {
     constructor(store) {
@@ -157,7 +157,7 @@ export class Cart {
                 const parsed = JSON.parse(raw);
                 this.content = parsed.map(prod => ({
                     productId: prod.productId,
-                    units: parseInt(prod.units),
+                    units: Math.max(1, parseInt(prod.units)),
                     option: prod.option,
                     pos: prod.pos
                 }));

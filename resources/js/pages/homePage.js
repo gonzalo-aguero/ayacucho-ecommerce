@@ -1,4 +1,4 @@
-import { store } from '../helpers/store';
+import { store } from '../utils/store';
 import GoogleReviews from '../classes/GoogleReviews';
 
 export async function HOME_PAGE(){

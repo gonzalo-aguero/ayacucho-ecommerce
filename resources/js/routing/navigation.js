@@ -1,5 +1,5 @@
 import { BASE_URL } from '../config/constants';
-import { store } from '../helpers/store';
+import { store } from '../utils/store';
 
 export function gotoCheckout(route){
     console.log(store("cart").length());

@@ -2,10 +2,10 @@
 import Cart from './classes/Cart';
 import ProductService from './services/productService';
 import NotificationService from './services/notificationService';
-import Notify from './Notification-Bar/notify';
+import Notify from './notification/notify';
 import VariationService from './services/variationService';
 import { priceFormat, decimalFormat } from './utils/format';
-import { store } from './helpers/store';
+import { store } from './utils/store';
 import { Confirm } from './ui/confirm';
 import { gotoCheckout } from './routing/navigation';
 import { loadProducts } from './products/catalog';
@@ -27,7 +27,7 @@ document.addEventListener('alpine:init', async function(){
     store('notificationService', notificationService);
 
     const variationService = new VariationService();
-    store("variations", variationService); //TODO: change in blade templates
+    store("variationService", variationService);
 
     const productService = new ProductService(cart, notificationService, variationService)
     store('productService', productService);

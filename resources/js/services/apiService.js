@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, BASE_URL } from '../config/constants';
-import { handleError, AppError } from '../utils/errorHandler';
+import { handleError, AppError } from '../utils/error';
 
 export class ApiService {
     static async fetch(endpoint, options = {}) {

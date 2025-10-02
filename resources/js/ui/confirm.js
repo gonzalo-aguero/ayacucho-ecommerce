@@ -1,4 +1,4 @@
-import { store } from '../helpers/store';
+import { store } from '../utils/store';
 
 export function Confirm(message, callback){
     const container = document.getElementById("aux_black_transparent_bg");
