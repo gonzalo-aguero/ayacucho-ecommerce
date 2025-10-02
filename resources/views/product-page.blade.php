@@ -29,7 +29,7 @@
         {{--MAIN INFO SECTION--}}
         <div>
             {{--PRODUCT IMAGE--}}
-            <div class="relative text-center">
+            <div class="relative text-center flex justify-center items-center">
                 {{--"NO STOCK" SIGN--}}
                 <div x-cloak class="bg-red text-white text-center rounded-t absolute w-full opacity-80"
                     x-show="
@@ -66,7 +66,7 @@
             {{--ADD TO CART SECTION--}}
             <div class="flex flex-col m-w-80 pt-2 pb-3">
                 <div class="flex w-full justify-center items-center gap-1">
-                    <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model="units" :disabled="product.units == 0"
+                    <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model.number="units" :disabled="product.units == 0"
                         class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
                     <span class="text-base font-light">
                         @php

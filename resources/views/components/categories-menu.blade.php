@@ -67,9 +67,10 @@
                                     }
                                 }">
                                 <div class="flex w-full justify-center items-center gap-1">
-                                    <input type="number" min="1" x-model="units" :disabled="product.units == 0"
+                                    <input type="number" min="1" x-model.number="units" :disabled="product.units == 0"
                                         class="block w-12 text-sm rounded border border-gray-light2 text-center"/>
 
+                                    <!-- Global variable to check if the category comes in a box -->
                                     <script>
                                         window.boxedCategories = {{ Js::from($boxedCategories) }};
                                     </script>

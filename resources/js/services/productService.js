@@ -1,5 +1,5 @@
 import { BASE_URL } from '../config/constants';
-import { handleError } from '../utils/errorHandler';
+import { handleError } from '../utils/error';
 
 export default class ProductService {
 
@@ -65,8 +65,9 @@ export default class ProductService {
      */
     squareMeters(units, productData) {
         try {
-            if (typeof units !== 'number' || units < 0) {
-                throw new Error('Units must be a non-negative number');
+            const parsedUnits = Number(units);
+            if (isNaN(parsedUnits) || parsedUnits < 0) {
+                throw new Error('Units must be a number greater than 0');
             }
 
             if (!productData || typeof productData !== 'object') {
@@ -212,23 +213,28 @@ export default class ProductService {
                 return false;
             }
 
+            const u = Number(units);
+            if (!Number.isFinite(u) || u <= 0) {
+                return false;
+            }
+
             const hasVariation = optionValue && optionValue !== '' && productData.variationId !== null;
 
             if (this.measurableInM2(productData)) {
                 const m2ByUnit = productData.m2ByUnit;
 
                 if (!hasVariation) {
-                    return units * m2ByUnit <= productData.units; // TODO: check if productData.units is in m²
+                    return u * m2ByUnit <= productData.units; // TODO: check if productData.units is in m²
                 } else {
                     const optionData = this._variationService.getByValue(productData.variationId, optionValue);
-                    return optionData && units * m2ByUnit <= optionData.units;
+                    return optionData && u * m2ByUnit <= optionData.units;
                 }
             } else {
                 if (!hasVariation) {
-                    return units <= productData.units;
+                    return u <= productData.units;
                 } else {
                     const optionData = this._variationService.getByValue(productData.variationId, optionValue);
-                    return optionData && units <= optionData.units;
+                    return optionData && u <= optionData.units;
                 }
             }
         } catch (error) {
@@ -246,7 +252,8 @@ export default class ProductService {
      */
     maxAvailableUnits(productData, optionValue, variations) {
         try {
-            if (!productData || !variations) {
+            // if (!productData || !variations) {
+            if (!productData) {
                 return 0;
             }
 
