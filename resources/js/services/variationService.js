@@ -3,7 +3,7 @@ import { handleError, logInfo } from '../utils/error';
 
 export class VariationService {
     constructor() {
-        this.list = [];
+        this.options = [];
     }
 
     /**
@@ -18,8 +18,8 @@ export class VariationService {
                 throw new Error('Invalid variations data format');
             }
 
-            this.list = data;
-            logInfo(`Loaded ${this.list.length} variations`, 'Variations.load');
+            this.options = data;
+            logInfo(`Loaded ${this.options.length} variations`, 'Variations.load');
             return true;
         } catch (error) {
             handleError(error, 'Variations.load');
@@ -32,15 +32,15 @@ export class VariationService {
      * @param {number} variationId - Variation ID
      * @returns {Object|null} Variation object or null if not found
      */
-    get(variationId) {
+    getById(variationId) {
         try {
             if (typeof variationId !== 'number' || variationId <= 0) {
                 throw new Error('Variation ID must be a positive number');
             }
 
             const index = variationId - 1;
-            if (index >= 0 && index < this.list.length) {
-                return { ...this.list[index] }; // Return copy
+            if (index >= 0 && index < this.options.length) {
+                return { ...this.options[index] }; // Return copy
             }
             return null;
         } catch (error) {
@@ -60,7 +60,7 @@ export class VariationService {
                 throw new Error('Variation ID must be a positive number');
             }
 
-            const variation = this.get(variationId);
+            const variation = this.getById(variationId);
             if (!variation || !Array.isArray(variation.options)) {
                 return [];
             }
@@ -83,8 +83,8 @@ export class VariationService {
                 throw new Error('Variation index must be a non-negative number');
             }
 
-            if (variationIndex >= 0 && variationIndex < this.list.length) {
-                return { ...this.list[variationIndex] }; // Return copy
+            if (variationIndex >= 0 && variationIndex < this.options.length) {
+                return { ...this.options[variationIndex] }; // Return copy
             }
             return null;
         } catch (error) {
@@ -94,7 +94,7 @@ export class VariationService {
     }
 
     /**
-     * Finds and returns the option data according to the variation ID and value
+     * Finds and returns the option data according to the variation ID and an option value
      * @param {number} variationId - Variation ID
      * @param {string} optionValue - Option value
      * @returns {Object|null} Option data or null if not found
@@ -109,7 +109,7 @@ export class VariationService {
                 throw new Error('Option value must be a non-empty string');
             }
 
-            const variation = this.get(variationId);
+            const variation = this.getById(variationId);
             if (!variation || !Array.isArray(variation.options)) {
                 return null;
             }
@@ -133,7 +133,7 @@ export class VariationService {
                 throw new Error('Variation ID must be a positive number');
             }
 
-            const variation = this.get(variationId);
+            const variation = this.getById(variationId);
             if (!variation || !Array.isArray(variation.options)) {
                 return [];
             }
@@ -155,7 +155,7 @@ export class VariationService {
      * @returns {Array} All variations array
      */
     getAll() {
-        return this.list.map(variation => ({ ...variation })); // Return copies
+        return this.options.map(variation => ({ ...variation })); // Return copies
     }
 
     /**
@@ -163,7 +163,7 @@ export class VariationService {
      * @returns {number} Number of variations
      */
     getCount() {
-        return this.list.length;
+        return this.options.length;
     }
 
     /**
@@ -171,7 +171,7 @@ export class VariationService {
      * @returns {boolean} True if variations are loaded
      */
     isLoaded() {
-        return this.list.length > 0;
+        return this.options.length > 0;
     }
 
     /**
@@ -186,7 +186,7 @@ export class VariationService {
             }
 
             const index = variationId - 1;
-            return index >= 0 && index < this.list.length;
+            return index >= 0 && index < this.options.length;
         } catch (error) {
             handleError(error, 'Variations.exists');
             return false;
@@ -200,7 +200,7 @@ export class VariationService {
     getAllOptionValues() {
         try {
             const allValues = [];
-            this.list.forEach(variation => {
+            this.options.forEach(variation => {
                 if (Array.isArray(variation.options)) {
                     variation.options.forEach(option => {
                         if (option.value && !allValues.includes(option.value)) {
@@ -227,7 +227,7 @@ export class VariationService {
                 throw new Error('Option value must be a non-empty string');
             }
 
-            return this.list
+            return this.options
                 .filter(variation =>
                     Array.isArray(variation.options) &&
                     variation.options.some(option => option.value === optionValue)

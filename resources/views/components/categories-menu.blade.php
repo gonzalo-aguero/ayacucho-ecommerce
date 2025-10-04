@@ -104,7 +104,7 @@
                             {{--SEE OPTIONS SECTION--}}
                             <div class="flex flex-col w-full items-center pt-2 pb-3">
                                 <a class="bg-orange-light active:opacity-80 hover:opacity-80 active:scale-95 text-white text-sm p-1 mt-2 rounded" name="Ver opciones"
-                                    :href="$store.productService.productPage(product)"
+                                    :href="$store.productService.getProductPageUrl(product)"
                                     >Ver opciones</a>
                             </div>
                         </template>

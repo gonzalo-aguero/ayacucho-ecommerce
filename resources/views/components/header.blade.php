@@ -38,7 +38,7 @@
     <div class="flex flex-nowrap justify-between items-center gap-2 py-3 px-2 rounded-sm">
         <a href="{{ route('home') }}"><img src="{{asset('favicon-96x96.png')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16"></a>
         <a href="{{ route('home') }}">
-            <h1 class="font-bold uppercase">
+            <h1 class="font-bold uppercase ">
                 <span class="text-black">{{ config('app.name_1') }}</span>
                 <span class="text-orange">{{ config('app.name_2') }}</span>
             </h1>

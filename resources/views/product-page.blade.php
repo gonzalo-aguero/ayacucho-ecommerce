@@ -1,8 +1,10 @@
 @props([
+    // for SEO
     'pageTitle' => $product->name. " - " . config('app.name'),
     "pageDescription" => $product->description,
 
 
+    // injected by Laravel
     "javascriptData" => [
         ["key" => "product", "value" => $product],
         ["key" => "variation", "value" => $variation],
@@ -36,7 +38,7 @@
                     (product.variationId === null && product.units === 0)
                     || (product.variationId !== null
                         && undefined !== $store.selectedVariation
-                        && $store.variations.getByValue(product.variationId, $store.selectedVariation).units === 0
+                        && $store.variationService.getByValue(product.variationId, $store.selectedVariation).units === 0
                         )">SIN STOCK</div>
 
                 <img
@@ -88,7 +90,7 @@
                                 <template x-if="$store.selectedVariation">
                                     <span class="text-base font-light" x-text="
                                         '('
-                                        + $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                        + $store.variationService.getByValue(product.variationId, $store.selectedVariation).units
                                         + ' disponibles)'
                                     "></span>
                                 </template>
@@ -103,7 +105,7 @@
                         <x-form.input type="select" name="variation"
                             required
                             requiredSign="1"
-                            getSelectedFrom="$store.variations.getValues({{ $product->variationId }})"
+                            getSelectedFrom="$store.variationService.getValues({{ $product->variationId }})"
                             saveSelectedIn="$store.selectedVariation"
                             >
                             <span class="text-base font-medium" x-text="undefined !== variation ? variation.title : ''"></span>
@@ -118,9 +120,9 @@
                                     variation: undefined,
                                     init() {
                                         this.$watch('$store.variations', (val) => {
-                                            const texts = Alpine.store("variations").texts({{ $product->variationId }});
+                                            const texts = Alpine.store("variationService").getTexts({{ $product->variationId }});
                                             this.options = texts;
-                                            this.variation = Alpine.store("variations").get({{ $product->variationId }});
+                                            this.variation = Alpine.store("variationService").getById({{ $product->variationId }});
                                         });
                                     }
                                 }));
@@ -145,7 +147,7 @@
                                     <span class="text-base font-light" x-text="
                                         '('
                                         + $store.decimalFormat(
-                                                $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                                $store.variationService.getByValue(product.variationId, $store.selectedVariation).units
                                             )
                                         + 'm² disponibles)'
                                     "></span>

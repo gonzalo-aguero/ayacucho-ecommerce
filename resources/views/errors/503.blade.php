@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>RH Renova tu Hogar - Sitio en Mantenimiento</title>
+        <title>{{config('app.name')}} - Sitio en Mantenimiento</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
@@ -16,7 +16,7 @@
             {{--Logo and Title--}}
             <div class="flex flex-nowrap justify-between items-center gap-2 py-3 px-2">
                 <a href="{{ route('home') }}">
-                    <img src="{{asset('logo.webp')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16">
+                    <img src="{{asset('favicon-96x96.png')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16">
                 </a>
                 <a href="{{ route('home') }}">
                     <h1 class="font-bold uppercase">
@@ -52,7 +52,7 @@
             <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-12 max-w-2xl mx-auto text-center">
                 {{--Error Icon/Logo--}}
                 <div class="mb-6">
-                    <img src="{{asset('logo.webp')}}" alt="Logo {{ config('app.name') }}" class="h-20 mx-auto mb-4 opacity-80">
+                    <img src="{{asset('logo.png')}}" alt="Logo {{ config('app.name') }}" class="h-32 mx-auto mb-4 opacity-80">
                 </div>
 
                 {{--Error Title--}}

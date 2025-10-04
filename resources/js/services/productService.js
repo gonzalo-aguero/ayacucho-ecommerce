@@ -104,7 +104,7 @@ export default class ProductService {
             url = url.replace(/ /g, '-').toLowerCase();
             return url;
         } catch (error) {
-            handleError(error, 'ProductService.productPage');
+            handleError(error, 'ProductService.getProductPageUrl');
             return BASE_URL;
         }
     }
@@ -117,7 +117,7 @@ export default class ProductService {
     measurableInM2(productData) {
         try {
             if (!productData || typeof productData !== 'object') {
-                return false;
+                throw new Error('Product data is required');
             }
 
             return productData.m2Price != null && productData.m2ByUnit != null;
@@ -224,7 +224,7 @@ export default class ProductService {
                 const m2ByUnit = productData.m2ByUnit;
 
                 if (!hasVariation) {
-                    return u * m2ByUnit <= productData.units; // TODO: check if productData.units is in m²
+                    return u * m2ByUnit <= productData.units;
                 } else {
                     const optionData = this._variationService.getByValue(productData.variationId, optionValue);
                     return optionData && u * m2ByUnit <= optionData.units;
@@ -244,24 +244,24 @@ export default class ProductService {
     }
 
     /**
-     * Returns the maximum number of boxes or packages that can be added to the cart
+     * Returns the maximum number of units, boxes or packages of a product that can be added to the cart.
+     * In the case of being ceramic, it returns the maximum available number
+     * of boxes according to the available square meters.
      * @param {Object} productData - Product data object
      * @param {string} optionValue - Optional variation value
-     * @param {Object} variations - Variations instance
      * @returns {number} Maximum available units
      */
-    maxAvailableUnits(productData, optionValue, variations) {
+    maxAvailableUnits(productData, optionValue=null) {
         try {
-            // if (!productData || !variations) {
             if (!productData) {
                 return 0;
             }
 
-            const hasVariation = optionValue && optionValue !== '';
+            const hasVariation = optionValue && optionValue !== '' && productData.variationId !== null
 
             if (this.measurableInM2(productData)) {
                 if (hasVariation) {
-                    const optionData = variations.getByValue(productData.variationId, optionValue);
+                    const optionData = this._variationService.getByValue(productData.variationId, optionValue);
                     if (optionData && productData.m2ByUnit) {
                         return parseInt(parseFloat(optionData.units) / parseFloat(productData.m2ByUnit));
                     }
@@ -270,7 +270,7 @@ export default class ProductService {
                 }
             } else {
                 if (hasVariation) {
-                    const optionData = variations.getByValue(productData.variationId, optionValue);
+                    const optionData = this._variationService.getByValue(productData.variationId, optionValue);
                     return optionData ? optionData.units : 0;
                 } else {
                     return productData.units || 0;

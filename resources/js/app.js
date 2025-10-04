@@ -28,6 +28,7 @@ document.addEventListener('alpine:init', async function(){
 
     const variationService = new VariationService();
     store("variationService", variationService);
+    store('variations', variationService.options);
 
     const productService = new ProductService(cart, notificationService, variationService)
     store('productService', productService);
@@ -48,13 +49,11 @@ document.addEventListener('alpine:init', async function(){
     store("gotoCheckout", gotoCheckout);
 
     await loadProducts();
-    variationService.load();
+    await variationService.load();
+    store('variations', variationService.options);
 
     const googleReviews = new GoogleReviews();
-    await googleReviews.load();
-    googleReviews.startRotation();
     store('googleReviews', googleReviews);
-
 
     const path = window.location.pathname;
     if(path === "/") HOME_PAGE();
