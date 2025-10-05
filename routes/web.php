@@ -59,8 +59,13 @@ Route::post('/maintenance', function (\Illuminate\Http\Request $request) {
         abort(400, 'Bad Request: action parameter is required');
     }
 
+    $maintenanceSecret = config('app.maintenance_secret');
+    if (empty($maintenanceSecret)) {
+        abort(500, 'Server Misconfiguration: maintenance secret is not set');
+    }
+
     $commands = [
-        'down' => 'down --render="errors.503" --secret="'.config('app.maintenance_secret').'"',
+        'down' => 'down --render="errors.503" --secret="' . $maintenanceSecret . '"',
         'up' => 'up',
     ];
 
