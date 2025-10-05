@@ -1,6 +1,6 @@
 "use strict";
 import { CART_COOKIE_EXPIRATION_DAYS } from '../config/constants';
-import { handleError, logWarning } from '../utils/error';
+import { handleError, logWarning, logInfo } from '../utils/error';
 
 export class Cart {
     constructor(store) {
@@ -46,7 +46,7 @@ export class Cart {
             }
 
             this.save();
-            console.log("new cart", this.content);
+            logInfo(this.content, "Cart.add");
             return true;
         } catch (error) {
             handleError(error, 'Cart.add');

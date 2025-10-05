@@ -62,7 +62,6 @@
                                     this.$watch('$store.displayPaymentMethods', (val) => {
                                         if(val){
                                             this.options = Alpine.store("paymentMethodService").getTexts();
-                                            console.log('Options updated:', this.options); // Debug
                                         }
                                     });
                                 }
@@ -96,7 +95,6 @@
                                     this.$watch('$store.displayShippingZones', (val) => {
                                         if(val){
                                             this.options = Alpine.store("shippingZoneService").getTexts();
-                                            console.log('Options updated:', this.options); // Debug
                                         }
                                     });
                                 }

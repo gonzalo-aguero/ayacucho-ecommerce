@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Order;
+use App\Models\PhoneRotator;
 
 class OrderController extends Controller
 {
     private function getBusinessPhoneNumber(){
-        $result = Order::find(1);
+        $result = PhoneRotator::find(1);
         $number = $result->lastPhoneNumber;//current number in database
         $number1 = config('company.phone_number_1');//option 1
         $number2 = config('company.phone_number_2');//option 2
@@ -40,8 +40,16 @@ class OrderController extends Controller
         return "   *$title:* ". $value ."\n";
     }
     /**
-     * Generates a WhatsApp URL with the order detail as message.
-     * */
+     * Generates a WhatsApp URL containing the order details as a pre-filled message.
+     *
+     * This method constructs a WhatsApp URL that, when visited, opens a chat with the company's phone number
+     * and pre-fills the message field with the customer's order information, including client data, products,
+     * and order details.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request containing order and customer data.
+     * @param string $compPhoneNumber The company's WhatsApp phone number to send the message to.
+     * @return string The generated WhatsApp URL with the order details as a message.
+     */
     private function generateURL(Request $request, $compPhoneNumber){
         $compName = config("app.name");
 
@@ -102,6 +110,9 @@ class OrderController extends Controller
             'orderTotal' => 'required|min:1|max:100',
         ]);
 
-        return redirect($this->generateURL($request, $this->getBusinessPhoneNumber()))->withoutCookie('cart');
+        return redirect(
+            $this->generateURL($request,
+            $this->getBusinessPhoneNumber())
+            )->withoutCookie('cart');
     }
 }

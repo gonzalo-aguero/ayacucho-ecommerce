@@ -1,5 +1,5 @@
 "use strict";
-import { handleError, logWarning } from '../utils/error';
+import { logInfo, logWarning } from '../utils/error';
 
 export class Order {
     constructor(productService, paymentMethodService, shippingZoneService) {
@@ -8,7 +8,6 @@ export class Order {
         this._shippingZoneService = shippingZoneService;
     }
 
-    // TODO: See if it is better to move this unique-method class to a different file
     /**
      * Calculates the order total including products, shipping and payment fees
      * @returns {number} Order total
@@ -36,9 +35,16 @@ export class Order {
         }
 
         let orderTotal = cartTotalWithPaymentMethod + shippingCost;
-        console.log("order total", orderTotal, "cartTotal", cartTotal, "shippingCost", shippingCost, "cartTotalWithPaymentMethod", cartTotalWithPaymentMethod);
-        console.log("selected payment method", selectedPaymentMethod);
-        console.log("selected shipping zone", selectedShippingZone);
+
+        logInfo(
+            {
+                orderTotal,
+                cartTotal,
+                shippingCost,
+                cartTotalWithPaymentMethod
+            },'Order.total');
+        logInfo({ selectedPaymentMethod },'Order.total');
+        logInfo({ selectedShippingZone },'Order.total');
 
         return Math.round(orderTotal * 100) / 100; // Round to 2 decimal places
     }

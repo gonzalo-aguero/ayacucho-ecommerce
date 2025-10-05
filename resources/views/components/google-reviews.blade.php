@@ -7,7 +7,6 @@
             show: [],
             init(){
                 $watch('$store.googleReviews.getReviews()', (value)=>{
-                    console.log(value);
                     this.reviews = value;
                 });
                 $watch('$store.googleReviews.getShowStates()', (value)=>{
