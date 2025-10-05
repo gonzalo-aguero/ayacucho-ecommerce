@@ -17,7 +17,7 @@ export default class ProductService {
 
         this._cart = cart;
         this._notificationService = notificationService;
-        this._variationService = variationService
+        this._variationService = variationService;
         this._products = []; // This will hold the product data
         this._productsById = Object.create(null);
         this._productsToPrint = []; // This will hold the products to print
