@@ -44,7 +44,7 @@ export class VariationService {
             }
             return null;
         } catch (error) {
-            handleError(error, 'Variations.get');
+            handleError(error, 'Variations.getById');
             return null;
         }
     }
