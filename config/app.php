@@ -220,6 +220,7 @@ return [
      **/
     'excel_name' => env('APP_EXCEL_NAME', 'Base de Datos.xlsx'),
     'command_token' => env('APP_COMMAND_TOKEN', null),
+    'maintenance_secret' => env('APP_MAINTENANCE_SECRET', null),
     'gtag_id' => env('GTAG_ID', null)
 
 ];

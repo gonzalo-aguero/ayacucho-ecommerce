@@ -1,8 +1,10 @@
 @props([
+    // for SEO
     'pageTitle' => $product->name. " - " . config('app.name'),
     "pageDescription" => $product->description,
 
 
+    // injected by Laravel
     "javascriptData" => [
         ["key" => "product", "value" => $product],
         ["key" => "variation", "value" => $variation],
@@ -22,21 +24,21 @@
     <div class="relative flex flex-wrap justify-center gap-8 mt-40 mb-20 px-4 py-10 bg-white" x-data="{
             units: 1,
             addToCart(){
-                if($store.StaticProduct.addToCart(this.units, product, $store.selectedVariation))
+                if($store.productService.addToCart(this.units, product, $store.selectedVariation))
                     this.units = 1;
             }
         }">
         {{--MAIN INFO SECTION--}}
         <div>
             {{--PRODUCT IMAGE--}}
-            <div class="relative text-center">
+            <div class="relative text-center flex justify-center items-center">
                 {{--"NO STOCK" SIGN--}}
                 <div x-cloak class="bg-red text-white text-center rounded-t absolute w-full opacity-80"
                     x-show="
                     (product.variationId === null && product.units === 0)
                     || (product.variationId !== null
                         && undefined !== $store.selectedVariation
-                        && $store.variations.getByValue(product.variationId, $store.selectedVariation).units === 0
+                        && $store.variationService.getByValue(product.variationId, $store.selectedVariation).units === 0
                         )">SIN STOCK</div>
 
                 <img
@@ -66,7 +68,7 @@
             {{--ADD TO CART SECTION--}}
             <div class="flex flex-col m-w-80 pt-2 pb-3">
                 <div class="flex w-full justify-center items-center gap-1">
-                    <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model="units" :disabled="product.units == 0"
+                    <input type="number" min="1" {{ $product->showUnits ? 'max="'. $product->units .'"' : "" }} x-model.number="units" :disabled="product.units == 0"
                         class="block w-16 text-xl font-light rounded border border-gray-light2 text-center"/>
                     <span class="text-base font-light">
                         @php
@@ -88,7 +90,7 @@
                                 <template x-if="$store.selectedVariation">
                                     <span class="text-base font-light" x-text="
                                         '('
-                                        + $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                        + $store.variationService.getByValue(product.variationId, $store.selectedVariation).units
                                         + ' disponibles)'
                                     "></span>
                                 </template>
@@ -103,7 +105,7 @@
                         <x-form.input type="select" name="variation"
                             required
                             requiredSign="1"
-                            getSelectedFrom="$store.variations.getValues({{ $product->variationId }})"
+                            getSelectedFrom="$store.variationService.getValues({{ $product->variationId }})"
                             saveSelectedIn="$store.selectedVariation"
                             >
                             <span class="text-base font-medium" x-text="undefined !== variation ? variation.title : ''"></span>
@@ -118,9 +120,9 @@
                                     variation: undefined,
                                     init() {
                                         this.$watch('$store.variations', (val) => {
-                                            const texts = Alpine.store("variations").texts({{ $product->variationId }});
+                                            const texts = Alpine.store("variationService").getTexts({{ $product->variationId }});
                                             this.options = texts;
-                                            this.variation = Alpine.store("variations").get({{ $product->variationId }});
+                                            this.variation = Alpine.store("variationService").getById({{ $product->variationId }});
                                         });
                                     }
                                 }));
@@ -133,7 +135,7 @@
                 @if($squareMeter)
                     <div class="text-base font-normal text-center">
                         <span class="text-lg">=</span>
-                        <span x-text="$store.StaticProduct.squareMeters(units, product)"></span>
+                        <span x-text="$store.productService.squareMeters(units, product)"></span>
                         <span>m²</span>
 
                         {{--AVAILABLE UNITS SECTION 2--}}
@@ -145,7 +147,7 @@
                                     <span class="text-base font-light" x-text="
                                         '('
                                         + $store.decimalFormat(
-                                                $store.variations.getByValue(product.variationId, $store.selectedVariation).units
+                                                $store.variationService.getByValue(product.variationId, $store.selectedVariation).units
                                             )
                                         + 'm² disponibles)'
                                     "></span>

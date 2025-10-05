@@ -1,7 +1,7 @@
 # WRITTEN BY LARAVEL
 /.phpunit.cache
 /node_modules
-#/public_html/build
+/public_html/build
 /public_html/hot
 /public_html/storage
 /storage/*.key
@@ -22,8 +22,6 @@ yarn-error.log
 # WRITTEN BY DEVS
 Session.vim
 .editorconfig
-/ConvertCSV-JSON
-Base de Datos WEB.xlsx
 /public_html/json/Productos.json
 /public_html/json/Variaciones.json
 /public_html/json/ZonasDeEnvio.json

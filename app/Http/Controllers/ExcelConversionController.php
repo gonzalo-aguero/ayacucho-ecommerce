@@ -212,6 +212,7 @@ class ExcelConversionController extends Controller
                     if(isset($data[$index])){
                         //Si la variacion ya existe se agrega la nueva opcion.
                         array_push($data[$index]["options"], [
+                            "id" => $optionId,
                             "value" => $value,
                             "units" => $units,
                         ]);
@@ -222,6 +223,7 @@ class ExcelConversionController extends Controller
                             "title" => $title,
                             "options" => array(
                                 [
+                                    "id" => $optionId,
                                     "value" => $value,
                                     "units" => $units,
                                 ],

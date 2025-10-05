@@ -44,12 +44,12 @@
                         required
                         requiredSign="0"
                         :options="$options1"
-                        getSelectedFrom="$store.paymentMethods.methods"
-                        saveSelectedIn="$store.selectedPaymentMethod"
+                        getSelectedFrom="$store.paymentMethodService.methods"
+                        saveSelectedIn="$store.paymentMethodService.selectedPaymentMethod"
                         >
                     </x-form.input>
-                    <template x-if="undefined !== $store.selectedPaymentMethod">
-                        <p class="{{$noteStyle}}" x-text="$store.selectedPaymentMethod.note"></p>
+                    <template x-if="undefined !== $store.paymentMethodService?.selectedPaymentMethod">
+                        <p class="{{$noteStyle}}" x-text="$store.paymentMethodService?.selectedPaymentMethod?.note"></p>
                     </template>
                     <script>
                         document.addEventListener('alpine:init', () => {
@@ -58,10 +58,11 @@
                                 defaultOptionText: "Seleccionar",
                                 showBladeOptions: false,
                                 options: [],
-                                init() {
-                                    this.$watch('$store.paymentMethods', (val) => {
-                                        const texts = Alpine.store("paymentMethods").texts();
-                                        this.options = texts;
+                                init(){
+                                    this.$watch('$store.displayPaymentMethods', (val) => {
+                                        if(val){
+                                            this.options = Alpine.store("paymentMethodService").getTexts();
+                                        }
                                     });
                                 }
                             }));
@@ -79,8 +80,8 @@
                         required
                         requiredSign="0"
                         :options="$options2"
-                        getSelectedFrom="$store.shippingZones.zones"
-                        saveSelectedIn="$store.selectedShippingZone"
+                        getSelectedFrom="$store.shippingZoneService.zones"
+                        saveSelectedIn="$store.shippingZoneService.selectedShippingZone"
                         >
                     </x-form.input>
                     <script>
@@ -91,9 +92,10 @@
                                 showBladeOptions: false,
                                 options: [],
                                 init() {
-                                    this.$watch('$store.shippingZones', (val) => {
-                                        const texts = Alpine.store("shippingZones").texts();
-                                        this.options = texts;
+                                    this.$watch('$store.displayShippingZones', (val) => {
+                                        if(val){
+                                            this.options = Alpine.store("shippingZoneService").getTexts();
+                                        }
                                     });
                                 }
                             }));
@@ -110,7 +112,7 @@
                 <div class="{{$sectionStyle}}">
                     <h2 class="{{$sectionTitleStyle}}">RESUMEN DEL PEDIDO</h2>
                     <ul class="flex flex-col w-full gap-[1px] mt-2 bg-gray-light2" x-data="{
-                            cartTotal: $store.priceFormat($store.cart.total()),
+                            cartTotal: $store.priceFormat($store.productService.cartTotal()),
                             shippingZone: 'Debe seleccionar',
                             shippingCost: $store.priceFormat(0),
                             paymentMethod: 'Debe seleccionar',
@@ -120,18 +122,18 @@
                             },
                             init() {
                                 $watch('$store.cart', () => {
-                                    this.cartTotal = $store.priceFormat($store.cart.total());
+                                    this.cartTotal = $store.priceFormat($store.productService.cartTotal());
                                     this.updateOrderTotal();
                                 });
-                                $watch('$store.selectedShippingZone', (val) => {
+                                $watch('$store.shippingZoneService?.selectedShippingZone', (val) => {
                                     // 'val' corresponds to the selected shipping zone object.
                                     this.shippingZone = val.name;
                                     this.shippingCost = $store.priceFormat(val.cost);
                                     this.updateOrderTotal();
                                 });
-                                $watch('$store.selectedPaymentMethod', (val) => {
+                                $watch('$store.paymentMethodService?.selectedPaymentMethod', (val) => {
                                     // 'val' corresponds to the selected payment method object.
-                                    const text = Alpine.store('paymentMethods').getText(val);
+                                    const text = Alpine.store('paymentMethodService').getText(val);
                                     this.paymentMethod = text;
                                     this.updateOrderTotal();
                                 });

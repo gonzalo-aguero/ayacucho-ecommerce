@@ -1,18 +1,28 @@
 <div class="p-8 flex flex-col items-center w-full md:w-5/6 h-80 rounded-md">
     <h2 class="text-center mt-8 mb-16 uppercase text-xl text-white font-semibold drop-shadow-2xl">Lo que opinan nuestros clientes</h2>
+
     <template x-if="undefined !== $store.googleReviews">
         <div id="google-reviews" x-data="{
             reviews: [],
             show: [],
             init(){
-                $watch('$store.googleReviews.reviews', (value)=>{
+                $watch('$store.googleReviews.getReviews()', (value)=>{
                     this.reviews = value;
                 });
-                $watch('$store.googleReviews.show', (value)=>{
+                $watch('$store.googleReviews.getShowStates()', (value)=>{
                     this.show = value;
                 });
+
+                // Inicializar cuando se carguen los reviews
+                $watch('$store.googleReviews.isLoaded()', (loaded)=>{
+                    if(loaded) {
+                        this.reviews = $store.googleReviews.getReviews();
+                        this.show = $store.googleReviews.getShowStates();
+                    }
+                });
             }
-            }" class="relative w-full h-96 flex justify-center items-center p-0 md:p-2">
+        }" class="relative w-full h-96 flex justify-center items-center p-0 md:p-2">
+
             <template x-for="(review, index) in reviews">
                 <div :id=" 'google-review_' + index " class="google-review animate__animated
                         absolute bg-white py-6 px-0 md:p-6 rounded-md shadow-2xl
@@ -20,9 +30,9 @@
                     "
                     x-data="{
                         init(){
-                            //This is the last item
+                            // Inicializar rotación cuando se cargue el último review
                             if(index == reviews.length -1){
-                                $store.googleReviews.run();
+                                $store.googleReviews.startRotation();
                             }
                         }
                     }"
