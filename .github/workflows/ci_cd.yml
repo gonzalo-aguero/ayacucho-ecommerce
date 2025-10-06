@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-test
     if: github.ref == 'refs/heads/main'
-    environment: Prod
+    environment: production
 
     steps:
       - name: Checkout code
@@ -119,7 +119,6 @@ jobs:
 
       - name: Laravel optimize
         run: |
-          php artisan config:cache
           php artisan route:cache
           php artisan view:cache
 
