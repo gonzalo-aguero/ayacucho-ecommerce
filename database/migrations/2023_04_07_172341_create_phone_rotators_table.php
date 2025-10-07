@@ -12,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create(PhoneRotator::table,function (Blueprint $table) {
+        Schema::create('phone_rotators',function (Blueprint $table) {
             $table->id();
             $table->integer("lastPhoneNumber");
             $table->timestamps();
         });
 
         // This is used to keep the last phone number used to send the customer's order to the seller (it alternates between two seller's phones)
-        DB::table(PhoneRotator::table)->insertOrIgnore([
+        DB::table('phone_rotators')->insertOrIgnore([
             'id' => 1,
             'lastPhoneNumber' => 1,
             'created_at' => now(),
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(PhoneRotator::table);
+        Schema::dropIfExists('phone_rotators');
     }
 };
