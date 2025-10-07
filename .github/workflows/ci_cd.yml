@@ -125,18 +125,70 @@ jobs:
       - name: Remove unnecessary files
         run: |
           rm -rf node_modules tests .github .git .gitignore README.md
+      
+      # Cache Composer dependencies
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      
+      # Crear ZIP de vendor solo si composer.lock cambió
+      - name: Create vendor ZIP if composer.lock changed
+        id: zip_vendor
+        run: |
+          HASH_FILE=".vendor_hash"
+          NEW_HASH=$(sha1sum composer.lock | awk '{print $1}')
+          UPLOAD_ZIP=false
+      
+          if [ -f $HASH_FILE ]; then
+            OLD_HASH=$(cat $HASH_FILE)
+            if [ "$OLD_HASH" != "$NEW_HASH" ]; then
+              UPLOAD_ZIP=true
+            fi
+          else
+            UPLOAD_ZIP=true
+          fi
+      
+          if [ "$UPLOAD_ZIP" = true ]; then
+            echo "Changes detected in composer.lock → creating ZIP..."
+            zip -r vendor.zip vendor/
+            echo "true" > upload_flag.txt
+          else
+            echo "No changes in composer.lock → skipping ZIP creation"
+          fi
+      
+          echo $NEW_HASH > $HASH_FILE
+        
+      
+      # Subir ZIP de vendor solo si cambió
+      - name: Upload vendor ZIP if needed
+        if: steps.zip_vendor.outputs.upload_flag == 'true' || needs.zip_vendor.outputs.upload_flag == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./vendor.zip
+          server-dir: ./vendor.zip
+          dry-run: false
 
+      # Deploy del resto de la app vía FTP
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          server-dir: /home/c6743/
           local-dir: ./
+          server-dir: ./
+          dry-run: false
           exclude: |
             **/.git*
             **/.github*
             **/node_modules/**
             **/tests/**
-            **/storage/logs/**
+            **/storage/**
+            **/vendor/**
