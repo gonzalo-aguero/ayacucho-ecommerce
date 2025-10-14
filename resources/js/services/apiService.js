@@ -8,8 +8,11 @@ export class ApiService {
             const response = await fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache', // ask server to not use its cache
+                    'Pragma': 'no-cache', // ask server to not return cached data (legacy compatibility)
                     ...options.headers
                 },
+                cache: 'no-store', // prevent browser from caching this request/response
                 ...options
             });
 
