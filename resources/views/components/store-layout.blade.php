@@ -52,6 +52,9 @@
                 @endforeach
             @endif
 
+            // Global variables for all pages
+            window.boxedCategories = {{ Js::from(config('products.boxed_categories', [])) }};
+
             // Fallback for critical variables
             if (typeof window.DEBUG === 'undefined') {
                 console.warn('DEBUG global not defined, defaulting to false');
@@ -73,6 +76,9 @@
     <body class="antialiased scroll-smooth" x-init="">
         {{--Header--}}
         <x-header></x-header>
+
+        {{--Product Search Modal--}}
+        <x-product-search-modal></x-product-search-modal>
 
         {{--Cart black-transparent background--}}
         <div class="fixed z-10 left-0 top-0 bg-black/30 w-screen h-screen animate__animated very_fast_animation"
