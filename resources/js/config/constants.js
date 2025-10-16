@@ -8,10 +8,10 @@
 // API endpoints
 export const API_ENDPOINTS = {
     GOOGLE_REVIEWS: '/api/google-reviews',
-    PRODUCTS: '/json/Productos.json',
-    PAYMENT_METHODS: '/json/MetodosDePago.json',
-    SHIPPING_ZONES: '/json/ZonasDeEnvio.json',
-    VARIATIONS: '/json/Variaciones.json'
+    PRODUCTS: '/api/products',
+    PAYMENT_METHODS: '/api/payment-methods',
+    SHIPPING_ZONES: '/api/shipping-zones',
+    VARIATIONS: '/api/variations'
 };
 
 // Base URL

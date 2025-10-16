@@ -1,5 +1,6 @@
 import { store } from '../utils/store';
 import { handleError, logInfo } from '../utils/error';
+import { api } from '../services/apiService';
 
 export function sortByCategories(products){
     if(!Array.isArray(products)){
@@ -69,20 +70,34 @@ export function printMoreProducts(){
 }
 
 export async function loadProducts(){
-    await fetch(location.origin + "/json/Productos.json")
-        .then(response => response.json())
-        .then(data => {
-            const productService = store('productService');
+    try {
+        // Force cache bypass if needed
+        const data = await api.getProducts();
 
-            productService.products = data;
-            if(DEBUG) console.log("Productos sin ordenar:", store('products'));
-            store('products', data);
-            store('productsLength', data.length);
+        const productService = store('productService');
 
-            productService.sortedProducts = sortByCategories(data);
-            if(DEBUG) console.log("Productos ordenados:", productService.sortedProducts);
-            store('sortedProducts', productService.sortedProducts);
+        productService.products = data;
+        if(DEBUG) console.log("Productos sin ordenar:", store('products'));
+        store('products', data);
+        store('productsLength', data.length);
 
-            printProducts(productService.printedProductsMax);
-        });
+        productService.sortedProducts = sortByCategories(data);
+        if(DEBUG) console.log("Productos ordenados:", productService.sortedProducts);
+        store('sortedProducts', productService.sortedProducts);
+
+        printProducts(productService.printedProductsMax);
+
+        logInfo(`Loaded ${data.length} products successfully`, 'loadProducts');
+    } catch (error) {
+        handleError(error, 'loadProducts');
+        // Fallback: set empty arrays to prevent app crashes
+        const productService = store('productService');
+        productService.products = [];
+        productService.sortedProducts = [];
+        productService.productsToPrint = [];
+        store('products', []);
+        store('productsLength', 0);
+        store('sortedProducts', []);
+        store('productsToPrint', []);
+    }
 }
