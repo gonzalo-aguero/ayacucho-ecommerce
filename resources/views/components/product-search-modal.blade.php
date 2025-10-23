@@ -1,7 +1,7 @@
 {{-- Product Search Modal Component --}}
-<div x-show="$store.searchModalOpened"
+<div x-show="$store.searchModalOpened || false"
      x-cloak
-     class="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4"
+     class="fixed inset-0 z-50 flex items-start justify-center pt-10 px-4"
      x-data="productSearchModal"
      @keydown.escape.window="$store.searchModalOpened = false"
      x-transition:enter="animate__animated animate__fadeIn very_fast_animation"
@@ -11,7 +11,7 @@
     <div class="fixed inset-0 bg-black/50" @click="$store.searchModalOpened = false"></div>
 
     {{-- Modal Content --}}
-    <div class="relative bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[70vh] overflow-hidden"
+    <div class="relative bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden"
          x-transition:enter="animate__animated animate__zoomIn very_fast_animation"
          x-transition:leave="animate__animated animate__zoomOut very_fast_animation">
 
@@ -76,91 +76,7 @@
             <div x-show="!isLoading && searchResults.length > 0" class="p-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <template x-for="product in searchResults" :key="product.id">
-                        <div class="bg-white border border-gray-light2 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
-                             x-data="{
-                                 units: 1,
-                                 productImage(){
-                                     const image = product.image !== null
-                                         ? '{{ asset('images/products') }}/' + product.id + '.' + product.image
-                                         : '{{ asset('images/defaultImage.svg') }}';
-                                     return image;
-                                 },
-                                 addToCart(){
-                                     if($store.productService.addToCart(this.units, product)){
-                                         this.units = 1;
-                                     }
-                                 }
-                             }">
-
-                            {{-- Product Image --}}
-                            <div class="relative">
-                                <template x-if="product.units == 0">
-                                    <div class="bg-red text-white font-medium text-center rounded-t absolute w-full opacity-80 z-10">SIN STOCK</div>
-                                </template>
-                                <a :href="$store.productService.getProductPageUrl(product)" @click="$store.searchModalOpened = false">
-                                    <img class="h-32 w-full object-cover" :src="productImage" :alt="product.name" :title="product.description">
-                                </a>
-                            </div>
-
-                            {{-- Product Info --}}
-                            <div class="p-3">
-                                <h3 class="font-medium text-sm mb-2 line-clamp-2">
-                                    <a :href="$store.productService.getProductPageUrl(product)"
-                                       @click="$store.searchModalOpened = false"
-                                       x-text="product.name"
-                                       class="hover:text-orange-medium"></a>
-                                </h3>
-
-                                {{-- Price --}}
-                                <div class="text-center font-light mb-3">
-                                    <span class="text-base font-medium" x-text="$store.priceFormat(product.price)"></span>
-                                    <span class="text-xs block" x-text="$store.priceFormat(product.m2Price) + '/m²'" x-show="$store.productService.measurableInM2(product)"></span>
-                                </div>
-
-                                {{-- Actions --}}
-                                <template x-if="product.variationId === null">
-                                    <div class="flex flex-col items-center gap-2">
-                                        <div class="flex items-center gap-2 w-full justify-center">
-                                            <input type="number" min="1" x-model.number="units" :disabled="product.units == 0"
-                                                class="w-16 text-sm rounded border border-gray-light2 text-center py-1"/>
-                                            <span class="text-xs text-gray">
-                                                <template x-if="window.boxedCategories && window.boxedCategories.includes(product.category)">
-                                                    <span>Cajas</span>
-                                                </template>
-                                                <template x-if="$store.productService.measurableInM2(product)">
-                                                    <span>m²</span>
-                                                </template>
-                                                <template x-if="!window.boxedCategories?.includes(product.category) && !$store.productService.measurableInM2(product)">
-                                                    <span>Unid.</span>
-                                                </template>
-                                            </span>
-                                        </div>
-                                        <div class="text-xs font-normal text-center" x-show="$store.productService.measurableInM2(product)">
-                                            <span class="text-sm">=</span>
-                                            <span x-text="$store.productService.squareMeters(units, product)"></span>
-                                            <span>m²</span>
-                                        </div>
-                                        <button @click="addToCart"
-                                                :disabled="product.units == 0"
-                                                class="w-full text-white text-sm py-2 px-3 rounded transition-colors"
-                                                :class="product.units == 0
-                                                    ? 'bg-gray opacity-80 cursor-not-allowed'
-                                                    : 'bg-orange-light hover:bg-orange-medium active:scale-95'">
-                                            Añadir al carrito
-                                        </button>
-                                    </div>
-                                </template>
-
-                                <template x-if="product.variationId !== null">
-                                    <div class="text-center">
-                                        <a :href="$store.productService.getProductPageUrl(product)"
-                                           class="inline-block w-full bg-orange-light hover:bg-orange-medium text-white text-sm py-2 px-3 rounded transition-colors">
-                                            Ver opciones
-                                        </a>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
+                        <x-product.product-card :closeModalOnAction="false" :compactMode="true" />
                     </template>
                 </div>
             </div>
