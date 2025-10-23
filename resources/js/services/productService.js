@@ -294,6 +294,56 @@ export default class ProductService {
     }
 
     /**
+     * Search products by name or ID (code)
+     * @param {string} query - Search query
+     * @param {number} maxResults - Maximum number of results to return (default: 10)
+     * @returns {Array} Array of matching products
+     */
+    searchProducts(query, maxResults = 10) {
+        if (!query || typeof query !== 'string' || query.trim().length === 0) {
+            return [];
+        }
+
+        const searchTerm = query.trim().toLowerCase();
+
+        try {
+            // Filter products that match name or ID
+            const matchedProducts = this._products.filter(product => {
+                if (!product || !product.show) return false;
+
+                // Search by name (case-insensitive)
+                const nameMatch = product.name && product.name.toLowerCase().includes(searchTerm);
+
+                // Search by ID/code (exact or partial match)
+                const idMatch = product.id && product.id.toString().includes(searchTerm);
+
+                return nameMatch || idMatch;
+            });
+
+            // Sort results - exact matches first, then partial matches
+            matchedProducts.sort((a, b) => {
+                const aNameExact = a.name && a.name.toLowerCase() === searchTerm;
+                const bNameExact = b.name && b.name.toLowerCase() === searchTerm;
+                const aIdExact = a.id && a.id.toString() === searchTerm;
+                const bIdExact = b.id && b.id.toString() === searchTerm;
+
+                // Exact matches first
+                if ((aNameExact || aIdExact) && !(bNameExact || bIdExact)) return -1;
+                if ((bNameExact || bIdExact) && !(aNameExact || aIdExact)) return 1;
+
+                // Then by name alphabetically
+                return (a.name || '').localeCompare(b.name || '');
+            });
+
+            // Return limited results
+            return matchedProducts.slice(0, maxResults);
+        } catch (error) {
+            handleError(error, 'ProductService.searchProducts');
+            return [];
+        }
+    }
+
+    /**
      * Calculates the total price of the cart passing the price retrieval function
      * @returns {number} Total cart price
      */
