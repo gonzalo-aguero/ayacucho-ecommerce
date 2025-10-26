@@ -6,6 +6,12 @@
             'action' => '',
         ],
         [
+            'img' => asset('images/UI-Icons/icons8-search-50.png'),
+            'text' => "Buscar",
+            'url' => '',
+            'action' => 'toggleSearch',
+        ],
+        [
             'img' => asset('images/UI-Icons/icons8-shopping-cart-48.png'),
             'text' => "Carrito",
             'url' => '',
@@ -27,13 +33,17 @@
             if(this.smartphone) this.menuOpened = false;
             Alpine.store('cartOpened', !$store.cartOpened);
         },
+        toggleSearch(){
+            if(this.smartphone) this.menuOpened = false;
+            Alpine.store('searchModalOpened', !$store.searchModalOpened);
+        },
         toggleMenu(){
             this.menuOpened = !this.menuOpened;
         },
         openMenu(){
             this.menuOpened = true;
         }
-    }">
+    }" @keydown.ctrl.k.window.prevent="$store.searchModalOpened = true">
     {{--Logo and Title--}}
     <div class="flex flex-nowrap justify-between items-center gap-2 py-3 px-2 rounded-sm">
         <a href="{{ route('home') }}"><img src="{{asset('favicon-96x96.png')}}" alt="Logo {{ config('app.name') }}" title="Logo {{ config('app.name') }}" class="h-16"></a>
@@ -48,7 +58,7 @@
         <button name="Abrir Menu" @click="openMenu()" x-show="smartphone" x-cloak class="active:opacity-80 text-center">
             <img src="{{ asset('images/UI-Icons/icons8-menu-rounded-100.png') }}" class="h-12">
         </button>
-        <ul class="fixed z-10 w-2/3 left-0 !top-0 top-[5.4rem] pt-[5.4rem] shadow-md h-full gap-0
+        <ul class="fixed z-10 w-2/3 left-0 !top-0 pt-[5.4rem] shadow-md h-full gap-0
             md:relative flex flex-col md:flex-row md:flex-nowrap md:h-16 md:w-auto md:left-auto md:top-auto md:shadow-none
             py-1 px-2 md:pt-1 bg-white text-orange animate__animated very_fast_animation"
             x-show="!smartphone || menuOpened"

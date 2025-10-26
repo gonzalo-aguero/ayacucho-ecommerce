@@ -13,10 +13,13 @@ import { HOME_PAGE } from './pages/homePage';
 import { CHECKOUT_PAGE } from './pages/checkoutPage';
 import { PRODUCT_PAGE } from './pages/productPage';
 import GoogleReviews from './classes/GoogleReviews';
+import { initProductSearchModal } from './components/productSearchModal';
 
 
 if(DEBUG) console.log("Code working");
 
+// Initialize components
+initProductSearchModal();
 
 document.addEventListener('alpine:init', async function(){
     const cart = new Cart(store);
@@ -38,11 +41,12 @@ document.addEventListener('alpine:init', async function(){
     store('productsToPrint', productService.productsToPrint);
     store("printedProductsMax", productService.printedProductsMax);
 
-
+    // UI state
     store('cartOpened', false);
+    store('searchModalOpened', false);
     store("ConfirmVisible", false);
 
-    // *** HELPERS ***
+    // Utility functions and formats
     store('priceFormat', priceFormat);
     store('decimalFormat', decimalFormat);
     store('Confirm', Confirm);
